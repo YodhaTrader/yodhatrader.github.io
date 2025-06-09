@@ -93,10 +93,10 @@ footer {
 }
 
 .logo {
-    height: 60px; /* reduce this number if needed */
-    max-width: 200px; /* ensures it doesn't get too wide */
-    width: auto;
-    vertical-align: middle;
+    height: 60px; /* adjust as needed */
+    max-width: 180px; /* smaller max-width */
+    object-fit: contain;
+    object-position: center;
     display: block;
     margin: 5px 0;
 }
