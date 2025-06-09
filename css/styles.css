@@ -91,3 +91,28 @@ footer {
     padding: 15px 0;
     font-size: 0.9em;
 }
+
+.logo {
+    height: 60px; /* adjust size as needed */
+    vertical-align: middle;
+    display: block;
+    margin: 5px 0;
+}
+
+/* Header flexbox layout */
+.header-flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header-flex nav a {
+    margin-left: 15px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+}
+
+.header-flex nav a:hover {
+    text-decoration: underline;
+}
