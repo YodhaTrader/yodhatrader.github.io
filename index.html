@@ -1613,7 +1613,7 @@ const MarketSensei = ({ darkMode, handleHapticFeedback, BACKEND_API_URL }) => {
 
         } catch (error) {
             console.error("Error sending message to Gemini:", error);
-            setChatHistory(prevHistory => [...prevHistory, { role: "model", parts: [{ text: `Error: ${error.message || 'Failed to get response from AI. Please try again.'} ${IS_BACKEND_MOCKED ? "(Simulated Response)" : ""}` }] }]);
+            setChatHistory(prevHistory => [...prevHistory, { role: "model", parts: [{ text: `Error: ${error.message || 'Failed to get response from AI. Please try again.'} ${IS_BACKEND_MOCKED ? "(Simulated Response)" : ""}. ${!IS_BACKEND_MOCKED ? "Check if your backend is running and CORS is configured." : ""}` }] }]);
         } finally {
             setLoading(false);
         }
@@ -2317,7 +2317,7 @@ This frontend application (HTML/React/JavaScript) runs directly in your browser.
                 setMessage(`Error: ${data.message || 'Failed to refresh token.'} ${IS_BACKEND_MOCKED ? "(Simulated Response)" : ""}`);
             }
         } catch (error) {
-            setMessage(`Network error: ${error.message}. Ensure your backend is running and accessible. ${IS_BACKEND_MOCKED ? "(Simulated Response)" : ""}`);
+            setMessage(`Network error: ${error.message}. Ensure your backend is running, accessible, and configured for CORS. ${IS_BACKEND_MOCKED ? "(Simulated Response)" : ""}`);
             console.error("Error refreshing token:", error);
         } finally {
             setLoading(false);
@@ -2712,104 +2712,7 @@ This frontend application (HTML/React/JavaScript) runs directly in your browser.
 
 
 // Section for Brand Identity & Technical Overview (now "Arena Blueprints")
-const ArenaBlueprints = ({ darkMode }) => (
-    <div className={`p-8 rounded-lg shadow-xl ${darkMode ? 'bg-darkerBg' : 'bg-cardBgLight'} border border-gray-200 dark:border-gray-700`}>
-        <h2 className="text-4xl font-bold mb-8 text-center text-primary dark:text-accent"><i className="fas fa-cogs mr-3"></i>Arena Blueprints & Technical Scrolls</h2>
-        <p className={`text-lg mb-8 text-center max-w-3xl mx-auto ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-            Understand the foundational principles that govern the Market Arena, including its visual design and underlying technical architecture.
-        </p>
-
-        {/* Brand Guidelines Summary */}
-        <div className={`mb-10 p-6 rounded-lg ${darkMode ? 'bg-darkBg' : 'bg-blue-50'} shadow-md border border-gray-300 dark:border-gray-700`}>
-            <h3 className="text-2xl font-semibold mb-4 text-primary dark:text-darkText"><i className="fas fa-palette mr-2"></i>Visual Codex (Brand Guidelines Summary)</h3>
-            <p className={`mb-4 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Extracted from the ancient `YODHA_TRADER_Brand_Guidelines_V1.2.pdf`:
-            </p>
-
-            <div className="space-y-4">
-                <div>
-                    <h4 className="font-semibold text-lg mb-2">1. The Yodha Emblem (Logo Usage):</h4>
-                    <ul className="list-disc list-inside ml-4 text-md text-gray-700 dark:text-gray-300">
-                        <li>Always utilize the full emblem, featuring the "YODHA TRADER" inscription, the "O" with the warrior silhouette, and the sacred tagline "Empower your Trading".</li>
-                        <li>The tagline may be omitted only when space is severely constrained (e.g., small sigils, app icons).</li>
-                        <li>**Forbidden Acts:** Altering colors, distorting proportions, applying shadows or effects, or separating the warrior icon from the inscription (save for sigils/app icons).</li>
-                        <li>The emblem displayed here is linked externally (e.g., `/logo.png`) and has protective wards (fallback images) should the link falter.</li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h4 className="font-semibold text-lg mb-2">2. Color Spectrum (Color Palette):</h4>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-md text-gray-700 dark:text-gray-300">
-                        <div>
-                            <p><strong>Main inscription (YODHA TRADER) & Warrior silhouette:</strong></p>
-                            <div className="flex items-center mt-1">
-                                <span className="block w-6 h-6 rounded-full mr-2" style={{ backgroundColor: '#183153' }}></span>
-                                <span>Deep navy / dark blue (HEX: #183153)</span>
-                            </div>
-                        </div>
-                        <div>
-                            <p><strong>"O" circle background:</strong></p>
-                            <div className="flex items-center mt-1">
-                                <span className="block w-6 h-6 rounded-full mr-2 bg-gradient-to-br from-[#A3C4DC] to-[#7AAAC3]"></span>
-                                <span>Gradient light blue (HEX: #A3C4DC &rarr; #7AAAC3)</span>
-                            </div>
-                        </div>
-                        <div>
-                            <p><strong>Tagline inscription:</strong></p>
-                            <div className="flex items-center mt-1">
-                                <span className="block w-6 h-6 rounded-full mr-2" style={{ backgroundColor: '#6A8AA6' }}></span>
-                                <span>Soft grey / light blue (HEX: #6A8AA6 or #7B8E9D)</span>
-                            </div>
-                        </div>
-                        <div>
-                            <p><strong>Arena Ground (Background):</strong></p>
-                            <div className="flex items-center mt-1">
-                                <span className="block w-6 h-6 rounded-full mr-2" style={{ backgroundColor: '#FDF7F0' }}></span>
-                                <span>Light beige / off-white (HEX: #FDF7F0)</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div>
-                    <h4 className="font-semibold text-lg mb-2">3. Sacred Inscriptions (Typography):</h4>
-                    <ul className="list-disc list-inside ml-4 text-md text-gray-700 dark:text-gray-300">
-                        <li><strong>Primary Scroll Font:</strong> Sans-serif (e.g., Helvetica, Montserrat, Poppins, Lato). This arena's scrolls employ 'Inter'.</li>
-                        <li><strong>Weight (YODHA TRADER):</strong> Medium to Bold.</li>
-                        <li><strong>Weight (Tagline):</strong> Light or Regular.</li>
-                        <li><strong>Alignment:</strong> Ensure harmonious kerning and optical balance.</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        {/* Technical Overview */}
-        <div className={`p-6 rounded-lg ${darkMode ? 'bg-darkBg' : 'bg-blue-50'} shadow-md border border-gray-300 dark:border-gray-700`}>
-            <h3 className="text-2xl font-semibold mb-4 text-primary dark:text-darkText"><i className="fas fa-network-wired mr-2"></i>Technical Scrolls: The Arena's Inner Workings</h3>
-            <p className={`mb-4 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                The YodhaTrader Market Arena operates through a powerful combination of frontend and backend services:
-            </p>
-            <ul className="list-disc list-inside space-y-3 pl-4 text-md text-gray-700 dark:text-gray-300">
-                <li>
-                    <strong>Frontend (This Sacred Scroll - `index.html`):</strong> This HTML file encapsulates the entire React.js application. It orchestrates all visual displays, interactive elements, and manages the flow of information on your device. It is designed to run within the browser's realm.
-                </li>
-                <li>
-                    <strong>Backend (The Oracle's Chamber - `app.py`):</strong> The Python Flask service (`app_py_live_ltp` in our archives) resides in a separate domain. It is the Oracle that communicates with external market data providers (like Kite Connect) and the Gemini AI. This frontend sends requests to the Oracle's Chamber via secure API calls, never directly embedding the Python code itself. This separation ensures the security of powerful artifacts and efficient server-side operations.
-                </li>
-                <li>
-                    <strong>Visual Assets (Emblems and Imagery - `.png` files):</strong> Emblems like the main YodhaTrader logo are stored in a publicly accessible vault (e.g., `/public/`) and are summoned into the arena by their unique addresses (URLs). This method enhances performance and allows for swift updates across the realm.
-                </li>
-                <li>
-                    <strong>CORS Configuration (Critical for Backend Interaction):</strong> For the frontend (running on a different domain, like the Canvas environment) to communicate with your backend (e.g., `yodha-private-api.fly.dev`), your backend **must** be configured to allow Cross-Origin Resource Sharing (CORS) requests from the frontend's origin. Without proper CORS headers on the backend, the browser will block the "Failed to fetch" request due to security policies.
-                </li>
-            </ul>
-            <p className={`mt-4 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                This strategic modular design ensures the Arena is both a responsive training ground for Yodhas and a secure fortress for sensitive market intelligence.
-            </p>
-        </div>
-    </div>
-);
-
+// THIS COMPONENT IS REMOVED as requested.
 
 // Main App component
 const App = () => {
@@ -2952,6 +2855,7 @@ const App = () => {
                         >
                             <i className="fas fa-tools mr-1"></i> Yodha's Arsenal
                         </NavLink>
+                        {/* Removed NavLink for Arena Blueprints */}
                     </nav>
 
                     <div className="flex items-center space-x-4">
@@ -3032,6 +2936,7 @@ const App = () => {
                         <option value="marketSensei"><i className="fas fa-graduation-cap mr-1"></i> Market Sensei</option>
                         <option value="strategyForge"><i className="fas fa-hammer mr-1"></i> Strategy Forge</option>
                         <option value="yodhasArsenal"><i className="fas fa-tools mr-1"></i> Yodha's Arsenal</option>
+                        {/* Removed option for Arena Blueprints */}
                     </select>
                 </div>
             </header>
@@ -3085,10 +2990,7 @@ const App = () => {
                         </div>
                     )}
                 </SectionWrapper>
-                {/* Arena Blueprints Section */}
-                <SectionWrapper id="arenaBlueprints" darkMode={darkMode}>
-                    <ArenaBlueprints darkMode={darkMode} />
-                </SectionWrapper>
+                {/* Arena Blueprints Section - REMOVED */}
             </main>
 
             {/* Footer */}
