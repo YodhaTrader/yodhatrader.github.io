@@ -105,7 +105,7 @@
                     },
                     boxShadow: {
                         'custom-light': 'var(--shadow-custom-light)',
-                        'custom-dark': 'var(--shadow-custom-dark)',
+                        'custom-dark': 'var(--shadow-dark-custom-dark)',
                     },
                 }
             }
@@ -126,6 +126,103 @@
 
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
+
+// Global flag to indicate if backend is mocked (for UI feedback)
+let IS_BACKEND_MOCKED = false;
+
+// Mock API Call Function
+// This function simulates backend responses if the actual fetch fails.
+const mockApiCall = async (url, options) => {
+    IS_BACKEND_MOCKED = true; // Set flag to true if mock is used
+    console.warn(`Backend connection failed. Providing simulated data for: ${url}`);
+
+    // Simulate network delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    // Basic routing for mock responses based on URL
+    if (url.includes('/gemini/generate')) {
+        const prompt = JSON.parse(options.body).prompt;
+        let generatedText = "Simulated AI response: \"The market rewards patience and disciplined strategy. Study the flow, not just the ripples.\"";
+        if (prompt.includes("inspiring") && prompt.includes("quote")) {
+            generatedText = "Simulated AI Quote: \"Fortune favors the bold, but wisdom guides the Yodha. Trade with knowledge.\"";
+        } else if (prompt.includes("executive summary")) {
+             generatedText = "Simulated AI Summary: This simulated research indicates strong performance driven by key market factors and strategic shifts, suggesting a favorable outlook. Further detailed analysis is available upon request for registered analysts.";
+        } else if (prompt.includes("finance") || prompt.includes("market")) {
+            generatedText = "Simulated AI Sensei response: \"In the market arena, understanding your opponent (the market) is paramount. Focus on fundamentals and disciplined risk management. How else can I guide your path, young Yodha?\"";
+        }
+        return {
+            ok: true,
+            json: () => Promise.resolve({ status: 'success', generated_text: generatedText })
+        };
+    } else if (url.includes('/kite/refresh-token')) {
+        return {
+            ok: true,
+            json: () => Promise.resolve({ status: 'success', message: 'Token refresh simulated successfully.', newToken: 'mock_simulated_token_12345' })
+        };
+    } else if (url.includes('/live_ltp/')) {
+        // Extract instrument token from URL
+        const token = url.split('/').pop();
+        let instrumentName = "Simulated Instrument";
+        let lastPrice = 1000 + Math.random() * 500;
+        let change = (Math.random() - 0.5) * 5;
+        let high = lastPrice + Math.random() * 10;
+        let low = lastPrice - Math.random() * 10;
+        let open = lastPrice - (Math.random() - 0.5) * 5;
+        let close = open + (Math.random() - 0.5) * 5;
+
+
+        switch (token) {
+            case '256265': instrumentName = 'NIFTY 50 Futures (Sim)'; lastPrice = 22000 + Math.random() * 500; break;
+            case '256001': instrumentName = 'BANKNIFTY Futures (Sim)'; lastPrice = 47000 + Math.random() * 1000; break;
+            default: break;
+        }
+
+        return {
+            ok: true,
+            json: () => Promise.resolve({
+                status: 'success',
+                instrument: instrumentName,
+                last_price: parseFloat(lastPrice.toFixed(2)),
+                change: parseFloat(change.toFixed(2)),
+                high: parseFloat(high.toFixed(2)),
+                low: parseFloat(low.toFixed(2)),
+                ohlc: { open: parseFloat(open.toFixed(2)), close: parseFloat(close.toFixed(2)) }
+            })
+        };
+    }
+
+    // Fallback for unhandled mock URLs
+    return {
+        ok: false,
+        status: 404,
+        json: () => Promise.resolve({ status: 'error', message: 'Simulated 404: Endpoint not found in mock data.' })
+    };
+};
+
+// Original fetch function (store a reference to it)
+const originalFetch = window.fetch;
+
+// Wrapper function for fetch that uses mock on error
+const safeFetch = async (url, options) => {
+    try {
+        const response = await originalFetch(url, options);
+        // If response is not OK (e.g., 404, 500), treat as a backend issue
+        if (!response.ok) {
+            console.error(`Backend returned non-OK status: ${response.status} for ${url}`);
+            const errorBody = await response.json().catch(() => ({ message: 'No JSON response from backend.' }));
+            console.error('Backend error details:', errorBody);
+            // Fallback to mock on backend error status
+            return mockApiCall(url, options);
+        }
+        IS_BACKEND_MOCKED = false; // Backend is working
+        return response;
+    } catch (error) {
+        console.error(`Fetch failed for ${url}:`, error);
+        // Fallback to mock on fetch error (network issues, CORS, etc.)
+        return mockApiCall(url, options);
+    }
+};
+
 
 // Section Wrapper for consistent styling
 const SectionWrapper = ({ id, darkMode, children }) => (
@@ -1003,7 +1100,7 @@ const SubmitResearchForm = ({ darkMode, loggedInUser, onCloseForm, handleHapticF
             const prompt = `Based on the following key points/draft summary for an equity research paper, provide an improved, concise, and impactful executive summary (max 150 words): \n\n${summaryInput}`;
             const payload = { prompt: prompt };
 
-            const response = await fetch(`${BACKEND_API_URL}/gemini/generate`, { // Use your backend proxy
+            const response = await safeFetch(`${BACKEND_API_URL}/gemini/generate`, { // Use safeFetch
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
@@ -1011,7 +1108,7 @@ const SubmitResearchForm = ({ darkMode, loggedInUser, onCloseForm, handleHapticF
 
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(`HTTP error! status: ${response.status} - ${errorData.message || 'Unknown error'}`);
+                throw new Error(`API error! status: ${response.status} - ${errorData.message || 'Unknown error'}`);
             }
 
             const result = await response.json();
@@ -1022,7 +1119,7 @@ const SubmitResearchForm = ({ darkMode, loggedInUser, onCloseForm, handleHapticF
                 console.error("Unexpected API response structure:", result);
             }
         } catch (e) {
-            setAiError(`Failed to get AI suggestion: ${e.message}.`);
+            setAiError(`Failed to get AI suggestion: ${e.message}. ${IS_BACKEND_MOCKED ? "(Using simulated response)" : ""}`);
             console.error("Error generating AI summary:", e);
         } finally {
             setAiLoading(false);
@@ -1323,7 +1420,7 @@ const MarketSayings = ({ darkMode, handleHapticFeedback, BACKEND_API_URL }) => {
             const prompt = "Generate a short, inspiring, and unique market-related quote, suitable for social media. Make it concise and impactful, suitable for a 'Market Sayings' section.";
             const payload = { prompt: prompt };
 
-            const response = await fetch(`${BACKEND_API_URL}/gemini/generate`, { // Use your backend proxy
+            const response = await safeFetch(`${BACKEND_API_URL}/gemini/generate`, { // Use safeFetch
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
@@ -1331,20 +1428,20 @@ const MarketSayings = ({ darkMode, handleHapticFeedback, BACKEND_API_URL }) => {
 
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(`HTTP error! status: ${response.status} - ${errorData.message || 'Unknown error'}`);
+                throw new Error(`API error! status: ${response.status} - ${errorData.message || 'Unknown error'}`);
             }
 
             const result = await response.json();
             if (result.status === 'success' && result.generated_text) {
                 setQuote(result.generated_text);
-                setQuoteSource("Oracle of Gemini");
+                setQuoteSource(IS_BACKEND_MOCKED ? "Oracle of Gemini (Simulated)" : "Oracle of Gemini");
             } else {
                 setQuote("Could not generate a new saying. Please try again.");
                 setQuoteSource("Error");
                 console.error("Unexpected API response structure:", result);
             }
         } catch (e) {
-            setError("Failed to generate saying: " + e.message);
+            setError(`Failed to generate saying: ${e.message}. ${IS_BACKEND_MOCKED ? "(Using simulated response)" : ""}`);
             setQuote("Failed to load saying. Please try again later.");
             setQuoteSource("Error");
             console.error("Error generating quote:", e);
@@ -1495,7 +1592,7 @@ const MarketSensei = ({ darkMode, handleHapticFeedback, BACKEND_API_URL }) => {
                 }))
             };
 
-            const response = await fetch(`${BACKEND_API_URL}/gemini/generate`, {
+            const response = await safeFetch(`${BACKEND_API_URL}/gemini/generate`, { // Use safeFetch
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
@@ -1516,7 +1613,7 @@ const MarketSensei = ({ darkMode, handleHapticFeedback, BACKEND_API_URL }) => {
 
         } catch (error) {
             console.error("Error sending message to Gemini:", error);
-            setChatHistory(prevHistory => [...prevHistory, { role: "model", parts: [{ text: `Error: ${error.message || 'Failed to get response from AI. Please try again.'}` }] }]);
+            setChatHistory(prevHistory => [...prevHistory, { role: "model", parts: [{ text: `Error: ${error.message || 'Failed to get response from AI. Please try again.'} ${IS_BACKEND_MOCKED ? "(Simulated Response)" : ""}` }] }]);
         } finally {
             setLoading(false);
         }
@@ -2069,17 +2166,22 @@ const YodhasArsenal = ({ darkMode, loggedInUser, openAuthModal, handleHapticFeed
         setLoadingLiveTicker(true);
         setLiveTickerError('');
         try {
-            const response = await fetch(`${liveLtpUrl}${selectedLiveTickerInstrument}`);
+            const response = await safeFetch(`${liveLtpUrl}${selectedLiveTickerInstrument}`); // Use safeFetch
             const data = await response.json();
 
             if (response.ok && data.status === 'success') {
                 setLiveTickerData(data);
+                if (IS_BACKEND_MOCKED) {
+                    setLiveTickerError("Backend connection failed for live data. Displaying simulated data.");
+                } else {
+                    setLiveTickerError(""); // Clear error if successful and not mocked
+                }
             } else {
                 setLiveTickerError(data.message || 'Failed to fetch live data.');
                 setLiveTickerData(null);
             }
         } catch (error) {
-            setLiveTickerError(`Network error: ${error.message}. Ensure backend is running and token is valid.`);
+            setLiveTickerError(`Network error: ${error.message}. Ensure backend is running and token is valid. ${IS_BACKEND_MOCKED ? "(Displaying simulated data.)" : ""}`);
             setLiveTickerData(null);
         } finally {
             setLoadingLiveTicker(false);
@@ -2157,7 +2259,7 @@ This section demonstrates potential query formats for interacting with a hypothe
     }
 }
 \`\`\`
-* **Response (Simulated):** Open, High, Low, Close, Volume data for each interval.
+* **Response (Simulated):</b> Open, High, Low, Close, Volume data for each interval.
 
 #### 4. User Portfolio Holdings
 \`\`\`json
@@ -2199,7 +2301,7 @@ This frontend application (HTML/React/JavaScript) runs directly in your browser.
         setMessage("Attempting to refresh token...");
 
         try {
-            const response = await fetch(kiteRefreshUrl, {
+            const response = await safeFetch(kiteRefreshUrl, { // Use safeFetch
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -2210,12 +2312,12 @@ This frontend application (HTML/React/JavaScript) runs directly in your browser.
             const data = await response.json();
 
             if (response.ok) {
-                setMessage(`Success: ${data.message} New Token: ${data.newToken ? data.newToken.substring(0, 10) + '...' : 'N/A'}`);
+                setMessage(`Success: ${data.message} New Token: ${data.newToken ? data.newToken.substring(0, 10) + '...' : 'N/A'} ${IS_BACKEND_MOCKED ? "(Simulated Response)" : ""}`);
             } else {
-                setMessage(`Error: ${data.message || 'Failed to refresh token.'}`);
+                setMessage(`Error: ${data.message || 'Failed to refresh token.'} ${IS_BACKEND_MOCKED ? "(Simulated Response)" : ""}`);
             }
         } catch (error) {
-            setMessage(`Network error: ${error.message}. Ensure your backend is running and accessible.`);
+            setMessage(`Network error: ${error.message}. Ensure your backend is running and accessible. ${IS_BACKEND_MOCKED ? "(Simulated Response)" : ""}`);
             console.error("Error refreshing token:", error);
         } finally {
             setLoading(false);
@@ -2436,7 +2538,7 @@ This frontend application (HTML/React/JavaScript) runs directly in your browser.
                     </p>
                 )}
 
-                {liveTickerData && !liveTickerLoading && !liveTickerError && (
+                {liveTickerData && !liveTickerLoading && (
                     <div className={`p-6 rounded-lg border-2 ${darkMode ? 'border-accent bg-gray-800' : 'border-blue-300 bg-blue-50'} text-center mt-8 shadow-lg`}>
                         <h4 className="text-3xl font-bold mb-3 text-primary dark:text-darkText flex items-center justify-center space-x-2">
                             <i className="fas fa-tachometer-alt"></i> <span>{instrumentOptions.find(opt => opt.token === selectedLiveTickerInstrument)?.name || 'Unknown Instrument'}</span>
@@ -2445,8 +2547,7 @@ This frontend application (HTML/React/JavaScript) runs directly in your browser.
                             ₹{liveTickerData.last_price?.toLocaleString('en-IN') || 'N/A'}
                         </p>
                         <p className={`text-xl font-semibold ${liveTickerData.change >= 0 ? 'text-green-500' : 'text-red-500'} mb-4 flex items-center justify-center space-x-2`}>
-                            {liveTickerData.change >= 0 ? <i className="fas fa-arrow-up"></i> : <i className="fas fa-arrow-down"></i>}
-                            <span>Change: {liveTickerData.change >= 0 ? '+' : ''}{liveTickerData.change?.toFixed(2) || 'N/A'}</span>
+                            {liveTickerData.change >= 0 ? '+' : ''}{liveTickerData.change?.toFixed(2) || 'N/A'}
                         </p>
                         <div className="grid grid-cols-2 gap-4 mt-4 text-md text-gray-700 dark:text-gray-300 font-medium">
                             <div>High: <span className="font-bold">₹{liveTickerData.high?.toLocaleString('en-IN') || 'N/A'}</span></div>
@@ -2454,7 +2555,7 @@ This frontend application (HTML/React/JavaScript) runs directly in your browser.
                             <div>Open: <span className="font-bold">₹{liveTickerData.ohlc?.open?.toLocaleString('en-IN') || 'N/A'}</span></div>
                             <div>Close (Prev): <span className="font-bold">₹{liveTickerData.ohlc?.close?.toLocaleString('en-IN') || 'N/A'}</span></div>
                         </div>
-                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-6">Last updated: {new Date().toLocaleTimeString()}</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-6">Last updated: {new Date().toLocaleTimeString()} {IS_BACKEND_MOCKED ? "(Simulated)" : ""}</p>
                     </div>
                 )}
             </div>
@@ -2698,6 +2799,9 @@ const ArenaBlueprints = ({ darkMode }) => (
                 <li>
                     <strong>Visual Assets (Emblems and Imagery - `.png` files):</strong> Emblems like the main YodhaTrader logo are stored in a publicly accessible vault (e.g., `/public/`) and are summoned into the arena by their unique addresses (URLs). This method enhances performance and allows for swift updates across the realm.
                 </li>
+                <li>
+                    <strong>CORS Configuration (Critical for Backend Interaction):</strong> For the frontend (running on a different domain, like the Canvas environment) to communicate with your backend (e.g., `yodha-private-api.fly.dev`), your backend **must** be configured to allow Cross-Origin Resource Sharing (CORS) requests from the frontend's origin. Without proper CORS headers on the backend, the browser will block the "Failed to fetch" request due to security policies.
+                </li>
             </ul>
             <p className={`mt-4 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                 This strategic modular design ensures the Arena is both a responsive training ground for Yodhas and a secure fortress for sensitive market intelligence.
@@ -2717,6 +2821,8 @@ const App = () => {
     const [showAuthModal, setShowAuthModal] = useState(false);
     const [authModalPurpose, setAuthModalPurpose] = useState('');
     const [authModalMessage, setAuthModalMessage] = useState('');
+    const [isBackendLive, setIsBackendLive] = useState(true); // New state for backend status
+
 
     // Base URL for your Fly.io backend API
     const BACKEND_API_URL = "https://yodha-private-api.fly.dev/api"; // Ensure this matches your Fly.io app URL
@@ -2735,6 +2841,15 @@ const App = () => {
             setLoggedInUser(JSON.parse(storedUser));
         }
     }, []);
+
+    // Effect to monitor IS_BACKEND_MOCKED and update isBackendLive state
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setIsBackendLive(!IS_BACKEND_MOCKED);
+        }, 500); // Check every half second
+        return () => clearInterval(interval);
+    }, []);
+
 
     // Handle simulated login
     const handleLogin = (userData) => {
@@ -2840,6 +2955,13 @@ const App = () => {
                     </nav>
 
                     <div className="flex items-center space-x-4">
+                        {/* Backend Status Indicator */}
+                        <div className={`flex items-center space-x-2 text-sm font-medium
+                            ${isBackendLive ? 'text-green-500' : 'text-orange-500'}`}>
+                            <span className={`h-3 w-3 rounded-full ${isBackendLive ? 'bg-green-500' : 'bg-orange-500'} animate-pulse`}></span>
+                            <span>{isBackendLive ? 'Backend Live' : 'Simulated Mode'}</span>
+                        </div>
+
                         {loggedInUser ? (
                             <div className="flex items-center space-x-2">
                                 <span className="text-sm font-medium whitespace-nowrap">Hail, <span className="font-semibold text-accent">{loggedInUser.username}</span>!</span>
