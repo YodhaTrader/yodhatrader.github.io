@@ -1,73 +1,3003 @@
-// index.html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yodha Trader | Empowering Investors with Insightful Research</title>
-    <link rel="stylesheet" href="/css/styles.css">
+    <title>YodhaTrader Market Arena - Empower Your Trading Journey</title>
+    <!-- Favicon (assuming it's in the public folder and accessible at root) -->
+    <link rel="icon" href="/public/favicon.ico" type="image/x-icon">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter font from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* Custom Tailwind Configuration (Optional, if you want to extend/override) */
+        /* This must be defined BEFORE Tailwind's classes are applied */
+        :root {
+            --color-primary: #183153; /* Deep navy / dark blue */
+            --color-accent: #3182CE; /* Vibrant Blue */
+            --color-secondary: #2D3748; /* Darker blue-gray */
+            --color-lightBg: #FDF7F0; /* Light beige / off-white - Adjusted slightly for a warmer feel */
+            --color-darkBg: #1A202C; /* Very dark background */
+            --color-darkerBg: #2D3748; /* Even darker for cards in dark mode */
+            --color-lightText: #2D3748; /* Dark text for light mode */
+            --color-darkText: #E2E8F0; /* Light text for dark mode */
+            --color-cardBgLight: #FFFFFF; /* White for light mode cards */
+        }
+
+        .dark {
+            --color-primary: #9BC2E4; /* Lighter primary in dark mode */
+            --color-accent: #63B3ED; /* Lighter accent in dark mode */
+            --color-secondary: #4A5568; /* Slightly lighter secondary in dark mode */
+            --color-lightBg: #1A202C; /* Dark background */
+            --color-darkBg: #1A202C; /* Ensure consistency for dark mode background */
+            --color-darkerBg: #2D3748; /* Darker card background */
+            --color-lightText: #E2E8F0; /* Light text for dark mode */
+            --color-darkText: #E2E8F0; /* Default text in dark mode */
+            --color-cardBgLight: #2D3748; /* Cards bg in dark mode */
+        }
+
+        .shadow-custom-light {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .shadow-custom-dark {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Basic animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .animate-fadeIn {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .animate-scaleIn {
+            animation: scaleIn 0.3s ease-out forwards;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Ensure smooth scroll for anchor links */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Fix for fixed header blocking content when scrolling to a section */
+        :target::before {
+            content: "";
+            display: block;
+            height: 80px; /* Adjust this value to match your header's height */
+            margin: -80px 0 0; /* Negative margin to pull the content up */
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: 'var(--color-primary)',
+                        accent: 'var(--color-accent)',
+                        secondary: 'var(--color-secondary)',
+                        lightBg: 'var(--color-lightBg)',
+                        darkBg: 'var(--color-darkBg)',
+                        darkerBg: 'var(--color-darkerBg)',
+                        lightText: 'var(--color-lightText)',
+                        darkText: 'var(--color-darkText)',
+                        cardBgLight: 'var(--color-cardBgLight)',
+                    },
+                    boxShadow: {
+                        'custom-light': 'var(--shadow-custom-light)',
+                        'custom-dark': 'var(--shadow-custom-dark)',
+                    },
+                }
+            }
+        }
+    </script>
 </head>
-<body>
-<header>
-    <div class="container header-flex">
-        <a href="/index.html">
-            <img src="/images/YodhaTrader_Logo.png" alt="Yodha Trader Logo" class="logo">
-        </a>
-        <nav>
-            <a href="/index.html">Home</a>
-            <a href="/about.html">About</a>
-            <a href="/research.html">Research</a>
-            <a href="/contact.html">Contact</a>
-            <a href="/disclaimer.html">Disclaimer</a>
-        </nav>
+<body class="bg-lightBg text-lightText antialiased">
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+
+    <!-- React and ReactDOM CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- Babel for JSX transformation in browser -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"></link>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+// Section Wrapper for consistent styling
+const SectionWrapper = ({ id, darkMode, children }) => (
+    <section
+        id={id}
+        className={`container mx-auto px-4 py-12 rounded-lg shadow-xl mb-12
+            ${darkMode ? 'bg-darkerBg shadow-custom-dark' : 'bg-cardBgLight shadow-custom-light'}
+            transition-all duration-300 ease-in-out transform hover:scale-[1.005]`}
+    >
+        {children}
+    </section>
+);
+
+// Reusable NavLink component
+const NavLink = ({ sectionId, currentSection, scrollToSection, handleHapticFeedback, children, darkMode }) => (
+    <button
+        onClick={() => { scrollToSection(sectionId); handleHapticFeedback(); }}
+        className={`px-4 py-2 rounded-md font-medium text-lg transition-all duration-300
+            ${currentSection === sectionId
+                ? 'bg-accent text-white shadow-md transform scale-105'
+                : `text-primary dark:text-darkText hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-accent dark:hover:text-white border ${darkMode ? 'border-transparent' : 'border-gray-200'}`
+            }
+            focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-75`}
+    >
+        {children}
+    </button>
+);
+
+// Reusable Social Share Buttons component
+const SocialShareButtons = ({ url, title, description, hashtags = [], darkMode }) => {
+    const encodedUrl = encodeURIComponent(url);
+    const encodedTitle = encodeURIComponent(title);
+    const encodedDescription = encodeURIComponent(description);
+    const encodedHashtags = hashtags.length > 0 ? encodeURIComponent(hashtags.join(',')) : '';
+
+    const handleButtonClick = () => {
+        if ('vibrate' in navigator) {
+            navigator.vibrate(50);
+        }
+    };
+
+    return (
+        <div className="flex justify-center space-x-3 mt-4">
+            {/* LinkedIn */}
+            <a
+                href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}&title=${encodedTitle}&summary=${encodedDescription}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={handleButtonClick}
+                className={`p-2 rounded-full ${darkMode ? 'bg-[#0A66C2] hover:bg-[#084C93]' : 'bg-[#0A66C2] hover:bg-[#084C93]'} text-white transition-colors duration-200`}
+                aria-label="Share on LinkedIn"
+                title="Share on LinkedIn"
+            >
+                <i className="fab fa-linkedin text-xl"></i>
+            </a>
+
+            {/* X (Twitter) */}
+            <a
+                href={`https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}${encodedHashtags ? `&hashtags=${encodedHashtags}` : ''}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={handleButtonClick}
+                className={`p-2 rounded-full ${darkMode ? 'bg-black hover:bg-gray-800' : 'bg-black hover:bg-gray-800'} text-white transition-colors duration-200`}
+                aria-label="Share on X"
+                title="Share on X (Twitter)"
+            >
+                <i className="fab fa-x-twitter text-xl"></i>
+            </a>
+
+            {/* Telegram */}
+            <a
+                href={`https://t.me/share/url?url=${encodedUrl}&text=${encodedTitle}%0A${encodedDescription}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={handleButtonClick}
+                className={`p-2 rounded-full ${darkMode ? 'bg-[#229ED9] hover:bg-[#1C7BB6]' : 'bg-[#229ED9] hover:bg-[#1C7BB6]'} text-white transition-colors duration-200`}
+                aria-label="Share on Telegram"
+                title="Share on Telegram"
+            >
+                <i className="fab fa-telegram text-xl"></i>
+            </a>
+
+            {/* YouTube - Links to your channel or a relevant video */}
+            <a
+                href="https://www.youtube.com/@yodhatrader"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={handleButtonClick}
+                className={`p-2 rounded-full ${darkMode ? 'bg-[#FF0000] hover:bg-[#CC0000]' : 'bg-[#FF0000] hover:bg-[#CC0000]'} text-white transition-colors duration-200`}
+                aria-label="Visit our YouTube channel"
+                title="Visit our YouTube channel"
+            >
+                <i className="fab fa-youtube text-xl"></i>
+            </a>
+
+            {/* Instagram - Note: Direct sharing is not possible via web links. This will link to your profile. */}
+            <a
+                href="https://www.instagram.com/yodhatrader"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={handleButtonClick}
+                className={`p-2 rounded-full ${darkMode ? 'bg-[#C13584] hover:bg-[#A92A72]' : 'bg-[#C13584] hover:bg-[#A92A72]'} text-white transition-colors duration-200`}
+                aria-label="Visit our Instagram profile"
+                title="Visit our Instagram profile (Direct sharing not supported)"
+            >
+                <i className="fab fa-instagram text-xl"></i>
+            </a>
+        </div>
+    );
+};
+
+// Reusable Modal Component (for Read More content)
+const Modal = ({ isOpen, onClose, title, children, darkMode }) => {
+    if (!isOpen) return null;
+
+    const handleCloseClick = () => {
+        if ('vibrate' in navigator) {
+            navigator.vibrate(50);
+        }
+        onClose();
+    };
+
+    return (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className={`relative ${darkMode ? 'bg-darkerBg text-darkText' : 'bg-white text-lightText'} rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto transform transition-all duration-300 scale-95 opacity-0 animate-scaleIn`}>
+                <div className="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700">
+                    <h3 className="text-xl font-bold">{title}</h3>
+                    <button onClick={handleCloseClick} className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 text-2xl font-bold">
+                        ×
+                    </button>
+                </div>
+                <div className="p-4">
+                    {children}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+// Auth Modal Component (for Login/Signup/Research Submission)
+const AuthModal = ({ isOpen, onClose, purpose, onLogin, loggedInUser, darkMode, message, handleHapticFeedback }) => {
+    const [isLoginView, setIsLoginView] = useState(true);
+    const [fullName, setFullName] = useState('');
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [isSebiRA, setIsSebiRA] = useState(false);
+    const [sebiId, setSebiId] = useState('');
+    const [sebiValidity, setSebiValidity] = useState('');
+    const [formMessage, setFormMessage] = useState('');
+
+    useEffect(() => {
+        setFormMessage(message);
+        if (purpose === 'login' || purpose === 'readMore' || purpose === 'privateAccess') {
+            setIsLoginView(true);
+        } else if (purpose === 'signup' || purpose === 'submitResearch') {
+            setIsLoginView(false);
+        }
+        if (!loggedInUser || purpose !== 'submitResearch') {
+            setFullName('');
+            setUsername('');
+            setEmail('');
+            setPassword('');
+            setConfirmPassword('');
+            setIsSebiRA(false);
+            setSebiId('');
+            setSebiValidity('');
+        } else if (loggedInUser && purpose === 'submitResearch') {
+            setFullName(loggedInUser.fullName || '');
+            setUsername(loggedInUser.username || '');
+            setEmail(loggedInUser.email || '');
+            setIsSebiRA(loggedInUser.isSebiRA || false);
+            setSebiId(loggedInUser.sebiId || '');
+            setSebiValidity(loggedInUser.sebiValidity || '');
+        }
+    }, [isOpen, purpose, loggedInUser, message]);
+
+
+    const handleAuthSubmit = (e) => {
+        e.preventDefault();
+        handleHapticFeedback();
+        setFormMessage('');
+
+        if (isLoginView) {
+            if (username.trim() === 'testuser' && password === 'password123') {
+                onLogin({ username: 'testuser', email: 'test@example.com', fullName: 'Test User', isSebiRA: false });
+                setFormMessage('Login successful!');
+                onClose();
+            } else if (username.trim() === 'sebianalyst' && password === 'securepass') {
+                onLogin({ username: 'sebianalyst', email: 'sebi@example.com', fullName: 'SEBI Analyst', isSebiRA: true, sebiId: 'SEBI12345', sebiValidity: '2026-12-31' });
+                setFormMessage('Login successful!');
+                onClose();
+            }
+            else {
+                setFormMessage('Invalid username or password.');
+            }
+        } else {
+            if (!fullName || !username || !email || !password || !confirmPassword) {
+                setFormMessage('All fields are required.');
+                return;
+            }
+            if (password !== confirmPassword) {
+                setFormMessage('Passwords do not match.');
+                return;
+            }
+            if (isSebiRA && (!sebiId || !sebiValidity)) {
+                setFormMessage('SEBI Registration ID and Validity Date are required for SEBI Registered Analysts.');
+                return;
+            }
+
+            if (username.toLowerCase() === 'testuser' || username.toLowerCase() === 'sebianalyst') {
+                setFormMessage('Username already taken. Please choose another.');
+                return;
+            }
+
+            if (!/\S+@\S+\.\S+/.test(email)) {
+                setFormMessage('Please enter a valid email address.');
+                return;
+            }
+
+            const newUser = {
+                fullName,
+                username,
+                email,
+                isSebiRA,
+                sebiId: isSebiRA ? sebiId : '',
+                sebiValidity: isSebiRA ? sebiValidity : ''
+            };
+            onLogin(newUser);
+            setFormMessage('Account created successfully and logged in!');
+            onClose();
+        }
+    };
+
+    if (!isOpen) return null;
+
+    let modalTitle = 'Welcome to YodhaTrader';
+    if (purpose === 'readMore') {
+        modalTitle = 'Login Required to View Full Content';
+    } else if (purpose === 'submitResearch') {
+        modalTitle = 'Submit Your Research (Account Required)';
+    } else if (purpose === 'privateAccess') {
+        modalTitle = 'Login to Access Private Admin Section';
+    } else if (isLoginView) {
+        modalTitle = 'Login to Your Account';
+    } else {
+        modalTitle = 'Create Your YodhaTrader Account';
+    }
+
+
+    return (
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4 animate-fadeIn">
+            <div className={`relative ${darkMode ? 'bg-darkerBg text-darkText' : 'bg-white text-lightText'} rounded-lg shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto transform transition-all duration-300 scale-95 opacity-0 animate-scaleIn`}>
+                <div className="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700">
+                    <h3 className="text-xl font-bold">{modalTitle}</h3>
+                    <button onClick={() => { onClose(); handleHapticFeedback(); }} className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 text-2xl font-bold">
+                        ×
+                    </button>
+                </div>
+                <div className="p-6">
+                    {/* Simulation Disclaimer */}
+                    <div className="mb-4 p-3 rounded-md bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 text-sm">
+                        <p className="font-semibold mb-1">Important Note:</p>
+                        <p>This application's authentication is **simulated** for demonstration purposes.</p>
+                        <ul className="list-disc list-inside mt-1">
+                            <li>**No real OTPs are sent.**</li>
+                            <li>Social logins (Gmail, LinkedIn, etc.) are not implemented.</li>
+                            <li>Full user management and secure authentication would require a **backend server** and database integration.</li>
+                        </ul>
+                        <p className="mt-2">You can use `username: testuser` and `password: password123` to log in.</p>
+                    </div>
+
+                    {formMessage && (
+                        <div className={`mb-4 p-3 rounded-md ${formMessage.includes('successfully') ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'}`}>
+                            {formMessage}
+                        </div>
+                    )}
+
+                    {loggedInUser && purpose === 'submitResearch' && (
+                        <div className="text-center mb-6">
+                            <p className="text-lg font-semibold mb-2">You are logged in as: {loggedInUser.username}</p>
+                            <p className="mb-4">You can now proceed with submitting your research.</p>
+                            <button
+                                onClick={() => { onClose(); handleHapticFeedback(); }}
+                                className="bg-accent text-white px-6 py-3 rounded-md shadow-lg hover:bg-blue-700 transition duration-300"
+                            >
+                                Close and Continue
+                            </button>
+                        </div>
+                    )}
+
+                    {(!loggedInUser || purpose !== 'submitResearch') && (
+                        <>
+                            <div className="flex justify-center mb-6 border-b border-gray-200 dark:border-gray-700">
+                                <button
+                                    onClick={() => { setIsLoginView(true); handleHapticFeedback(); }}
+                                    className={`py-2 px-4 font-semibold ${isLoginView ? 'border-b-2 border-accent text-accent' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`}
+                                >
+                                    Login
+                                </button>
+                                <button
+                                    onClick={() => { setIsLoginView(false); handleHapticFeedback(); }}
+                                    className={`py-2 px-4 font-semibold ${!isLoginView ? 'border-b-2 border-accent text-accent' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`}
+                                >
+                                    Sign Up
+                                </button>
+                            </div>
+
+                            <form onSubmit={handleAuthSubmit} className="space-y-4">
+                                {!isLoginView && (
+                                    <>
+                                        <div>
+                                            <label htmlFor="fullName" className="block text-sm font-medium mb-1">Full Name</label>
+                                            <input
+                                                type="text"
+                                                id="fullName"
+                                                className={`w-full p-2 rounded-md border ${darkMode ? 'bg-gray-800 border-gray-600 text-darkText' : 'border-gray-300 text-lightText'} focus:ring-accent focus:border-accent`}
+                                                value={fullName}
+                                                onChange={(e) => setFullName(e.target.value)}
+                                                required={!isLoginView}
+                                            />
+                                        </div>
+                                        <div>
+                                            <label htmlFor="username" className="block text-sm font-medium mb-1">Unique Username</label>
+                                            <input
+                                                type="text"
+                                                id="username"
+                                                className={`w-full p-2 rounded-md border ${darkMode ? 'bg-gray-800 border-gray-600 text-darkText' : 'border-gray-300 text-lightText'} focus:ring-accent focus:border-accent`}
+                                                value={username}
+                                                onChange={(e) => setUsername(e.target.value)}
+                                                required={!isLoginView}
+                                            />
+                                        </div>
+                                        <div>
+                                            <label htmlFor="email" className="block text-sm font-medium mb-1">Email ID</label>
+                                            <input
+                                                type="email"
+                                                id="email"
+                                                className={`w-full p-2 rounded-md border ${darkMode ? 'bg-gray-800 border-gray-600 text-darkText' : 'border-gray-300 text-lightText'} focus:ring-accent focus:border-accent`}
+                                                value={email}
+                                                onChange={(e) => setEmail(e.target.value)}
+                                                required={!isLoginView}
+                                            />
+                                        </div>
+                                    </>
+                                )}
+                                {isLoginView && (
+                                    <div>
+                                        <label htmlFor="loginUsername" className="block text-sm font-medium mb-1">Username</label>
+                                        <input
+                                            type="text"
+                                            id="loginUsername"
+                                            className={`w-full p-2 rounded-md border ${darkMode ? 'bg-gray-800 border-gray-600 text-darkText' : 'border-gray-300 text-lightText'} focus:ring-accent focus:border-accent`}
+                                            value={username}
+                                            onChange={(e) => setUsername(e.target.value)}
+                                            required={isLoginView}
+                                        />
+                                    </div>
+                                )}
+                                <div>
+                                    <label htmlFor="password" className="block text-sm font-medium mb-1">Password</label>
+                                    <input
+                                        type="password"
+                                        id="password"
+                                        className={`w-full p-2 rounded-md border ${darkMode ? 'bg-gray-800 border-gray-600 text-darkText' : 'border-gray-300 text-lightText'} focus:ring-accent focus:border-accent`}
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        required
+                                    />
+                                </div>
+                                {!isLoginView && (
+                                    <div>
+                                        <label htmlFor="confirmPassword" className="block text-sm font-medium mb-1">Confirm Password</label>
+                                        <input
+                                            type="password"
+                                            id="confirmPassword"
+                                            className={`w-full p-2 rounded-md border ${darkMode ? 'bg-gray-800 border-gray-600 text-darkText' : 'border-gray-300 text-lightText'} focus:ring-accent focus:border-accent`}
+                                            value={confirmPassword}
+                                            onChange={(e) => setConfirmPassword(e.target.value)}
+                                            required={!isLoginView}
+                                        />
+                                    </div>
+                                )}
+
+                                {!isLoginView && (
+                                    <div className="flex items-center">
+                                        <input
+                                            type="checkbox"
+                                            id="isSebiRA"
+                                            className="h-4 w-4 text-accent rounded focus:ring-accent"
+                                            checked={isSebiRA}
+                                            onChange={(e) => setIsSebiRA(e.target.checked)}
+                                        />
+                                        <label htmlFor="isSebiRA" className="ml-2 block text-sm font-medium">SEBI - Registered Analyst</label>
+                                        {!isLoginView && !isSebiRA && <span className="ml-2 text-sm text-gray-500">(Non SEBI RA)</span>}
+                                    </div>
+                                )}
+
+                                {!isLoginView && isSebiRA && (
+                                    <>
+                                        <div>
+                                            <label htmlFor="sebiId" className="block text-sm font-medium mb-1">SEBI Registration ID</label>
+                                            <input
+                                                type="text"
+                                                id="sebiId"
+                                                className={`w-full p-2 rounded-md border ${darkMode ? 'bg-gray-800 border-gray-600 text-darkText' : 'border-gray-300 text-lightText'} focus:ring-accent focus:border-accent`}
+                                                value={sebiId}
+                                                onChange={(e) => setSebiId(e.target.value)}
+                                                required={isSebiRA}
+                                            />
+                                        </div>
+                                        <div>
+                                            <label htmlFor="sebiValidity" className="block text-sm font-medium mb-1">Validity Date (YYYY-MM-DD)</label>
+                                            <input
+                                                type="date"
+                                                id="sebiValidity"
+                                                className={`w-full p-2 rounded-md border ${darkMode ? 'bg-gray-800 border-gray-600 text-darkText' : 'border-gray-300 text-lightText'} focus:ring-accent focus:border-accent`}
+                                                value={sebiValidity}
+                                                onChange={(e) => setSebiValidity(e.target.value)}
+                                                required={isSebiRA}
+                                            />
+                                        </div>
+                                    </>
+                                )}
+
+                                <button
+                                    type="submit"
+                                    className="w-full bg-accent text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300"
+                                >
+                                    {isLoginView ? 'Login' : 'Create Account'}
+                                </button>
+                            </form>
+                        </>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+// Hero Section Component (Re-imagined as Arena Intro)
+const ArenaIntro = ({ darkMode, scrollToSection, handleHapticFeedback, loggedInUser }) => (
+    <section id="arenaIntro" className={`relative flex items-center justify-center h-screen text-center overflow-hidden
+        ${darkMode ? 'bg-gradient-to-br from-darkBg to-darkerBg' : 'bg-gradient-to-br from-lightBg to-blue-100'}
+        transition-colors duration-500 py-16`}
+    >
+        {/* Animated Background SVG for Arena Feel */}
+        <div className={`absolute inset-0 z-0 opacity-10`} style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='100%' height='100%' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cpattern id='grid' width='10' height='10' patternUnits='userSpaceOnUse'%3E%3Cpath d='M 10 0 L 0 0 L 0 10' fill='none' stroke='%23${darkMode ? '4a5568' : 'a3c4dc'}' stroke-width='0.5'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%' height='100%' fill='url(%23grid)'/%3E%3C/svg%3E")`,
+            backgroundSize: '100% 100%',
+            animation: 'fadeIn 2s ease-out forwards'
+        }}></div>
+
+        <div className="relative z-10 max-w-4xl mx-auto px-4">
+            <h1 className={`text-5xl md:text-7xl font-extrabold mb-6 leading-tight
+                ${darkMode ? 'text-white' : 'text-primary'} animate-fadeIn`}>
+                Welcome to the <span className="text-accent">Market Arena</span>
+            </h1>
+            <p className={`text-lg md:text-xl mb-10 max-w-2xl mx-auto
+                ${darkMode ? 'text-gray-300' : 'text-gray-700'} animate-fadeIn delay-100`}>
+                {loggedInUser ? `Hail, ${loggedInUser.fullName || loggedInUser.username}! Prepare to sharpen your skills.` : "Forge your trading prowess. Learn, strategize, and conquer the markets."}
+                <br/>Your ultimate training ground for financial mastery.
+            </p>
+            <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                <button
+                    onClick={() => { scrollToSection('strategyForge'); handleHapticFeedback(); }}
+                    className="bg-accent text-white px-8 py-3 rounded-full text-lg font-semibold shadow-lg
+                        hover:bg-blue-700 transform hover:scale-105 transition-all duration-300 ease-in-out btn-hover-scale flex items-center justify-center space-x-2"
+                >
+                    <i className="fas fa-hammer"></i> <span>Strategy Forge</span>
+                </button>
+                <button
+                    onClick={() => { scrollToSection('marketSensei'); handleHapticFeedback(); }}
+                    className={`bg-transparent border-2 border-accent text-accent px-8 py-3 rounded-full text-lg font-semibold
+                        hover:bg-accent hover:text-white transform hover:scale-105 transition-all duration-300 ease-in-out btn-hover-scale flex items-center justify-center space-x-2
+                        ${darkMode ? 'hover:border-blue-700' : ''}`}
+                >
+                    <i className="fas fa-brain"></i> <span>Meet Your Sensei</span>
+                </button>
+            </div>
+            {/* Scroll down indicator */}
+            <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-float">
+                <i className="fas fa-chevron-down text-gray-500 text-3xl"></i>
+            </div>
+        </div>
+    </section>
+);
+
+// Reusable Research Paper Card component (now "Battle Log Entry")
+const BattleLogEntryCard = ({ title, author, date, summary, link, darkMode, openModal }) => {
+    return (
+        <div className={`p-6 rounded-lg shadow-md transition-all duration-300 transform
+            ${darkMode ? 'bg-darkerBg hover:shadow-xl hover:-translate-y-1' : 'bg-cardBgLight hover:shadow-xl hover:-translate-y-1'}
+            border border-transparent ${darkMode ? 'hover:border-accent' : 'hover:border-blue-300'}
+            group flex flex-col justify-between h-full`}>
+            <div>
+                <h3 className="text-xl font-semibold mb-2 text-primary dark:text-darkText group-hover:text-accent transition-colors duration-200"><i className="fas fa-scroll mr-2"></i>{title}</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">Recorded by {author} | {date}</p>
+                <p className="text-md mb-4 line-clamp-3 leading-relaxed">{summary}</p>
+            </div>
+            <div className="mt-auto">
+                <button onClick={() => openModal(title, summary)} className="text-accent hover:underline font-medium text-lg">
+                    Unroll Scroll →
+                </button>
+                <SocialShareButtons
+                    url={window.location.href + link}
+                    title={`Read "${title}" by ${author} on YodhaTrader`}
+                    description={summary}
+                    hashtags={['MarketAnalysis', 'YodhaTraderBattleLog']}
+                    darkMode={darkMode}
+                />
+            </div>
+        </div>
+    );
+};
+
+// Reusable Blog Post Card component (now "Wisdom Scroll")
+const WisdomScrollCard = ({ title, date, excerpt, link, darkMode, openModal }) => {
+    return (
+        <div className={`p-6 rounded-lg shadow-md transition-all duration-300 transform
+            ${darkMode ? 'bg-darkerBg hover:shadow-xl hover:-translate-y-1' : 'bg-cardBgLight hover:shadow-xl hover:-translate-y-1'}
+            border border-transparent ${darkMode ? 'hover:border-accent' : 'hover:border-blue-300'}
+            group flex flex-col justify-between h-full`}>
+            <div>
+                <h3 className="text-xl font-semibold mb-2 text-primary dark:text-darkText group-hover:text-accent transition-colors duration-200"><i className="fas fa-feather-alt mr-2"></i>{title}</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">Inscribed: {date}</p>
+                <p className="text-md mb-4 line-clamp-3 leading-relaxed">{excerpt}</p>
+            </div>
+            <div className="mt-auto">
+                <button onClick={() => openModal(title, excerpt)} className="text-accent hover:underline font-medium text-lg">
+                    Read Wisdom →
+                </button>
+                <SocialShareButtons
+                    url={window.location.href + link}
+                    title={`Read "${title}" on YodhaTrader Blog`}
+                    description={excerpt}
+                    hashtags={['TradingInsights', 'YodhaTraderWisdom']}
+                    darkMode={darkMode}
+                />
+            </div>
+        </div>
+    );
+};
+
+// Reusable Book Card component (now "Ancient Texts")
+const AncientTextCard = ({ title, author, description, coverUrl, link, darkMode, openModal }) => {
+    return (
+        <div className={`p-6 rounded-lg shadow-md transition-all duration-300 transform
+            ${darkMode ? 'bg-darkerBg hover:shadow-xl hover:-translate-y-1' : 'bg-cardBgLight hover:shadow-xl hover:-translate-y-1'}
+            border border-transparent ${darkMode ? 'hover:border-accent' : 'hover:border-blue-300'}
+            group flex flex-col items-center text-center h-full`}>
+            <img src={coverUrl} alt={`${title} Cover`} className="w-32 h-48 object-cover rounded-lg shadow-lg mb-4 transform group-hover:scale-105 transition-transform duration-200" />
+            <h3 className="text-xl font-semibold mb-2 text-primary dark:text-darkText group-hover:text-accent transition-colors duration-200"><i className="fas fa-book-open mr-2"></i>{title}</h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">By {author}</p>
+            <p className="text-md mb-4 line-clamp-3 leading-relaxed">{description}</p>
+            <div className="mt-auto w-full">
+                <button onClick={() => openModal(title, description)} className="text-accent hover:underline font-medium text-lg">
+                    Study Text →
+                </button>
+                <SocialShareButtons
+                    url={window.location.href + link}
+                    title={`Check out "${title}" by ${author} on YodhaTrader`}
+                    description={description}
+                    hashtags={['TradingBooks', 'InvestmentLiterature', 'YodhaTrader']}
+                    darkMode={darkMode}
+                />
+            </div>
+        </div>
+    );
+};
+
+// Section 1: Battle Log (Equity Research)
+const BattleLog = ({ darkMode, loggedInUser, openAuthModal, handleHapticFeedback, BACKEND_API_URL }) => {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalContent, setModalContent] = useState({ title: '', body: '' });
+    const [showSubmitForm, setShowSubmitForm] = useState(false);
+
+    const openModal = (title, body) => {
+        handleHapticFeedback();
+        if (!loggedInUser) {
+            openAuthModal('readMore', 'You must prove your worth. Login or create an account to access the full Battle Log entry.');
+            return;
+        }
+        setModalContent({ title, body });
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        handleHapticFeedback();
+        setIsModalOpen(false);
+        setModalContent({ title: '', body: '' });
+    };
+
+    const handleOpenSubmitForm = () => {
+        handleHapticFeedback();
+        if (!loggedInUser) {
+            openAuthModal('submitResearch', 'Only a true Yodha can record their battle strategies. Login or create an account to submit your research.');
+        } else if (!loggedInUser.isSebiRA) {
+            openAuthModal('submitResearch', 'Your rank is not yet sufficient. Only SEBI Registered Analysts can submit official Battle Log entries. Please register as one if you qualify, or contact your Sensei for other contribution methods.');
+        }
+        else {
+            setShowSubmitForm(true);
+        }
+    };
+
+    const handleCloseSubmitForm = () => {
+        setShowSubmitForm(false);
+    };
+
+    if (showSubmitForm && loggedInUser && loggedInUser.isSebiRA) {
+        return (
+            <SubmitResearchForm
+                darkMode={darkMode}
+                loggedInUser={loggedInUser}
+                onCloseForm={handleCloseSubmitForm}
+                handleHapticFeedback={handleHapticFeedback}
+                BACKEND_API_URL={BACKEND_API_URL}
+            />
+        );
+    }
+
+    return (
+        <>
+            <h2 className="text-4xl font-bold mb-8 text-center text-primary dark:text-accent"><i className="fas fa-book-open mr-3"></i>The Battle Log</h2>
+            <p className={`text-lg mb-10 text-center max-w-3xl mx-auto ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                Records of past campaigns and strategic insights from seasoned Yodhas. Study these entries to understand the market's movements and prepare for your own battles.
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <BattleLogEntryCard
+                    title="Deep Dive: Pharma Sector Outlook 2025"
+                    author="Dr. Anand Kumar (SEBI RA)"
+                    date="March 15, 2025"
+                    summary="An extensive report on the Indian pharmaceutical sector, covering growth drivers, regulatory changes, and top stock picks for the coming year. This analysis delves into the impact of R&D investments, generic drug competition, and global supply chain dynamics. Includes detailed financial projections for leading pharmaceutical companies and outlines potential risks and opportunities."
+                    link="#battleLog"
+                    darkMode={darkMode}
+                    openModal={openModal}
+                />
+                <BattleLogEntryCard
+                    title="Reliance Industries Ltd. - Q4 FY24 Analysis"
+                    author="Priya Sharma (SEBI RA)"
+                    date="February 28, 2025"
+                    summary="A quarterly review of Reliance Industries, focusing on Jio and Retail segment performance, petrochemicals outlook, and debt reduction strategies. This report assesses the impact of new product launches in consumer segments, the expansion of their digital ecosystem, and the strategic divestments contributing to deleveraging. It also provides an updated valuation model and target price."
+                    link="#battleLog"
+                    darkMode={darkMode}
+                    openModal={openModal}
+                />
+                <BattleLogEntryCard
+                    title="Banking Sector: Navigating Interest Rate Cycles"
+                    author="Rajesh Gupta (SEBI RA)"
+                    date="February 10, 2025"
+                    summary="Insights into how Indian banks are performing amidst changing interest rate environments, asset quality trends, and credit growth. This paper examines the impact of RBI's monetary policy on Net Interest Margins (NIMs), the evolution of Non-Performing Assets (NPAs), and the competitive landscape with the rise of FinTechs. Key performance indicators and a comparative analysis of public vs. private sector banks are included."
+                    link="#battleLog"
+                    darkMode={darkMode}
+                    openModal={openModal}
+                />
+                <BattleLogEntryCard
+                    title="IT Services: Beyond the Global Slowdown"
+                    author="Smita Rao (SEBI RA)"
+                    date="January 20, 2025"
+                    summary="Examining the resilience of Indian IT services companies despite global macroeconomic headwinds, focusing on new deal wins and digital transformation initiatives. This report highlights companies successfully pivoting to cloud, AI, and cybersecurity services, maintaining strong revenue pipelines. It discusses strategies for talent retention and the long-term structural tailwinds supporting the sector's growth."
+                    link="#battleLog"
+                    darkMode={darkMode}
+                    openModal={openModal}
+                />
+                <BattleLogEntryCard
+                    title="EV Market in India: The Road Ahead"
+                    author="Vikram Singh (SEBI RA)"
+                    date="January 5, 2025"
+                    summary="An overview of the rapidly evolving Electric Vehicle market in India, including policy support, infrastructure development, and key players. This research explores consumer adoption trends, battery technology advancements, and the emergence of new business models like battery swapping. It identifies investment opportunities across the EV value chain, from manufacturers to charging infrastructure providers."
+                    link="#battleLog"
+                    darkMode={darkMode}
+                    openModal={openModal}
+                />
+            </div>
+
+            <div className="mt-10 text-center">
+                <a href="#" onClick={(e) => { e.preventDefault(); handleHapticFeedback(); }} className="inline-block bg-accent text-white px-8 py-3 rounded-lg text-lg font-semibold shadow-lg hover:bg-blue-700 transition duration-300 transform hover:scale-105 btn-hover-scale flex items-center justify-center space-x-2">
+                    <i className="fas fa-search-plus mr-2"></i> <span>View All Entries</span>
+                </a>
+            </div>
+
+            <div className={`mt-12 p-8 rounded-lg border ${darkMode ? 'border-gray-700 bg-darkBg' : 'border-gray-300 bg-blue-50'} shadow-xl text-center`}>
+                <h3 className="text-3xl font-semibold mb-6 text-primary dark:text-darkText"><i className="fas fa-pencil-alt mr-3"></i>Record Your Own Insights</h3>
+                <p className={`text-md mb-8 max-w-2xl mx-auto ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    Are you a SEBI Registered Analyst with valuable insights from the market battlefield?
+                    Submit your research papers to be enshrined in the Battle Log and guide fellow Yodhas.
+                </p>
+                <button
+                    onClick={handleOpenSubmitForm}
+                    className="bg-accent text-white px-8 py-3 rounded-lg text-lg font-semibold shadow-lg
+                        hover:bg-blue-700 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-accent btn-hover-scale flex items-center justify-center space-x-2 mx-auto"
+                >
+                    <i className="fas fa-file-upload mr-2"></i> <span>Submit Your Battle Log</span>
+                </button>
+            </div>
+
+            <Modal isOpen={isModalOpen} onClose={closeModal} title={modalContent.title} darkMode={darkMode}>
+                <p className="whitespace-pre-wrap">{modalContent.body}</p>
+            </Modal>
+        </>
+    );
+};
+
+
+// Standard Research Format Content (Used by SubmitResearchForm)
+const StandardResearchFormat = ({ darkMode }) => (
+    <div className={`p-4 ${darkMode ? 'bg-darkBg text-darkText' : 'bg-white text-lightText'} rounded-lg`}>
+        <h4 className="text-2xl font-bold mb-4 text-primary dark:text-accent">Standard Equity Research Paper Format (Global Standards)</h4>
+        <p className="mb-4">For professional and globally compliant equity research, consider including the following sections:</p>
+        <ul className="list-disc list-inside space-y-3 pl-4">
+            <li>
+                <strong>1. Cover Page / Title Page:</strong>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Research Title, Author(s) Name, Publication Date, Company/Sector Covered, Recommendation (e.g., Buy, Hold, Sell), Target Price.
+                </p>
+            </li>
+            <li>
+                <strong>2. Disclaimer:</strong>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Crucial section detailing potential conflicts of interest, limitations of the research, and regulatory compliance statements. Should be prominent.
+                </p>
+            </li>
+            <li>
+                <strong>3. Table of Contents:</strong>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                    For longer reports, a detailed table of contents with page numbers helps readers navigate the document.
+                </p>
+            </li>
+            <li>
+                <strong>4. Executive Summary:</strong>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                    A concise, high-level overview of the entire report. It should highlight the key findings, investment recommendation, target price, and the most compelling reasons for the thesis.
+                </p>
+            </li>
+            <li>
+                <strong>5. Investment Thesis:</strong>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Detailed explanation of *why* the investment recommendation is being made. This includes key drivers for growth, competitive advantages, and the long-term outlook.
+                </p>
+            </li>
+            <li>
+                <strong>6. Company Overview:</strong>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Comprehensive description of the company, its history, mission, business segments, key products/services, and operational footprint.
+                </p>
+            </li>
+            <li>
+                <strong>7. Industry Analysis:</strong>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                    In-depth analysis of the industry landscape, market size, growth trends, competitive structure (e.g., Porter's Five Forces), regulatory environment, and technological advancements.
+                </p>
+            </li>
+            <li>
+                <strong>8. Products & Services:</strong>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Detailed breakdown of the company's offerings, market positioning, and any recent innovations or product pipeline.
+                </p>
+            </li>
+            <li>
+                <strong>9. Financial Analysis:</strong>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Thorough review of historical financial performance including revenue trends, profitability margins, balance sheet health, cash flow generation, and key financial ratios (e.g., P/E, Debt/Equity, ROE). Provide forecasts and assumptions.
+                </p>
+            </li>
+            <li>
+                <strong>10. Valuation:</strong>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Detailed explanation of the valuation methodology used (e.g., Discounted Cash Flow - DCF, Comparable Company Analysis - CCA, Precedent Transactions, Sum-of-the-Parts). Include key assumptions and sensitivity analysis to demonstrate how changes in assumptions impact the target price.
+                </p>
+            </li>
+            <li>
+                <strong>11. Risk Factors:</strong>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Comprehensive identification and assessment of potential risks that could adversely affect the company's performance or the investment thesis. This includes market risks, operational risks, regulatory risks, competitive risks, and financial risks.
+                </p>
+            </li>
+            <li>
+                <strong>12. ESG (Environmental, Social, Governance) Considerations:</strong>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Analysis of the company's performance and impact related to environmental sustainability, social responsibility, and corporate governance practices. (Increasingly important for global investors).
+                </p>
+            </li>
+            <li>
+                <strong>13. Conclusion:</strong>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Reiteration of the investment thesis and recommendation, summarizing the core reasons for the call.
+                </p>
+            </li>
+            <li>
+                <strong>14. Appendices:</strong>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Supporting data, detailed financial models, additional charts, and any other supplementary information.
+                </p>
+            </li>
+        </ul>
+        <p className="mt-4 text-md font-semibold text-orange-500">
+            Always ensure your research adheres to all relevant regulatory guidelines (e.g., SEBI guidelines in India).
+        </p>
     </div>
-</header>
+);
 
-    <section class="hero">
-        <div class="container">
-            <h2>Empowering Investors with Insightful Research & User-Friendly Tools</h2>
-            <p>SEBI-Registered Research Analyst (coming soon). Trusted research, intuitive charting, and premium insights.</p>
-            <a href="/contact.html" class="cta-button">Contact Us</a>
+
+// New Submit Research Form Component (Used by BattleLog)
+const SubmitResearchForm = ({ darkMode, loggedInUser, onCloseForm, handleHapticFeedback, BACKEND_API_URL }) => {
+    const researchContentRef = useRef(null);
+    const [researchTitle, setResearchTitle] = useState('');
+    const [summaryInput, setSummaryInput] = useState('');
+    const [aiSummarySuggestion, setAiSummarySuggestion] = useState('');
+    const [aiLoading, setAiLoading] = useState(false);
+    const [aiError, setAiError] = useState(null);
+    const [showFormatModal, setShowFormatModal] = useState(false);
+    const [submitMessage, setSubmitMessage] = useState('');
+
+    // Function to apply formatting to contentEditable div
+    const applyFormat = (command, value = null) => {
+        handleHapticFeedback();
+        document.execCommand(command, false, value);
+        if (researchContentRef.current) {
+            researchContentRef.current.focus();
+        }
+    };
+
+    const handleResearchSubmit = (e) => {
+        e.preventDefault();
+        handleHapticFeedback();
+        setSubmitMessage('');
+
+        const content = researchContentRef.current ? researchContentRef.current.innerHTML : '';
+
+        if (!researchTitle.trim() || !content.trim()) {
+            setSubmitMessage('Please fill in both the research title and content.');
+            return;
+        }
+
+        console.log('Simulating Research Submission:', {
+            title: researchTitle,
+            content: content,
+            author: loggedInUser.fullName || loggedInUser.username,
+            isSebiRA: loggedInUser.isSebiRA,
+            sebiId: loggedInUser.sebiId,
+            sebiValidity: loggedInUser.sebiValidity,
+            aiSummarySuggestion: aiSummarySuggestion,
+            timestamp: new Date().toISOString()
+        });
+
+        setSubmitMessage('Battle Log entry submitted successfully! (Simulated)');
+        setResearchTitle('');
+        if (researchContentRef.current) {
+            researchContentRef.current.innerHTML = '';
+        }
+        setSummaryInput('');
+        setAiSummarySuggestion('');
+
+        setTimeout(() => {
+            setSubmitMessage('');
+            onCloseForm();
+        }, 3000);
+    };
+
+    const getAiSummary = async () => {
+        handleHapticFeedback();
+        if (!summaryInput.trim()) {
+            setAiError("Please enter some key points or a draft summary for AI suggestions.");
+            setAiSummarySuggestion('');
+            return;
+        }
+
+        setAiLoading(true);
+        setAiError(null);
+        setAiSummarySuggestion('');
+
+        try {
+            const prompt = `Based on the following key points/draft summary for an equity research paper, provide an improved, concise, and impactful executive summary (max 150 words): \n\n${summaryInput}`;
+            const payload = { prompt: prompt };
+
+            const response = await fetch(`${BACKEND_API_URL}/gemini/generate`, { // Use your backend proxy
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(`HTTP error! status: ${response.status} - ${errorData.message || 'Unknown error'}`);
+            }
+
+            const result = await response.json();
+            if (result.status === 'success' && result.generated_text) {
+                setAiSummarySuggestion(result.generated_text);
+            } else {
+                setAiError("Could not generate AI summary. Please try again.");
+                console.error("Unexpected API response structure:", result);
+            }
+        } catch (e) {
+            setAiError(`Failed to get AI suggestion: ${e.message}.`);
+            console.error("Error generating AI summary:", e);
+        } finally {
+            setAiLoading(false);
+        }
+    };
+
+
+    return (
+        <div className={`p-8 rounded-lg shadow-xl ${darkMode ? 'bg-darkBg' : 'bg-blue-50'} border border-gray-200 dark:border-gray-700`}>
+            <h2 className="text-4xl font-bold mb-6 text-center text-primary dark:text-accent">Submit Your Battle Log Entry</h2>
+            <p className={`text-lg mb-8 text-center max-w-3xl mx-auto ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                Document your strategic insights and share your wisdom with the YodhaTrader community.
+            </p>
+
+            {submitMessage && (
+                <div className={`mb-4 p-3 rounded-md ${submitMessage.includes('successfully') ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'}`}>
+                    {submitMessage}
+                </div>
+            )}
+
+            <form onSubmit={handleResearchSubmit} className="space-y-6">
+                {/* Author Info (Read-only) */}
+                <div className={`p-4 rounded-md ${darkMode ? 'bg-gray-800' : 'bg-gray-100'} shadow-inner`}>
+                    <h4 className="text-xl font-semibold mb-3 text-primary dark:text-darkText">Author Information</h4>
+                    <p className="text-md mb-1">
+                        <span className="font-medium">Author:</span> {loggedInUser.fullName || loggedInUser.username}
+                    </p>
+                    <p className="text-md">
+                        <span className="font-medium">SEBI Registered Analyst:</span> {loggedInUser.isSebiRA ? 'Yes' : 'No'}
+                        {loggedInUser.isSebiRA && ` (ID: ${loggedInUser.sebiId}, Valid until: ${loggedInUser.sebiValidity})`}
+                    </p>
+                </div>
+
+                {/* Research Title */}
+                <div>
+                    <label htmlFor="researchTitle" className="block text-lg font-medium mb-2 text-primary dark:text-darkText">
+                        Battle Log Entry Title:
+                    </label>
+                    <input
+                        type="text"
+                        id="researchTitle"
+                        className={`w-full p-3 rounded-lg border ${darkMode ? 'bg-gray-800 border-gray-600 text-darkText' : 'border-gray-300 text-lightText'} focus:ring-accent focus:border-accent shadow-sm`}
+                        value={researchTitle}
+                        onChange={(e) => setResearchTitle(e.target.value)}
+                        placeholder="e.g., 'Analysis of the Great Q4 Tech Surge'"
+                        required
+                    />
+                </div>
+
+                {/* Research Content with Basic Formatting Tools */}
+                <div>
+                    <div className="flex justify-between items-center mb-2">
+                        <label className="block text-lg font-medium text-primary dark:text-darkText">
+                            Battle Log Content:
+                        </label>
+                        <button
+                            type="button"
+                            onClick={() => { setShowFormatModal(true); handleHapticFeedback(); }}
+                            className="text-accent hover:underline font-medium text-sm"
+                        >
+                            View Standard Format Guide
+                        </button>
+                    </div>
+
+                    {/* Formatting Buttons */}
+                    <div className={`p-2 rounded-t-lg border-x border-t ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-200 border-gray-300'} flex space-x-2`}>
+                        <button type="button" onClick={() => applyFormat('bold')} className={`p-2 rounded-md ${darkMode ? 'bg-gray-600 hover:bg-gray-500' : 'bg-gray-300 hover:bg-gray-400'} text-sm font-bold`} title="Bold">B</button>
+                        <button type="button" onClick={() => applyFormat('italic')} className={`p-2 rounded-md ${darkMode ? 'bg-gray-600 hover:bg-gray-500' : 'bg-gray-300 hover:bg-gray-400'} text-sm italic`} title="Italic">I</button>
+                        <button type="button" onClick={() => applyFormat('underline')} className={`p-2 rounded-md ${darkMode ? 'bg-gray-600 hover:bg-gray-500' : 'bg-gray-300 hover:bg-gray-400'} text-sm underline`} title="Underline">U</button>
+                        <button type="button" onClick={() => applyFormat('insertUnorderedList')} className={`p-2 rounded-md ${darkMode ? 'bg-gray-600 hover:bg-gray-500' : 'bg-gray-300 hover:bg-gray-400'} text-sm`} title="Bullet List">
+                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fillRule="evenodd" d="M4 4a1 1 0 011-1h10a1 1 0 011 1v1a1 1 0 01-1 1H5a1 1 0 01-1-1V4zm0 6a1 1 0 011-1h10a1 1 0 011 1v1a1 1 0 01-1 1H5a1 1 0 01-1-1v-1zm-1 5a1 1 0 100 2h10a1 1 0 100-2H3z" clipRule="evenodd"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div
+                        ref={researchContentRef}
+                        contentEditable="true"
+                        className={`w-full p-3 min-h-[300px] rounded-b-lg border ${darkMode ? 'bg-gray-800 border-gray-600 text-darkText' : 'border-gray-300 text-lightText'} focus:ring-accent focus:border-accent shadow-sm overflow-y-auto`}
+                        placeholder="Document your observations, strategies, and outcomes here..."
+                        dangerouslySetInnerHTML={{ __html: '' }}
+                    ></div>
+                </div>
+
+                {/* AI Summary Suggestion */}
+                <div className={`p-6 rounded-lg ${darkMode ? 'bg-darkerBg' : 'bg-cardBgLight'} shadow-md`}>
+                    <h3 className="text-2xl font-semibold mb-4 text-primary dark:text-darkText">AI Summary Assistant</h3>
+                    <p className={`mb-4 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                        Provide key points or a draft summary of your research, and our AI will suggest an improved executive summary.
+                    </p>
+                    <div>
+                        <label htmlFor="summaryInput" className="block text-md font-medium mb-2 text-primary dark:text-darkText">
+                            Your Key Points / Draft Summary:
+                        </label>
+                        <textarea
+                            id="summaryInput"
+                            className={`w-full p-3 min-h-[100px] rounded-lg border ${darkMode ? 'bg-gray-800 border-gray-600 text-darkText' : 'border-gray-300 text-lightText'} focus:ring-accent focus:border-accent shadow-sm resize-y`}
+                            value={summaryInput}
+                            onChange={(e) => setSummaryInput(e.target.value)}
+                            placeholder="e.g., 'Company A financial results positive, strong revenue growth, high market share, future outlook bright, buy rating.'"
+                        ></textarea>
+                    </div>
+                    <button
+                        type="button"
+                        onClick={getAiSummary}
+                        className="mt-4 bg-purple-600 text-white px-6 py-2 rounded-lg text-lg font-semibold shadow-lg
+                            hover:bg-purple-700 transition duration-300 transform hover:scale-105 disabled:opacity-50 btn-hover-scale flex items-center justify-center space-x-2"
+                        disabled={aiLoading || !summaryInput.trim()}
+                    >
+                        {aiLoading ? <><i className="fas fa-spinner fa-spin mr-2"></i> Generating...</> : <><i className="fas fa-magic mr-2"></i> Get AI Suggestion for Summary</>}
+                    </button>
+
+                    {aiError && (
+                        <div className="mt-4 p-3 rounded-md bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
+                            {aiError}
+                        </div>
+                    )}
+
+                    {aiSummarySuggestion && (
+                        <div className={`mt-6 p-4 rounded-md ${darkMode ? 'bg-gray-700' : 'bg-gray-100'} border border-gray-300 dark:border-gray-600`}>
+                            <h4 className="font-semibold mb-2">AI Suggested Summary:</h4>
+                            <p className="whitespace-pre-wrap leading-relaxed">{aiSummarySuggestion}</p>
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    if (researchContentRef.current) {
+                                        researchContentRef.current.innerHTML = researchContentRef.current.innerHTML + `<p>${aiSummarySuggestion}</p>`;
+                                        researchContentRef.current.focus();
+                                    }
+                                    handleHapticFeedback();
+                                }}
+                                className="mt-3 text-accent hover:underline text-sm font-medium"
+                            >
+                                <i className="fas fa-plus mr-1"></i> Insert into Battle Log
+                            </button>
+                        </div>
+                    )}
+                </div>
+
+                {/* Submit and Cancel Buttons */}
+                <div className="flex justify-end space-x-4 mt-8">
+                    <button
+                        type="button"
+                        onClick={() => { onCloseForm(); handleHapticFeedback(); }}
+                        className={`px-6 py-3 rounded-lg text-lg font-semibold shadow-md
+                            ${darkMode ? 'bg-gray-600 hover:bg-gray-700 text-white' : 'bg-gray-300 hover:bg-gray-400 text-gray-800'}
+                            transition duration-300 transform hover:scale-105 btn-hover-scale`}
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        type="submit"
+                        className="bg-green-600 text-white px-8 py-3 rounded-lg text-lg font-semibold shadow-lg
+                            hover:bg-green-700 transition duration-300 transform hover:scale-105 btn-hover-scale flex items-center justify-center space-x-2"
+                    >
+                        <i className="fas fa-check-circle mr-2"></i> <span>Submit Entry</span>
+                    </button>
+                </div>
+            </form>
+
+            <Modal isOpen={showFormatModal} onClose={() => setShowFormatModal(false)} title="Standard Research Format Guide" darkMode={darkMode}>
+                <StandardResearchFormat darkMode={darkMode} />
+            </Modal>
         </div>
-    </section>
+    );
+};
 
-    <section class="about">
-        <div class="container">
-            <h2>About Yodha Trader</h2>
-            <p>Yodha Trader aims to democratize high-quality investment research and intuitive charting tools for all levels of traders and investors. Founded by a passionate trader, our mission is to build trust and transparency in financial markets through research-driven insights.</p>
+// Section 2: Wisdom Scrolls & Ancient Texts (Blogs & Books)
+const WisdomScrolls = ({ darkMode, loggedInUser, openAuthModal, handleHapticFeedback }) => {
+    const [isContentModalOpen, setIsContentModalOpen] = useState(false);
+    const [modalContent, setModalContent] = useState({ title: '', body: '' });
+
+    const openContentModal = (title, body) => {
+        handleHapticFeedback();
+        if (!loggedInUser) {
+            openAuthModal('readMore', 'Seek wisdom first! Login or create an account to unroll this scroll or study this ancient text.');
+            return;
+        }
+        setModalContent({ title, body });
+        setIsContentModalOpen(true);
+    };
+
+    const closeContentModal = () => {
+        handleHapticFeedback();
+        setIsContentModalOpen(false);
+        setModalContent({ title: '', body: '' });
+    };
+    return (
+        <>
+            <h2 className="text-4xl font-bold mb-8 text-center text-primary dark:text-accent"><i className="fas fa-book mr-3"></i>Wisdom Scrolls & Ancient Texts</h2>
+            <p className={`text-lg mb-10 text-center max-w-3xl mx-auto ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                Gather insights from experienced Yodhas, shared as wisdom scrolls and archived in ancient texts. These teachings will illuminate your path to market mastery.
+            </p>
+
+            {/* Wisdom Scrolls Section */}
+            <div className="mb-12">
+                <h3 className="text-3xl font-semibold mb-8 text-primary dark:text-darkText text-center"><i className="fas fa-lightbulb mr-2"></i>Latest Wisdom Scrolls</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <WisdomScrollCard
+                        title="Understanding Market Volatility in 2025"
+                        date="February 10, 2025"
+                        excerpt="A deep dive into the factors driving market volatility and strategies to navigate uncertain times. This extensive analysis covers macro-economic indicators, geopolitical events, and investor sentiment, offering actionable insights for mitigating risks and capitalizing on market swings. Learn about historical volatility patterns and how to build a resilient portfolio."
+                        link="#wisdomScrolls"
+                        darkMode={darkMode}
+                        openModal={openContentModal}
+                    />
+                    <WisdomScrollCard
+                        title="The Psychology of Successful Trading"
+                        date="January 28, 2025"
+                        excerpt="Explore the mental aspects that differentiate successful traders from the rest. Discipline, patience, and emotional control are key. This article provides practical techniques for managing fear and greed, developing a winning mindset, and sticking to your trading plan even during challenging periods. Understand how cognitive biases can impact your decisions."
+                        link="#wisdomScrolls"
+                        darkMode={darkMode}
+                        openModal={openContentModal}
+                    />
+                    <WisdomScrollCard
+                        title="Basics of Technical Analysis for Beginners"
+                        date="January 15, 2025"
+                        excerpt="An introductory guide to common technical analysis tools and indicators. Learn how to read charts, identify trends, and make informed trading decisions using simple yet powerful techniques. This includes explanations of moving averages, RSI, MACD, and candlestick patterns, along with their practical applications for entry and exit points."
+                        link="#wisdomScrolls"
+                        darkMode={darkMode}
+                        openModal={openContentModal}
+                    />
+                </div>
+                <div className="mt-10 =text-center">
+                    <a href="#" onClick={(e) => { e.preventDefault(); handleHapticFeedback(); }} className="inline-block bg-accent text-white px-8 py-3 rounded-lg text-lg font-semibold shadow-lg hover:bg-blue-700 transition duration-300 transform hover:scale-105 btn-hover-scale flex items-center justify-center space-x-2">
+                        <i className="fas fa-eye mr-2"></i> <span>View All Scrolls</span>
+                    </a>
+                </div>
+            </div>
+
+            {/* Ancient Texts Section */}
+            <div className="mb-12">
+                <h3 className="text-3xl font-semibold mb-8 text-primary dark:text-darkText text-center"><i className="fas fa-atlas mr-2"></i>Ancient Texts of Strategy</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <AncientTextCard
+                        title="The Yodha Trader's Guide to Options"
+                        author="[Your Name]"
+                        description="A comprehensive guide to understanding and trading options in the Indian market, from basics to advanced strategies. This book covers everything from option Greeks and volatility to complex strategies like straddles, iron condors, and butterflies, illustrated with real-world examples and risk management principles tailored for the Indian context."
+                        coverUrl="https://placehold.co/200x300/3182CE/FFFFFF?text=Text+Cover+1"
+                        link="#wisdomScrolls"
+                        darkMode={darkMode}
+                        openModal={openContentModal}
+                    />
+                    <AncientTextCard
+                        title="Mastering Swing Trading"
+                        author="[Your Name]"
+                        description="Learn the art of swing trading with practical examples and actionable strategies for short-term gains. This book focuses on identifying high-probability setups, managing risk, and optimizing trade entries and exits for holding periods ranging from a few days to several weeks. It includes chapters on trend identification, support/resistance, and candlestick patterns relevant for swing traders."
+                        coverUrl="https://placehold.co/200x300/4A5568/FFFFFF?text=Text+Cover+2"
+                        link="#wisdomScrolls"
+                        darkMode={darkMode}
+                        openModal={openContentModal}
+                    />
+                </div>
+                <div className="mt-10 text-center">
+                    <a href="#" onClick={(e) => { e.preventDefault(); handleHapticFeedback(); }} className="inline-block bg-accent text-white px-8 py-3 rounded-lg text-lg font-semibold shadow-lg hover:bg-blue-700 transition duration-300 transform hover:scale-105 btn-hover-scale flex items-center justify-center space-x-2">
+                        <i className="fas fa-library mr-2"></i> <span>View All Texts</span>
+                    </a>
+                </div>
+            </div>
+
+            <div className={`mt-12 p-8 rounded-lg border ${darkMode ? 'border-gray-700 bg-darkBg' : 'border-gray-300 bg-blue-50'} shadow-xl text-center`}>
+                <h3 className="text-3xl font-semibold mb-6 text-primary dark:text-darkText"><i className="fas fa-edit mr-3"></i>Contribute Your Wisdom</h3>
+                <p className={`text-md mb-8 max-w-2xl mx-auto ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    Do you possess profound market wisdom or have an ancient text of strategy to share?
+                    Contribute to the YodhaTrader archives and help illuminate the path for others.
+                    <br />
+                    <a href="#" className="text-accent hover:underline font-semibold" onClick={(e) => { e.preventDefault(); openAuthModal('submitResearch', loggedInUser ? 'You are logged in. Proceed to submit your content.' : 'Please login or create an account to submit your content.'); handleHapticFeedback(); }}>contact your Sensei</a> to discuss publishing opportunities.
+                </p>
+                <button
+                    onClick={(e) => { e.preventDefault(); openAuthModal('submitResearch', loggedInUser ? 'You are logged in. Proceed to submit your content.' : 'Please login or create an account to submit your content.'); handleHapticFeedback(); }}
+                    className="bg-accent text-white px-8 py-3 rounded-lg text-lg font-semibold shadow-lg
+                        hover:bg-blue-700 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-accent btn-hover-scale flex items-center justify-center space-x-2"
+                >
+                    <i className="fas fa-plus-square mr-2"></i> <span>Submit Content</span>
+                </button>
+            </div>
+            <Modal isOpen={isContentModalOpen} onClose={closeContentModal} title={modalContent.title} darkMode={darkMode}>
+                <p className="whitespace-pre-wrap">{modalContent.body}</p>
+            </Modal>
+        </>
+    );
+};
+
+// Section 3: Market Sayings (Market Quotes)
+const MarketSayings = ({ darkMode, handleHapticFeedback, BACKEND_API_URL }) => {
+    const [quote, setQuote] = useState("Invest in yourself, it's the best investment you'll ever make.");
+    const [quoteSource, setQuoteSource] = useState("YodhaTrader Elders");
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [manualQuoteInput, setManualQuoteInput] = useState('');
+
+    // Function to fetch a new market quote using Gemini API
+    const generateNewQuote = async () => {
+        handleHapticFeedback();
+        setLoading(true);
+        setError(null);
+        try {
+            const prompt = "Generate a short, inspiring, and unique market-related quote, suitable for social media. Make it concise and impactful, suitable for a 'Market Sayings' section.";
+            const payload = { prompt: prompt };
+
+            const response = await fetch(`${BACKEND_API_URL}/gemini/generate`, { // Use your backend proxy
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(`HTTP error! status: ${response.status} - ${errorData.message || 'Unknown error'}`);
+            }
+
+            const result = await response.json();
+            if (result.status === 'success' && result.generated_text) {
+                setQuote(result.generated_text);
+                setQuoteSource("Oracle of Gemini");
+            } else {
+                setQuote("Could not generate a new saying. Please try again.");
+                setQuoteSource("Error");
+                console.error("Unexpected API response structure:", result);
+            }
+        } catch (e) {
+            setError("Failed to generate saying: " + e.message);
+            setQuote("Failed to load saying. Please try again later.");
+            setQuoteSource("Error");
+            console.error("Error generating quote:", e);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Function to manually set a new quote
+    const setManualQuote = () => {
+        handleHapticFeedback();
+        if (manualQuoteInput.trim()) {
+            setQuote(manualQuoteInput.trim());
+            setQuoteSource("Yodha Elder");
+            setManualQuoteInput('');
+        } else {
+            // Using alert for simplicity, but consider a custom modal
+            const el = document.createElement('div');
+            el.innerHTML = `
+                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div class="bg-white dark:bg-darkerBg p-6 rounded-lg shadow-xl text-center w-80">
+                        <p class="text-lg font-semibold mb-4 text-primary dark:text-darkText">Please enter a saying to set.</p>
+                        <button class="bg-accent text-white px-4 py-2 rounded-md hover:bg-blue-700" onclick="this.parentNode.parentNode.remove()">OK</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(el);
+        }
+    };
+
+    // Function to copy quote to clipboard
+    const copyToClipboard = () => {
+        handleHapticFeedback();
+        const textToCopy = `"${quote}" - ${quoteSource || "YodhaTrader"}`;
+        const el = document.createElement('textarea');
+        el.value = textToCopy;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+        const alertEl = document.createElement('div');
+        alertEl.innerHTML = `
+            <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-fadeIn opacity-0">
+                Saying copied to clipboard!
+            </div>
+        `;
+        document.body.appendChild(alertEl);
+        setTimeout(() => alertEl.remove(), 2000);
+    };
+
+    return (
+        <section className="bg-white dark:bg-secondary p-8 rounded-lg shadow-xl mb-8 text-center">
+            <h2 className="text-4xl font-bold mb-8 text-center text-primary dark:text-accent"><i className="fas fa-quote-right mr-3"></i>Market Sayings</h2>
+            <p className="text-lg mb-10">
+                Ancient proverbs and modern wisdom for the Yodha on their trading journey. Share these sayings to inspire your fellow warriors!
+            </p>
+
+            <div className={`p-8 rounded-lg shadow-inner ${darkMode ? 'bg-gray-800' : 'bg-gray-100'} mb-8`}>
+                {loading ? (
+                    <p className="text-lg italic text-gray-500 dark:text-gray-400"><i className="fas fa-spinner fa-spin mr-2"></i>Summoning ancient wisdom...</p>
+                ) : error ? (
+                    <p className="text-lg italic text-red-500">{error}</p>
+                ) : (
+                    <>
+                        <p className="text-2xl font-semibold italic text-primary dark:text-darkText mb-4">"{quote}"</p>
+                        <p className="text-lg text-gray-600 dark:text-gray-400">Source: {quoteSource}</p>
+                    </>
+                )}
+            </div>
+
+            <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 mb-10">
+                <button
+                    onClick={generateNewQuote}
+                    className="bg-accent text-white px-6 py-3 rounded-md shadow-lg hover:bg-blue-700 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-accent disabled:opacity-50 flex items-center justify-center space-x-2"
+                    disabled={loading}
+                >
+                    {loading ? <><i className="fas fa-spinner fa-spin mr-2"></i> Generating...</> : <><i className="fas fa-dice-d6 mr-2"></i> <span>Conjure New Saying</span></>}
+                </button>
+                <button
+                    onClick={copyToClipboard}
+                    className="bg-gray-600 text-white px-6 py-3 rounded-md shadow-lg hover:bg-gray-700 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 flex items-center justify-center space-x-2"
+                >
+                    <i className="fas fa-copy mr-2"></i> <span>Copy to Scroll</span>
+                </button>
+            </div>
+
+            {/* Manual Quote Update */}
+            <div className={`mt-8 p-8 rounded-lg shadow-xl ${darkMode ? 'bg-darkBg' : 'bg-blue-50'} border border-gray-200 dark:border-gray-700 text-center`}>
+                <h3 className="text-3xl font-semibold mb-6 text-primary dark:text-darkText"><i className="fas fa-keyboard mr-3"></i>Inscribe Your Own Saying</h3>
+                <input
+                    type="text"
+                    className={`w-full max-w-xl mx-auto block p-3 rounded-lg border ${darkMode ? 'bg-gray-800 border-gray-600 text-darkText' : 'border-gray-300 text-lightText'} focus:ring-accent focus:border-accent mb-6 shadow-sm`}
+                    placeholder="Enter your custom market saying here..."
+                    value={manualQuoteInput}
+                    onChange={(e) => setManualQuoteInput(e.target.value)}
+                />
+                <button
+                    onClick={setManualQuote}
+                    className="bg-purple-600 text-white px-8 py-3 rounded-lg text-lg font-semibold shadow-lg
+                        hover:bg-purple-700 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 btn-hover-scale flex items-center justify-center space-x-2 mx-auto"
+                >
+                    <i className="fas fa-magic mr-2"></i> <span>Inscribe Saying</span>
+                </button>
+            </div>
+
+            {/* Social sharing for quotes */}
+            <div className="mt-10">
+                <SocialShareButtons
+                    url={window.location.href + '#marketSayings'}
+                    title="Inspiring Market Saying from YodhaTrader Market Arena"
+                    description={`"${quote}" #MarketSayings #TradingWisdom #YodhaTrader`}
+                    hashtags={['MarketSayings', 'TradingWisdom', 'YodhaTrader']}
+                    darkMode={darkMode}
+                />
+            </div>
+        </section>
+    );
+};
+
+// Section for Market Sensei (AI Assistant)
+const MarketSensei = ({ darkMode, handleHapticFeedback, BACKEND_API_URL }) => {
+    const [chatHistory, setChatHistory] = useState([]);
+    const [userInput, setUserInput] = useState('');
+    const [loading, setLoading] = useState(false);
+    const chatEndRef = useRef(null);
+
+    // Scroll to the latest message
+    useEffect(() => {
+        chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [chatHistory]);
+
+    const sendMessage = async () => {
+        handleHapticFeedback();
+        const trimmedInput = userInput.trim();
+        if (!trimmedInput) return;
+
+        const newChatHistory = [...chatHistory, { role: "user", parts: [{ text: trimmedInput }] }];
+        setChatHistory(newChatHistory);
+        setUserInput('');
+        setLoading(true);
+
+        try {
+            const payload = {
+                prompt: trimmedInput,
+                chat_history: chatHistory.map(msg => ({
+                    role: msg.role,
+                    parts: msg.parts.map(part => ({ text: part.text }))
+                }))
+            };
+
+            const response = await fetch(`${BACKEND_API_URL}/gemini/generate`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(`API error: ${response.status} - ${errorData.message || 'Unknown error'}`);
+            }
+
+            const result = await response.json();
+            let modelResponseText = "I couldn't get a response from the Oracle. Please try again.";
+            if (result.status === 'success' && result.generated_text) {
+                modelResponseText = result.generated_text;
+            }
+
+            setChatHistory(prevHistory => [...prevHistory, { role: "model", parts: [{ text: modelResponseText }] }]);
+
+        } catch (error) {
+            console.error("Error sending message to Gemini:", error);
+            setChatHistory(prevHistory => [...prevHistory, { role: "model", parts: [{ text: `Error: ${error.message || 'Failed to get response from AI. Please try again.'}` }] }]);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    };
+
+    return (
+        <>
+            <h2 className="text-4xl font-bold mb-8 text-center text-primary dark:text-accent"><i className="fas fa-graduation-cap mr-3"></i>Market Sensei</h2>
+            <p className={`text-lg mb-10 text-center max-w-3xl mx-auto ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                Your wise mentor for the market arena. Ask me anything about finance, trading strategies, economic trends, or even seek guidance for your warrior's path.
+            </p>
+
+            <div className={`p-6 mb-8 rounded-lg ${darkMode ? 'bg-darkBg' : 'bg-blue-50'} border border-gray-200 dark:border-gray-700 text-center`}>
+                <p className={`text-md mb-4 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    <span className="font-semibold text-orange-500"><i className="fas fa-exclamation-triangle mr-1"></i>A Note from the Oracle:</span> While I possess vast knowledge,
+                    I do not have direct access to real-time live market data. For real-time quotes and specific market information,
+                    consult the 'Yodha's Arsenal' or trusted financial scrolls like:
+                </p>
+                <a
+                    href="https://www.google.com/finance/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={handleHapticFeedback}
+                    className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg text-lg font-semibold shadow-lg
+                        hover:bg-blue-700 transition duration-300 transform hover:scale-105 btn-hover-scale flex items-center justify-center space-x-2 mx-auto"
+                >
+                    <i className="fas fa-chart-line mr-2"></i> <span>Consult the Global Market Ledger</span>
+                </a>
+            </div>
+
+            <div className={`flex flex-col h-[600px] border rounded-lg shadow-xl ${darkMode ? 'border-gray-700 bg-darkBg' : 'border-gray-200 bg-white'}`}>
+                {/* Chat History */}
+                <div className="flex-1 overflow-y-auto p-6 space-y-4">
+                    {chatHistory.length === 0 && (
+                        <div className={`text-center text-lg italic ${darkMode ? 'text-gray-500' : 'text-gray-400'} flex flex-col items-center justify-center h-full`}>
+                            <i className="fas fa-comment-dots text-5xl mb-4 text-accent animate-float"></i>
+                            Start your training! Ask your Sensei anything.
+                        </div>
+                    )}
+                    {chatHistory.map((msg, index) => (
+                        <div key={index} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                            <div className={`max-w-[75%] p-4 rounded-xl shadow-md
+                                ${msg.role === 'user'
+                                    ? 'bg-accent text-white rounded-br-none'
+                                    : `${darkMode ? 'bg-gray-700 text-darkText' : 'bg-gray-100 text-gray-800'} rounded-bl-none`
+                                }
+                                transition-all duration-300 ease-in-out`}>
+                                <p className="whitespace-pre-wrap leading-relaxed">
+                                    {msg.role === 'model' && <i className="fas fa-robot mr-2 text-primary dark:text-accent"></i>}
+                                    {msg.parts[0].text}
+                                </p>
+                            </div>
+                        </div>
+                    ))}
+                    {loading && (
+                        <div className="flex justify-start">
+                            <div className={`max-w-[75%] p-4 rounded-xl shadow-md bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-darkText rounded-bl-none flex items-center`}>
+                                <i className="fas fa-spinner fa-spin mr-2"></i> <span className="animate-pulse">Sensei is contemplating...</span>
+                            </div>
+                        </div>
+                    )}
+                    <div ref={chatEndRef} />
+                </div>
+
+                {/* User Input */}
+                <div className={`p-6 border-t ${darkMode ? 'border-gray-700' : 'border-gray-200'} flex`}>
+                    <textarea
+                        className={`flex-1 p-3 rounded-l-lg border ${darkMode ? 'bg-gray-900 border-gray-600 text-darkText' : 'border-gray-300 text-lightText'} focus:ring-accent focus:border-accent resize-none shadow-sm`}
+                        rows="2"
+                        placeholder="Inquire your wisdom..."
+                        value={userInput}
+                        onChange={(e) => setUserInput(e.target.value)}
+                        onKeyPress={handleKeyPress}
+                        disabled={loading}
+                    ></textarea>
+                    <button
+                        onClick={sendMessage}
+                        className="bg-accent text-white px-6 py-3 rounded-r-lg text-lg font-semibold shadow-lg
+                            hover:bg-blue-700 transition duration-300 disabled:opacity-50 btn-hover-scale flex items-center justify-center space-x-2"
+                        disabled={loading || !userInput.trim()}
+                    >
+                        <i className="fas fa-paper-plane mr-2"></i> <span>Send</span>
+                    </button>
+                </div>
+            </div>
+        </>
+    );
+};
+
+// New Section: Strategy Forge (Simulated Trading)
+const StrategyForge = ({ darkMode, handleHapticFeedback }) => {
+    const [symbol, setSymbol] = useState('NIFTY50');
+    const [strategy, setStrategy] = useState('trend-following'); // e.g., 'trend-following', 'mean-reversion', 'breakout'
+    const [duration, setDuration] = useState(100); // Number of simulated data points
+    const [simulatedData, setSimulatedData] = useState([]);
+    const [strategyOutcome, setStrategyOutcome] = useState(null);
+    const [simulating, setSimulating] = useState(false);
+    const chartRef = useRef(null);
+
+    // Function to generate simulated stock data
+    const generateSimulatedData = (initialPrice = 100, numPoints = 100, volatility = 0.01) => {
+        let data = [];
+        let currentPrice = initialPrice;
+        for (let i = 0; i < numPoints; i++) {
+            // Simple random walk simulation
+            const change = (Math.random() - 0.5) * 2 * volatility * currentPrice;
+            currentPrice = Math.max(1, currentPrice + change); // Price can't go below 1
+            data.push({ index: i, price: parseFloat(currentPrice.toFixed(2)) });
+        }
+        return data;
+    };
+
+    // Function to simulate a strategy and calculate outcome
+    const runStrategy = () => {
+        handleHapticFeedback();
+        setSimulating(true);
+        setStrategyOutcome(null);
+        setSimulatedData([]);
+
+        const initialPrice = 1000 + Math.random() * 500; // Vary initial price
+        const data = generateSimulatedData(initialPrice, duration, 0.005 + Math.random() * 0.005); // Vary volatility
+
+        let outcome = {
+            initialCapital: 100000,
+            finalCapital: 100000,
+            trades: [],
+            totalProfitLoss: 0,
+            profitPercentage: 0
+        };
+
+        const tradeSize = 10; // Number of units to trade per signal
+
+        // Simulate Trend Following Strategy (simple moving average crossover)
+        if (strategy === 'trend-following') {
+            const shortMA = 5; // Short-term moving average period
+            const longMA = 20; // Long-term moving average period
+
+            let maShort = [];
+            let maLong = [];
+            let position = 0; // 0: no position, 1: long, -1: short
+
+            for (let i = 0; i < data.length; i++) {
+                const currentPrice = data[i].price;
+
+                // Calculate MAs
+                if (i >= shortMA - 1) {
+                    const sumShort = data.slice(i - shortMA + 1, i + 1).reduce((acc, val) => acc + val.price, 0);
+                    maShort.push(sumShort / shortMA);
+                } else {
+                    maShort.push(null);
+                }
+
+                if (i >= longMA - 1) {
+                    const sumLong = data.slice(i - longMA + 1, i + 1).reduce((acc, val) => acc + val.price, 0);
+                    maLong.push(sumLong / longMA);
+                } else {
+                    maLong.push(null);
+                }
+
+                data[i].maShort = maShort[i];
+                data[i].maLong = maLong[i];
+
+                // Trading Logic (MA Crossover)
+                if (maShort[i] && maLong[i] && i > longMA) { // Ensure MAs are calculated and enough history
+                    const prevMAShort = maShort[i - 1];
+                    const prevMALong = maLong[i - 1];
+
+                    // Buy signal (short MA crosses above long MA)
+                    if (prevMAShort < prevMALong && maShort[i] > maLong[i] && position === 0) {
+                        outcome.trades.push({ type: 'BUY', price: currentPrice, units: tradeSize, day: i });
+                        position = tradeSize;
+                        outcome.finalCapital -= currentPrice * tradeSize;
+                    }
+                    // Sell signal (short MA crosses below long MA)
+                    else if (prevMAShort > prevMALong && maShort[i] < maLong[i] && position > 0) {
+                        outcome.trades.push({ type: 'SELL', price: currentPrice, units: position, day: i });
+                        outcome.finalCapital += currentPrice * position;
+                        position = 0;
+                    }
+                }
+            }
+
+            // Close any open position at the end
+            if (position > 0) {
+                outcome.trades.push({ type: 'SELL (Close)', price: data[data.length - 1].price, units: position, day: data.length - 1 });
+                outcome.finalCapital += data[data.length - 1].price * position;
+            }
+
+            outcome.totalProfitLoss = outcome.finalCapital - outcome.initialCapital;
+            outcome.profitPercentage = (outcome.totalProfitLoss / outcome.initialCapital) * 100;
+        } else if (strategy === 'mean-reversion') {
+            const lookback = 20; // Period for Bollinger Bands or similar
+            const stdDevFactor = 2; // Factor for standard deviation bands
+
+            let pricesForBand = [];
+            for (let i = 0; i < data.length; i++) {
+                const currentPrice = data[i].price;
+                pricesForBand.push(currentPrice);
+                if (pricesForBand.length > lookback) {
+                    pricesForBand.shift(); // Keep only `lookback` number of prices
+                }
+
+                if (pricesForBand.length === lookback) {
+                    const avg = pricesForBand.reduce((sum, p) => sum + p, 0) / lookback;
+                    const stdDev = Math.sqrt(pricesForBand.map(p => (p - avg) ** 2).reduce((sum, sq) => sum + sq, 0) / lookback);
+                    const upperBand = avg + stdDevFactor * stdDev;
+                    const lowerBand = avg - stdDevFactor * stdDev;
+
+                    data[i].avg = parseFloat(avg.toFixed(2));
+                    data[i].upperBand = parseFloat(upperBand.toFixed(2));
+                    data[i].lowerBand = parseFloat(lowerBand.toFixed(2));
+
+                    // Simple Mean Reversion: Buy when price is below lower band, Sell when above upper band
+                    if (currentPrice < lowerBand && outcome.trades.filter(t => t.type === 'BUY' && t.day > i - lookback).length === 0) { // Simple check to avoid multiple buys without a sell
+                        outcome.trades.push({ type: 'BUY', price: currentPrice, units: tradeSize, day: i });
+                        outcome.finalCapital -= currentPrice * tradeSize;
+                    } else if (currentPrice > upperBand && outcome.trades.filter(t => t.type === 'SELL' && t.day > i - lookback).length === 0) { // Simple check to avoid multiple sells without a buy
+                        outcome.trades.push({ type: 'SELL', price: currentPrice, units: tradeSize, day: i });
+                        outcome.finalCapital += currentPrice * tradeSize;
+                    }
+                } else {
+                    data[i].avg = null;
+                    data[i].upperBand = null;
+                    data[i].lowerBand = null;
+                }
+            }
+             // Recalculate profit/loss based on trades (assuming all trades close positions)
+            let netTradeValue = 0;
+            let currentUnits = 0;
+            for(const trade of outcome.trades){
+                if(trade.type === 'BUY'){
+                    netTradeValue -= trade.price * trade.units;
+                    currentUnits += trade.units;
+                } else if (trade.type === 'SELL'){
+                    netTradeValue += trade.price * trade.units;
+                    currentUnits -= trade.units;
+                } else if (trade.type === 'SELL (Close)'){
+                    // If it's a final close, account for remaining units
+                    netTradeValue += trade.price * trade.units;
+                    currentUnits -= trade.units;
+                }
+            }
+            // Ensure any remaining open position is valued at the last price
+            if(currentUnits > 0){
+                netTradeValue += data[data.length - 1].price * currentUnits;
+            }
+
+            outcome.totalProfitLoss = netTradeValue;
+            outcome.finalCapital = outcome.initialCapital + outcome.totalProfitLoss;
+            outcome.profitPercentage = (outcome.totalProfitLoss / outcome.initialCapital) * 100;
+        }
+
+
+        setSimulatedData(data);
+        setStrategyOutcome(outcome);
+        setSimulating(false);
+    };
+
+    // Chart rendering logic using SVG
+    useEffect(() => {
+        if (simulatedData.length === 0 || !chartRef.current) return;
+
+        const svg = chartRef.current;
+        svg.innerHTML = ''; // Clear previous chart
+        const width = svg.clientWidth;
+        const height = svg.clientHeight;
+        const padding = 30;
+
+        const prices = simulatedData.map(d => d.price);
+        const minPrice = Math.min(...prices);
+        const maxPrice = Math.max(...prices);
+
+        const xScale = (index) => (index / (simulatedData.length - 1)) * (width - 2 * padding) + padding;
+        const yScale = (price) => height - padding - ((price - minPrice) / (maxPrice - minPrice)) * (height - 2 * padding);
+
+        // Draw Price Line
+        const pathData = simulatedData.map((d, i) => `${xScale(i)},${yScale(d.price)}`).join('L');
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("d", `M${pathData}`);
+        path.setAttribute("stroke", darkMode ? "#63B3ED" : "#3182CE");
+        path.setAttribute("stroke-width", "2");
+        path.setAttribute("fill", "none");
+        svg.appendChild(path);
+
+        // Draw MAs for Trend Following
+        if (strategy === 'trend-following') {
+            const maShortData = simulatedData.filter(d => d.maShort !== null).map((d, i) => `${xScale(d.index)},${yScale(d.maShort)}`).join('L');
+            const maLongData = simulatedData.filter(d => d.maLong !== null).map((d, i) => `${xScale(d.index)},${yScale(d.maLong)}`).join('L');
+
+            if (maShortData) {
+                const pathShort = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                pathShort.setAttribute("d", `M${maShortData}`);
+                pathShort.setAttribute("stroke", darkMode ? "#F6E05E" : "#D69E2E"); // Yellow
+                pathShort.setAttribute("stroke-width", "1.5");
+                pathShort.setAttribute("fill", "none");
+                svg.appendChild(pathShort);
+            }
+            if (maLongData) {
+                const pathLong = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                pathLong.setAttribute("d", `M${maLongData}`);
+                pathLong.setAttribute("stroke", darkMode ? "#FC8181" : "#E53E3E"); // Red
+                pathLong.setAttribute("stroke-width", "1.5");
+                pathLong.setAttribute("fill", "none");
+                svg.appendChild(pathLong);
+            }
+        } else if (strategy === 'mean-reversion') {
+            // Draw Mean Reversion Bands
+            const avgData = simulatedData.filter(d => d.avg !== null).map((d, i) => `${xScale(d.index)},${yScale(d.avg)}`).join('L');
+            const upperData = simulatedData.filter(d => d.upperBand !== null).map((d, i) => `${xScale(d.index)},${yScale(d.upperBand)}`).join('L');
+            const lowerData = simulatedData.filter(d => d.lowerBand !== null).map((d, i) => `${xScale(d.index)},${yScale(d.lowerBand)}`).join('L');
+
+            if (avgData) {
+                const pathAvg = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                pathAvg.setAttribute("d", `M${avgData}`);
+                pathAvg.setAttribute("stroke", darkMode ? "#F6E05E" : "#D69E2E");
+                pathAvg.setAttribute("stroke-width", "1");
+                pathAvg.setAttribute("stroke-dasharray", "3 3");
+                pathAvg.setAttribute("fill", "none");
+                svg.appendChild(pathAvg);
+            }
+            if (upperData) {
+                const pathUpper = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                pathUpper.setAttribute("d", `M${upperData}`);
+                pathUpper.setAttribute("stroke", darkMode ? "#FC8181" : "#E53E3E");
+                pathUpper.setAttribute("stroke-width", "1");
+                pathUpper.setAttribute("fill", "none");
+                svg.appendChild(pathUpper);
+            }
+            if (lowerData) {
+                const pathLower = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                pathLower.setAttribute("d", `M${lowerData}`);
+                pathLower.setAttribute("stroke", darkMode ? "#FC8181" : "#E53E3E");
+                pathLower.setAttribute("stroke-width", "1");
+                pathLower.setAttribute("fill", "none");
+                svg.appendChild(pathLower);
+            }
+        }
+
+
+        // Draw Trade Markers
+        if (strategyOutcome && strategyOutcome.trades) {
+            strategyOutcome.trades.forEach(trade => {
+                const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                circle.setAttribute("cx", xScale(trade.day));
+                circle.setAttribute("cy", yScale(trade.price));
+                circle.setAttribute("r", 4);
+                circle.setAttribute("fill", trade.type.startsWith('BUY') ? "green" : "red");
+                circle.setAttribute("stroke", "white");
+                circle.setAttribute("stroke-width", "1");
+                svg.appendChild(circle);
+
+                const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                text.setAttribute("x", xScale(trade.day) + 8);
+                text.setAttribute("y", yScale(trade.price) + (trade.type.startsWith('BUY') ? -5 : 15));
+                text.setAttribute("fill", darkMode ? "#E2E8F0" : "#2D3748");
+                text.setAttribute("font-size", "10");
+                text.textContent = `${trade.type} @ ${trade.price}`;
+                svg.appendChild(text);
+            });
+        }
+
+        // Axes (simplified)
+        const addLine = (x1, y1, x2, y2, color, strokeWidth = 1) => {
+            const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            line.setAttribute("x1", x1);
+            line.setAttribute("y1", y1);
+            line.setAttribute("x2", x2);
+            line.setAttribute("y2", y2);
+            line.setAttribute("stroke", color);
+            line.setAttribute("stroke-width", strokeWidth);
+            svg.appendChild(line);
+        };
+
+        const axisColor = darkMode ? "#A0AEC0" : "#CBD5E0";
+        addLine(padding, height - padding, width - padding, height - padding, axisColor); // X-axis
+        addLine(padding, padding, padding, height - padding, axisColor); // Y-axis
+
+        // Add labels for min/max price
+        const addText = (x, y, textContent, color, alignment = "start") => {
+            const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            text.setAttribute("x", x);
+            text.setAttribute("y", y);
+            text.setAttribute("fill", color);
+            text.setAttribute("font-size", "10");
+            text.setAttribute("text-anchor", alignment);
+            text.textContent = textContent;
+            svg.appendChild(text);
+        };
+
+        addText(padding - 5, yScale(minPrice) + 5, minPrice.toFixed(2), darkMode ? "#E2E8F0" : "#2D3748", "end");
+        addText(padding - 5, yScale(maxPrice) - 5, maxPrice.toFixed(2), darkMode ? "#E2E8F0" : "#2D3748", "end");
+
+    }, [simulatedData, darkMode, strategy]); // Redraw when data or dark mode changes
+
+    return (
+        <>
+            <h2 className="text-4xl font-bold mb-8 text-center text-primary dark:text-accent"><i className="fas fa-hammer mr-3"></i>The Strategy Forge</h2>
+            <p className={`text-lg mb-10 text-center max-w-3xl mx-auto ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                Test your trading strategies in a simulated environment. Choose an instrument, a strategy, and see the potential outcomes! This is your training ground, not real-world trading.
+            </p>
+
+            <div className={`p-8 rounded-lg shadow-xl ${darkMode ? 'bg-darkBg' : 'bg-blue-50'} border border-gray-200 dark:border-gray-700`}>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div>
+                        <label htmlFor="symbol" className="block text-lg font-medium mb-2 text-primary dark:text-darkText">Select Instrument (Simulated):</label>
+                        <select
+                            id="symbol"
+                            className={`w-full p-3 rounded-lg border ${darkMode ? 'bg-gray-900 border-gray-600 text-darkText' : 'border-gray-300 text-lightText'} focus:ring-accent focus:border-accent shadow-sm`}
+                            value={symbol}
+                            onChange={(e) => { setSymbol(e.target.value); handleHapticFeedback(); }}
+                        >
+                            <option value="NIFTY50">NIFTY 50 (Index)</option>
+                            <option value="BANKNIFTY">BANKNIFTY (Index)</option>
+                            <option value="RELIANCE">RELIANCE (Stock)</option>
+                            <option value="TCS">TCS (Stock)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label htmlFor="strategy" className="block text-lg font-medium mb-2 text-primary dark:text-darkText">Choose Strategy:</label>
+                        <select
+                            id="strategy"
+                            className={`w-full p-3 rounded-lg border ${darkMode ? 'bg-gray-900 border-gray-600 text-darkText' : 'border-gray-300 text-lightText'} focus:ring-accent focus:border-accent shadow-sm`}
+                            value={strategy}
+                            onChange={(e) => { setStrategy(e.target.value); handleHapticFeedback(); }}
+                        >
+                            <option value="trend-following">Trend Following (MA Crossover)</option>
+                            <option value="mean-reversion">Mean Reversion (Bollinger Bands-like)</option>
+                            {/* <option value="breakout">Breakout (Future)</option> */}
+                        </select>
+                    </div>
+                </div>
+
+                <div className="mb-8">
+                    <label htmlFor="duration" className="block text-lg font-medium mb-2 text-primary dark:text-darkText">Simulation Duration (Data Points):</label>
+                    <input
+                        type="range"
+                        id="duration"
+                        min="50"
+                        max="300"
+                        value={duration}
+                        onChange={(e) => { setDuration(parseInt(e.target.value)); handleHapticFeedback(); }}
+                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700 accent-accent"
+                    />
+                    <span className="text-md text-gray-600 dark:text-gray-400 mt-2 block text-center">{duration} data points</span>
+                </div>
+
+                <button
+                    onClick={runStrategy}
+                    className="w-full bg-green-600 text-white px-8 py-3 rounded-lg text-xl font-semibold shadow-lg
+                        hover:bg-green-700 transition duration-300 transform hover:scale-105 disabled:opacity-50 btn-hover-scale flex items-center justify-center space-x-3 mx-auto"
+                    disabled={simulating}
+                >
+                    {simulating ? <><i className="fas fa-spinner fa-spin mr-3"></i> Forging Strategy...</> : <><i className="fas fa-play-circle mr-3"></i> Run Simulation</>}
+                </button>
+
+                {simulatedData.length > 0 && (
+                    <div className="mt-10 p-6 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-darkerBg shadow-inner">
+                        <h3 className="text-2xl font-bold mb-4 text-primary dark:text-darkText text-center">Simulated Market Movement</h3>
+                        <div className="relative w-full h-64 md:h-96">
+                            <svg ref={chartRef} className="w-full h-full"></svg>
+                        </div>
+
+                        {strategyOutcome && (
+                            <div className="mt-8">
+                                <h4 className="text-xl font-semibold mb-4 text-primary dark:text-darkText text-center">Strategy Outcome:</h4>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-lg font-medium text-gray-700 dark:text-gray-300">
+                                    <div>
+                                        <span className="text-primary dark:text-darkText font-bold">Initial Capital:</span> ₹{strategyOutcome.initialCapital.toLocaleString('en-IN')}
+                                    </div>
+                                    <div>
+                                        <span className="text-primary dark:text-darkText font-bold">Final Capital:</span> ₹{strategyOutcome.finalCapital.toLocaleString('en-IN')}
+                                    </div>
+                                    <div>
+                                        <span className="text-primary dark:text-darkText font-bold">Total P/L:</span>
+                                        <span className={strategyOutcome.totalProfitLoss >= 0 ? 'text-green-600' : 'text-red-600'}>
+                                            ₹{strategyOutcome.totalProfitLoss.toLocaleString('en-IN')}
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <span className="text-primary dark:text-darkText font-bold">Profit %:</span>
+                                        <span className={strategyOutcome.profitPercentage >= 0 ? 'text-green-600' : 'text-red-600'}>
+                                            {strategyOutcome.profitPercentage.toFixed(2)}%
+                                        </span>
+                                    </div>
+                                </div>
+                                <h5 className="text-lg font-semibold mt-6 mb-3 text-primary dark:text-darkText">Trade Log:</h5>
+                                <div className="max-h-40 overflow-y-auto border rounded-md p-3 text-sm font-mono
+                                    ${darkMode ? 'border-gray-600 bg-gray-700 text-gray-200' : 'border-gray-300 bg-gray-50 text-gray-800'}">
+                                    {strategyOutcome.trades.length > 0 ? (
+                                        strategyOutcome.trades.map((trade, index) => (
+                                            <p key={index} className={`${trade.type.startsWith('BUY') ? 'text-green-500' : 'text-red-500'}`}>
+                                                Day {trade.day}: {trade.type} {trade.units} units @ ₹{trade.price.toFixed(2)}
+                                            </p>
+                                        ))
+                                    ) : (
+                                        <p>No trades executed for this simulation.</p>
+                                    )}
+                                </div>
+                                <p className={`text-sm mt-4 text-orange-500 ${darkMode ? 'text-orange-300' : ''}`}>
+                                    <i className="fas fa-info-circle mr-1"></i> This is a simplified simulation for educational purposes only and does not reflect real market conditions or guarantee future results.
+                                </p>
+                            </div>
+                        )}
+                    </div>
+                )}
+            </div>
+        </>
+    );
+};
+
+
+// Section for Yodha's Arsenal (Private Access)
+const YodhasArsenal = ({ darkMode, loggedInUser, openAuthModal, handleHapticFeedback, BACKEND_API_URL }) => {
+    const [requestToken, setRequestToken] = useState('');
+    const [message, setMessage] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [selectedPrebuiltQuery, setSelectedPrebuiltQuery] = useState('none');
+    const [queryResponse, setQueryResponse] = useState('');
+    const [showCheatsheetModal, setShowCheatsheetModal] = useState(false);
+
+    const [selectedLiveTickerInstrument, setSelectedLiveTickerInstrument] = useState('');
+    const [liveTickerData, setLiveTickerData] = useState(null);
+    const [liveTickerLoading, setLoadingLiveTicker] = useState(false);
+    const [liveTickerError, setLiveTickerError] = useState('');
+
+    const instrumentOptions = [
+        { name: 'Select Instrument', token: '' },
+        { name: 'NIFTY 50 (Index Futures)', token: '256265' },
+        { name: 'BANKNIFTY (Index Futures)', token: '256001' },
+    ];
+
+    const kiteRefreshUrl = `${BACKEND_API_URL}/kite/refresh-token`;
+    const liveLtpUrl = `${BACKEND_API_URL}/live_ltp/`;
+
+    // Function to fetch live LTP data
+    const fetchLiveLTP = async () => {
+        if (!selectedLiveTickerInstrument) {
+            setLiveTickerError('Please select an instrument to view live data.');
+            setLiveTickerData(null);
+            return;
+        }
+
+        setLoadingLiveTicker(true);
+        setLiveTickerError('');
+        try {
+            const response = await fetch(`${liveLtpUrl}${selectedLiveTickerInstrument}`);
+            const data = await response.json();
+
+            if (response.ok && data.status === 'success') {
+                setLiveTickerData(data);
+            } else {
+                setLiveTickerError(data.message || 'Failed to fetch live data.');
+                setLiveTickerData(null);
+            }
+        } catch (error) {
+            setLiveTickerError(`Network error: ${error.message}. Ensure backend is running and token is valid.`);
+            setLiveTickerData(null);
+        } finally {
+            setLoadingLiveTicker(false);
+        }
+    };
+
+    // useEffect to set up polling for live ticker data
+    useEffect(() => {
+        let intervalId;
+        if (selectedLiveTickerInstrument) {
+            fetchLiveLTP();
+            intervalId = setInterval(fetchLiveLTP, 5000);
+        }
+        return () => {
+            if (intervalId) {
+                clearInterval(intervalId);
+            }
+        };
+    }, [selectedLiveTickerInstrument]);
+
+
+    // Pre-built query examples
+    const prebuiltQueries = [
+        { id: 'none', name: 'Select a pre-built query', code: '' },
+        { id: 'nifty50_live', name: 'GET /api/market/quotes?instrument=NIFTY50', description: 'Fetches simulated live quote data for Nifty 50.' },
+        { id: 'top_gainers', name: 'GET /api/market/top_gainers?exchange=NSE', description: 'Retrieves a simulated list of today\'s top gaining stocks on NSE.' },
+        { id: 'historical_reliance', name: 'GET /api/historical/RELIANCE?interval=day&period=1year', description: 'Simulated historical data (1 year, daily) for Reliance Industries Ltd.' },
+        { id: 'portfolio_holdings', name: 'GET /api/user/holdings', description: 'Simulated data of your current portfolio holdings.' },
+        { id: 'bulk_deals', name: 'GET /api/market/bulk_deals?exchange=NSE&date=2025-06-20', description: 'Simulated bulk deal information for a given exchange and date.' },
+    ];
+
+    const cheatsheetContent = `
+### Custom Data Query Cheatsheet (Conceptual Examples)
+
+This section demonstrates potential query formats for interacting with a hypothetical backend API. In a real-world scenario, your backend would define these endpoints and handle the data fetching from sources like Kite Connect.
+
+#### 1. Fetch Live Market Quotes
+\`\`\`json
+{
+    "method": "GET",
+    "endpoint": "/api/market/quotes",
+    "params": {
+        "instrument": "NIFTY50",
+        "exchange": "NSE"
+    }
+}
+\`\`\`
+* **Response (Simulated):** Current price, change, volume.
+
+#### 2. Get Top Gainers/Losers
+\`\`\`json
+{
+    "method": "GET",
+    "endpoint": "/api/market/top_gainers",
+    "params": {
+        "exchange": "NSE",
+        "limit": 10
+    }
+}
+\`\`\`
+* **Response (Simulated):** List of stocks with their percentage change.
+
+#### 3. Historical Data Fetch
+\`\`\`json
+{
+    "method": "GET",
+    "endpoint": "/api/historical/{symbol}",
+    "path_params": {
+        "symbol": "RELIANCE"
+    },
+    "query_params": {
+        "interval": "day",
+        "from": "2024-01-01",
+        "to": "2025-01-01"
+    }
+}
+\`\`\`
+* **Response (Simulated):** Open, High, Low, Close, Volume data for each interval.
+
+#### 4. User Portfolio Holdings
+\`\`\`json
+{
+    "method": "GET",
+    "endpoint": "/api/user/holdings",
+    "auth_required": true
+}
+\`\`\`
+* **Response (Simulated):** List of held stocks, quantity, average price, current value.
+
+#### 5. Search for an Instrument
+\`\`\`json
+{
+    "method": "GET",
+    "endpoint": "/api/instruments/search",
+    "params": {
+        "query": "TATASTEEL"
+    }
+}
+\`\`\`
+* **Response (Simulated):** Matching instrument details (token, name, exchange).
+
+---
+**Note on Python Code:**
+This frontend application (HTML/React/JavaScript) runs directly in your browser. It **cannot directly execute Python code**. The "queries" you enter here are meant to be sent to a separate backend service (like your \`app.py\` Flask application), which would then process them using Python and interact with external APIs (like Kite Connect).
+                    `;
+
+    // Handle token submission
+    const handleSubmitToken = async (e) => {
+        e.preventDefault();
+        handleHapticFeedback();
+        if (!requestToken.trim()) {
+            setMessage("Please enter a request token.");
+            return;
+        }
+
+        setLoading(true);
+        setMessage("Attempting to refresh token...");
+
+        try {
+            const response = await fetch(kiteRefreshUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ request_token: requestToken }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                setMessage(`Success: ${data.message} New Token: ${data.newToken ? data.newToken.substring(0, 10) + '...' : 'N/A'}`);
+            } else {
+                setMessage(`Error: ${data.message || 'Failed to refresh token.'}`);
+            }
+        } catch (error) {
+            setMessage(`Network error: ${error.message}. Ensure your backend is running and accessible.`);
+            console.error("Error refreshing token:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Handle pre-built query selection and simulation
+    const handlePrebuiltQueryRun = () => {
+        handleHapticFeedback();
+        const selectedQuery = prebuiltQueries.find(q => q.id === selectedPrebuiltQuery);
+        if (!selectedQuery || selectedQuery.id === 'none') {
+            setQueryResponse("Please select a valid pre-built query.");
+            return;
+        }
+
+        setQueryResponse(`Running: ${selectedQuery.name}\nSimulating response...`);
+
+        setTimeout(() => {
+            let responseData;
+            switch (selectedQuery.id) {
+                case 'nifty50_live':
+                    responseData = {
+                        status: 'success',
+                        query: selectedQuery.code,
+                        data: {
+                            instrument: 'NIFTY50',
+                            lastPrice: '22,500.25',
+                            change: '+120.50 (+0.54%)',
+                            high: '22,550.00',
+                            low: '22,380.00',
+                            open: '22,400.00',
+                            close: '22,399.75 (prev)',
+                            volume: '150M shares',
+                            tradeDate: new Date().toLocaleDateString()
+                        }
+                    };
+                    break;
+                case 'top_gainers':
+                    responseData = {
+                        status: 'success',
+                        query: selectedQuery.code,
+                        data: [
+                            { symbol: 'ADANIENT', change: '+5.20%', price: '3200.00', volume: '5M' },
+                            { symbol: 'BAJFINANCE', change: '+3.80%', price: '7250.50', volume: '2M' },
+                            { symbol: 'TCS', change: '+2.90%', price: '4000.10', volume: '3.5M' },
+                            { symbol: 'INFY', change: '+2.50%', price: '1550.00', volume: '4M' },
+                        ]
+                    };
+                    break;
+                case 'historical_reliance':
+                    responseData = {
+                        status: 'success',
+                        query: selectedQuery.code,
+                        data: {
+                            symbol: 'RELIANCE',
+                            period: '1 Year (Daily)',
+                            from: '2024-01-01',
+                            to: '2025-01-01',
+                            entries: 250,
+                            avgClosePrice: '2800.00',
+                            high: '3020.00 (on 2025-03-10)',
+                            low: '2350.00 (on 2024-09-15)',
+                            note: 'Simulated historical data. Actual data would be a large array of OHLCV.',
+                            sampleData: [
+                                { date: '2025-06-20', open: 2900, high: 2920, low: 2880, close: 2910, volume: '1.2M' },
+                                { date: '2025-06-19', open: 2880, high: 2905, low: 2875, close: 2895, volume: '1.1M' },
+                            ]
+                        }
+                    };
+                    break;
+                case 'portfolio_holdings':
+                    responseData = {
+                        status: 'success',
+                        query: selectedQuery.code,
+                        data: [
+                            { symbol: 'INFY', quantity: 100, avgPrice: 1500, currentPrice: 1550, pnl: 5000, pnl_percent: '3.33%' },
+                            { symbol: 'HDFCBANK', quantity: 50, avgPrice: 1400, currentPrice: 1420, pnl: 1000, pnl_percent: '1.43%' },
+                            { symbol: 'RELIANCE', quantity: 20, avgPrice: 2850, currentPrice: 2910, pnl: 1200, pnl_percent: '2.11%' },
+                        ]
+                    };
+                    break;
+                case 'bulk_deals':
+                    responseData = {
+                        status: 'success',
+                        query: selectedQuery.code,
+                        data: [
+                            {
+                                date: '2025-06-20',
+                                exchange: 'NSE',
+                                deals: [
+                                    { symbol: 'ZOMATO', client: 'Tiger Global', type: 'BUY', quantity: '10,000,000', price: '180.50' },
+                                    { symbol: 'PAYTM', client: 'Berkshire Hathaway', type: 'SELL', quantity: '2,500,000', price: '400.00' },
+                                ],
+                                source: 'https://www.nseindia.com/products-services/bulk-block-deals-snapshot'
+                            }
+                        ]
+                    };
+                    break;
+                default:
+                    responseData = { status: 'error', message: 'Unknown query selected.' };
+            }
+            setQueryResponse(JSON.stringify(responseData, null, 2));
+        }, 1000);
+    };
+
+
+    return (
+        <>
+            <h2 className="text-4xl font-bold mb-8 text-center text-primary dark:text-accent"><i className="fas fa-tools mr-3"></i>Yodha's Arsenal</h2>
+            <div className={`p-6 rounded-lg mb-10 text-center
+                ${darkMode ? 'bg-red-900 bg-opacity-30 text-red-200 border border-red-700' : 'bg-red-100 text-red-800 border border-red-300'}
+                font-semibold text-lg animate-fadeIn`}
+            >
+                <p>
+                    <span className="text-2xl mr-2">⚠️</span>
+                    This section is **restricted to Yodha Masters and trusted apprentices**.
+                </p>
+                <p className="mt-2 text-md">
+                    It contains powerful tools (e.g., direct Kite Connect API interaction, live market data access)
+                    that are not intended for public use and are secured to comply with market regulations.
+                    **Access requires specialized authentication and is permission-based.**
+                </p>
+            </div>
+
+            <p className={`text-lg mb-10 text-center max-w-3xl mx-auto ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                This arsenal allows Yodha Masters to wield direct control over market data,
+                extracting live and historical insights, performing advanced analysis,
+                and deploying strategic commands.
+            </p>
+
+            {/* Kite Connect Token Refresh Integration */}
+            <div className={`p-8 rounded-lg shadow-xl mb-12 ${darkMode ? 'bg-darkBg' : 'bg-blue-50'} border border-gray-200 dark:border-gray-700`}>
+                <h3 className="text-3xl font-semibold mb-6 text-primary dark:text-darkText text-center"><i className="fas fa-key mr-3"></i>Forge Access Key (Kite Connect Token)</h3>
+                <p className={`mb-4 text-center max-w-2xl mx-auto ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    To access the deepest vaults of market data, you must refresh your Kite Connect access key. Follow these steps to obtain a new `request_token`:
+                </p>
+                <ol className="list-decimal list-inside mb-8 space-y-3 pl-5 text-md text-gray-700 dark:text-gray-300">
+                    <li>
+                        Initiate the key forging process by visiting the Kite Connect login portal through your backend gateway:
+                        <a href="https://yodha-private-api.fly.dev/refresh-token" target="_blank" rel="noopener noreferrer"
+                           onClick={handleHapticFeedback}
+                           className="text-accent hover:underline ml-2 font-semibold flex items-center justify-center mt-2">
+                           <i className="fas fa-external-link-alt mr-2"></i> <span>Open Kite Login Gateway</span>
+                        </a>
+                    </li>
+                    <li>
+                        After successful authentication, retrieve the `request_token` from the redirected URL (it will be visible on the page `https://yodha-private-api.fly.dev/kite/callback?request_token=YOUR_TOKEN`).
+                    </li>
+                    <li>Inscribe the `request_token` into the input field below and command "Refresh Access Key".</li>
+                </ol>
+
+                <form onSubmit={handleSubmitToken} className="space-y-6">
+                    <div>
+                        <label htmlFor="requestToken" className="block text-lg font-medium mb-2 text-primary dark:text-darkText">
+                            Inscribe Request Token:
+                        </label>
+                        <input
+                            type="text"
+                            id="requestToken"
+                            className={`w-full p-3 rounded-lg border ${darkMode ? 'bg-gray-800 border-gray-600 text-darkText' : 'border-gray-300 text-lightText'} focus:ring-accent focus:border-accent shadow-sm`}
+                            value={requestToken}
+                            onChange={(e) => setRequestToken(e.target.value)}
+                            placeholder="e.g., asd123zxc456..."
+                            required
+                        />
+                    </div>
+                    <button
+                        type="submit"
+                        className="w-full bg-accent text-white px-8 py-3 rounded-lg text-lg font-semibold shadow-lg
+                        hover:bg-blue-700 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-accent disabled:opacity-50 btn-hover-scale flex items-center justify-center space-x-2"
+                        disabled={loading}
+                    >
+                        {loading ? <><i className="fas fa-sync fa-spin mr-2"></i> Forging Key...</> : <><i className="fas fa-arrow-right mr-2"></i> <span>Refresh Access Key</span></>}
+                    </button>
+                </form>
+                {message && (
+                    <div className={`mt-6 p-4 rounded-md ${message.startsWith('Success') ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'} flex items-center space-x-2`}>
+                        {message.startsWith('Success') ? <i className="fas fa-check-circle"></i> : <i className="fas fa-exclamation-circle"></i>}
+                        <span>{message}</span>
+                    </div>
+                )}
+            </div>
+
+            {/* Live Instrument Ticker (New Section) */}
+            <div className={`p-8 rounded-lg shadow-xl mb-12 ${darkMode ? 'bg-darkBg' : 'bg-blue-50'} border border-gray-200 dark:border-gray-700`}>
+                <h3 className="text-3xl font-semibold mb-6 text-primary dark:text-darkText text-center"><i className="fas fa-chart-line mr-3"></i>Live Market Pulse</h3>
+                <p className={`mb-6 text-center max-w-2xl mx-auto ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    Observe the live heartbeat of key instruments in the arena. Data refreshes every 5 seconds.
+                    Ensure your access key is active in the "Forge Access Key" section above.
+                </p>
+
+                <div className="mb-8 max-w-md mx-auto">
+                    <label htmlFor="instrumentSelect" className="block text-lg font-medium mb-2 text-primary dark:text-darkText">
+                        Select Instrument for Pulse:
+                    </label>
+                    <select
+                        id="instrumentSelect"
+                        className={`w-full p-3 rounded-lg border ${darkMode ? 'bg-gray-900 border-gray-600 text-darkText' : 'border-gray-300 text-lightText'} focus:ring-accent focus:border-accent shadow-sm`}
+                        value={selectedLiveTickerInstrument}
+                        onChange={(e) => { setSelectedLiveTickerInstrument(e.target.value); handleHapticFeedback(); }}
+                    >
+                        {instrumentOptions.map(option => (
+                            <option key={option.token} value={option.token}>
+                                {option.name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                {liveTickerLoading && (
+                    <p className="text-center text-xl italic text-gray-500 dark:text-gray-400 animate-pulse flex items-center justify-center space-x-2">
+                        <i className="fas fa-spinner fa-spin"></i> <span>Monitoring market pulse...</span>
+                    </p>
+                )}
+                {liveTickerError && (
+                    <p className="text-center text-red-500 text-xl flex items-center justify-center space-x-2">
+                        <i className="fas fa-exclamation-circle"></i> <span>{liveTickerError}</span>
+                    </p>
+                )}
+
+                {liveTickerData && !liveTickerLoading && !liveTickerError && (
+                    <div className={`p-6 rounded-lg border-2 ${darkMode ? 'border-accent bg-gray-800' : 'border-blue-300 bg-blue-50'} text-center mt-8 shadow-lg`}>
+                        <h4 className="text-3xl font-bold mb-3 text-primary dark:text-darkText flex items-center justify-center space-x-2">
+                            <i className="fas fa-tachometer-alt"></i> <span>{instrumentOptions.find(opt => opt.token === selectedLiveTickerInstrument)?.name || 'Unknown Instrument'}</span>
+                        </h4>
+                        <p className="text-5xl font-extrabold mb-3 leading-tight">
+                            ₹{liveTickerData.last_price?.toLocaleString('en-IN') || 'N/A'}
+                        </p>
+                        <p className={`text-xl font-semibold ${liveTickerData.change >= 0 ? 'text-green-500' : 'text-red-500'} mb-4 flex items-center justify-center space-x-2`}>
+                            {liveTickerData.change >= 0 ? <i className="fas fa-arrow-up"></i> : <i className="fas fa-arrow-down"></i>}
+                            <span>Change: {liveTickerData.change >= 0 ? '+' : ''}{liveTickerData.change?.toFixed(2) || 'N/A'}</span>
+                        </p>
+                        <div className="grid grid-cols-2 gap-4 mt-4 text-md text-gray-700 dark:text-gray-300 font-medium">
+                            <div>High: <span className="font-bold">₹{liveTickerData.high?.toLocaleString('en-IN') || 'N/A'}</span></div>
+                            <div>Low: <span className="font-bold">₹{liveTickerData.low?.toLocaleString('en-IN') || 'N/A'}</span></div>
+                            <div>Open: <span className="font-bold">₹{liveTickerData.ohlc?.open?.toLocaleString('en-IN') || 'N/A'}</span></div>
+                            <div>Close (Prev): <span className="font-bold">₹{liveTickerData.ohlc?.close?.toLocaleString('en-IN') || 'N/A'}</span></div>
+                        </div>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-6">Last updated: {new Date().toLocaleTimeString()}</p>
+                    </div>
+                )}
+            </div>
+
+
+            {/* Data Analysis and Charting Section (Placeholders) */}
+            <div className={`p-8 rounded-lg shadow-xl ${darkMode ? 'bg-darkBg' : 'bg-blue-50'} border border-gray-200 dark:border-gray-700`}>
+                <h3 className="text-3xl font-semibold mb-6 text-primary dark:text-accent text-center"><i className="fas fa-chart-area mr-3"></i>Strategic Reconnaissance & Data Visualization</h3>
+                <p className={`mb-10 text-center max-w-3xl mx-auto ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    This command center will eventually house advanced tools for deep market reconnaissance,
+                    charting the flow of battle with historical data,
+                    and deploying pre-defined trading strategies.
+                </p>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {/* Live Market Data (Simulated - General Market Overview) */}
+                    <div className={`p-6 rounded-md border ${darkMode ? 'border-gray-600 bg-gray-800' : 'border-gray-300 bg-white'} shadow-md`}>
+                        <h4 className="text-xl font-medium mb-3 text-primary dark:text-darkText"><i className="fas fa-globe mr-2"></i>Market Overview (Simulated)</h4>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">(General Market Trends)</p>
+                        <div className="space-y-3 text-md">
+                            <div className="flex justify-between items-center">
+                                <span className="font-semibold">NIFTY 50:</span>
+                                <span>22,500.25 <span className="text-green-500 font-semibold">(+0.54%)</span></span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                                <span className="font-semibold">BANK NIFTY:</span>
+                                <span>48,010.50 <span className="text-green-500 font-semibold">(+0.62%)</span></span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                                <span className="font-semibold">SENSEX:</span>
+                                <span>74,890.15 <span className="text-green-500 font-semibold">(+0.48%)</span></span>
+                            </div>
+                        </div>
+                        <div className="mt-6 text-sm text-gray-500 dark:text-gray-400">
+                            <p className="font-semibold mb-2"><i className="fas fa-bullhorn mr-1"></i>Market Sentiment Report:</p>
+                            <p className="leading-relaxed">Overall market sentiment is positive today, driven by strong quarterly earnings reports from key sectors. Mid-cap and small-cap stocks are showing particular resilience.</p>
+                            <p className="mt-4 font-semibold mb-2"><i className="fas fa-exchange-alt mr-1"></i>High-Volume Engagements (Bulk Deals):</p>
+                            <ul className="list-disc list-inside space-y-1 pl-4">
+                                <li>Large block deal in ZOMATO (NSE) - Tiger Global acquired 10M shares at ₹180.50.</li>
+                                <li>Significant selling pressure observed in PAYTM (BSE) by Berkshire Hathaway divesting 2.5M shares at ₹400.00.</li>
+                            </ul>
+                            <p className="mt-4 text-xs">Source: <a href="https://www.nseindia.com/products-services/bulk-block-deals-snapshot" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">Market Ledger (Simulated Link)</a></p>
+                        </div>
+                    </div>
+
+                    {/* Custom Queries Section with pre-built examples */}
+                    <div className={`p-6 rounded-md border ${darkMode ? 'border-gray-600 bg-gray-800' : 'border-gray-300 bg-white'} shadow-md`}>
+                        <h4 className="text-xl font-medium mb-3 text-primary dark:text-darkText"><i className="fas fa-terminal mr-2"></i>Command Console (Custom Data Queries)</h4>
+                        <p className="text-gray-600 dark:text-gray-400 mb-6">
+                            Issue direct commands to retrieve market intelligence. Select a pre-built query or craft your own. (Simulated responses for pre-built queries).
+                        </p>
+
+                        {/* Pre-built Query Dropdown */}
+                        <div className="mb-6">
+                            <label htmlFor="prebuiltQuery" className="block text-md font-medium mb-2 text-primary dark:text-darkText">
+                                Select Pre-built Query:
+                            </label>
+                            <select
+                                id="prebuiltQuery"
+                                className={`w-full p-3 rounded-lg border ${darkMode ? 'bg-gray-900 border-gray-600 text-darkText' : 'border-gray-300 text-lightText'} focus:ring-accent focus:border-accent shadow-sm`}
+                                value={selectedPrebuiltQuery}
+                                onChange={(e) => {
+                                    setSelectedPrebuiltQuery(e.target.value);
+                                    const selected = prebuiltQueries.find(q => q.id === e.target.value);
+                                    if (selected) {
+                                        setQueryResponse(selected.code);
+                                    } else {
+                                        setQueryResponse('');
+                                    }
+                                    handleHapticFeedback();
+                                }}
+                            >
+                                {prebuiltQueries.map(query => (
+                                    <option key={query.id} value={query.token || query.id}>
+                                        {query.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
+                        {/* Textarea for custom or selected query code */}
+                        <label htmlFor="customQuery" className="block text-md font-medium mb-2 text-primary dark:text-darkText">
+                            Query Command Input:
+                        </label>
+                        <textarea
+                            id="customQuery"
+                            className={`w-full p-3 mt-2 rounded-lg border ${darkMode ? 'bg-gray-900 border-gray-600 text-darkText' : 'border-gray-300 text-lightText'} focus:ring-accent focus:border-accent font-mono shadow-sm`}
+                            rows="8"
+                            placeholder="Enter your custom data query (e.g., JSON, URL-encoded string) for the backend API..."
+                            value={queryResponse}
+                            onChange={(e) => setQueryResponse(e.target.value)}
+                        ></textarea>
+                        <button
+                            onClick={handlePrebuiltQueryRun}
+                            className="mt-6 bg-green-600 text-white px-8 py-3 rounded-lg text-lg font-semibold shadow-lg
+                                hover:bg-green-700 transition duration-300 w-full transform hover:scale-105 btn-hover-scale flex items-center justify-center space-x-2"
+                        >
+                            <i className="fas fa-play mr-2"></i> <span>Execute Query</span>
+                        </button>
+                        {queryResponse && (
+                            <div className={`mt-6 p-4 rounded-md overflow-x-auto text-sm ${darkMode ? 'bg-gray-900 text-green-300' : 'bg-gray-100 text-gray-800'} border border-gray-300 dark:border-gray-600`}>
+                                <h5 className="font-semibold mb-3">Query Result:</h5>
+                                <pre className="whitespace-pre-wrap leading-relaxed">{queryResponse}</pre>
+                            </div>
+                        )}
+                        <div className="mt-8 text-center">
+                            <button
+                                onClick={() => { setShowCheatsheetModal(true); handleHapticFeedback(); }}
+                                className="bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold shadow-lg
+                                    hover:bg-blue-700 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 btn-hover-scale flex items-center justify-center space-x-2"
+                            >
+                                <i className="fas fa-info-circle mr-2"></i> <span>View Command Cheatsheet</span>
+                            </button>
+                            <p className="text-sm text-gray-500 dark:text-gray-400 mt-4 leading-relaxed">
+                                <i className="fas fa-exclamation-circle mr-1"></i> Note: This frontend does not execute Python code directly. Commands are transmitted to a secured backend API.
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Placeholder for Historical Charting */}
+                    <div className={`p-6 rounded-md border ${darkMode ? 'border-gray-600 bg-gray-800' : 'border-gray-300 bg-white'} shadow-md`}>
+                        <h4 className="text-xl font-medium mb-3 text-primary dark:text-darkText"><i className="fas fa-chart-bar mr-2"></i>Historical Scrolls (Charting)</h4>
+                        <p className="text-gray-600 dark:text-gray-400 mb-6">
+                            (Interactive scrolls depicting the historical flow of market battles, with various tactical indicators, will be unveiled here.)
+                        </p>
+                        <div className="h-48 bg-gray-200 dark:bg-gray-600 rounded-md flex items-center justify-center text-gray-500 mt-4 text-center p-4 text-lg">
+                            Historical Charting Module
+                            <br/> (Future Arsenal Upgrade)
+                        </div>
+                    </div>
+
+                    {/* Placeholder for Strategy Execution */}
+                    <div className={`p-6 rounded-md border ${darkMode ? 'border-gray-600 bg-gray-800' : 'border-gray-300 bg-white'} shadow-md`}>
+                        <h4 className="text-xl font-medium mb-3 text-primary dark:text-darkText"><i className="fas fa-chess-knight mr-2"></i>Strategy Deployment & Review</h4>
+                        <p className="text-gray-600 dark:text-gray-400 mb-6">
+                            (Define and test your grand strategies against the archives of past battles, and deploy them live in the arena.)
+                        </p>
+                        <div className="h-48 bg-gray-200 dark:bg-gray-600 rounded-md flex items-center justify-center text-gray-500 mt-4 text-center p-4 text-lg">
+                            Strategy Deployment Interface
+                            <br/> (Future Arsenal Upgrade)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <Modal isOpen={showCheatsheetModal} onClose={() => setShowCheatsheetModal(false)} title="Command Cheatsheet" darkMode={darkMode}>
+                <pre className="whitespace-pre-wrap text-sm leading-relaxed">{cheatsheetContent}</pre>
+                <p className="mt-4 text-xs text-gray-500 dark:text-gray-400">
+                    You can copy this content and save it as a text file for your reference.
+                </p>
+            </Modal>
+        </>
+    );
+};
+
+
+// Section for Brand Identity & Technical Overview (now "Arena Blueprints")
+const ArenaBlueprints = ({ darkMode }) => (
+    <div className={`p-8 rounded-lg shadow-xl ${darkMode ? 'bg-darkerBg' : 'bg-cardBgLight'} border border-gray-200 dark:border-gray-700`}>
+        <h2 className="text-4xl font-bold mb-8 text-center text-primary dark:text-accent"><i className="fas fa-cogs mr-3"></i>Arena Blueprints & Technical Scrolls</h2>
+        <p className={`text-lg mb-8 text-center max-w-3xl mx-auto ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+            Understand the foundational principles that govern the Market Arena, including its visual design and underlying technical architecture.
+        </p>
+
+        {/* Brand Guidelines Summary */}
+        <div className={`mb-10 p-6 rounded-lg ${darkMode ? 'bg-darkBg' : 'bg-blue-50'} shadow-md border border-gray-300 dark:border-gray-700`}>
+            <h3 className="text-2xl font-semibold mb-4 text-primary dark:text-darkText"><i className="fas fa-palette mr-2"></i>Visual Codex (Brand Guidelines Summary)</h3>
+            <p className={`mb-4 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                Extracted from the ancient `YODHA_TRADER_Brand_Guidelines_V1.2.pdf`:
+            </p>
+
+            <div className="space-y-4">
+                <div>
+                    <h4 className="font-semibold text-lg mb-2">1. The Yodha Emblem (Logo Usage):</h4>
+                    <ul className="list-disc list-inside ml-4 text-md text-gray-700 dark:text-gray-300">
+                        <li>Always utilize the full emblem, featuring the "YODHA TRADER" inscription, the "O" with the warrior silhouette, and the sacred tagline "Empower your Trading".</li>
+                        <li>The tagline may be omitted only when space is severely constrained (e.g., small sigils, app icons).</li>
+                        <li>**Forbidden Acts:** Altering colors, distorting proportions, applying shadows or effects, or separating the warrior icon from the inscription (save for sigils/app icons).</li>
+                        <li>The emblem displayed here is linked externally (e.g., `/logo.png`) and has protective wards (fallback images) should the link falter.</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 className="font-semibold text-lg mb-2">2. Color Spectrum (Color Palette):</h4>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-md text-gray-700 dark:text-gray-300">
+                        <div>
+                            <p><strong>Main inscription (YODHA TRADER) & Warrior silhouette:</strong></p>
+                            <div className="flex items-center mt-1">
+                                <span className="block w-6 h-6 rounded-full mr-2" style={{ backgroundColor: '#183153' }}></span>
+                                <span>Deep navy / dark blue (HEX: #183153)</span>
+                            </div>
+                        </div>
+                        <div>
+                            <p><strong>"O" circle background:</strong></p>
+                            <div className="flex items-center mt-1">
+                                <span className="block w-6 h-6 rounded-full mr-2 bg-gradient-to-br from-[#A3C4DC] to-[#7AAAC3]"></span>
+                                <span>Gradient light blue (HEX: #A3C4DC &rarr; #7AAAC3)</span>
+                            </div>
+                        </div>
+                        <div>
+                            <p><strong>Tagline inscription:</strong></p>
+                            <div className="flex items-center mt-1">
+                                <span className="block w-6 h-6 rounded-full mr-2" style={{ backgroundColor: '#6A8AA6' }}></span>
+                                <span>Soft grey / light blue (HEX: #6A8AA6 or #7B8E9D)</span>
+                            </div>
+                        </div>
+                        <div>
+                            <p><strong>Arena Ground (Background):</strong></p>
+                            <div className="flex items-center mt-1">
+                                <span className="block w-6 h-6 rounded-full mr-2" style={{ backgroundColor: '#FDF7F0' }}></span>
+                                <span>Light beige / off-white (HEX: #FDF7F0)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 className="font-semibold text-lg mb-2">3. Sacred Inscriptions (Typography):</h4>
+                    <ul className="list-disc list-inside ml-4 text-md text-gray-700 dark:text-gray-300">
+                        <li><strong>Primary Scroll Font:</strong> Sans-serif (e.g., Helvetica, Montserrat, Poppins, Lato). This arena's scrolls employ 'Inter'.</li>
+                        <li><strong>Weight (YODHA TRADER):</strong> Medium to Bold.</li>
+                        <li><strong>Weight (Tagline):</strong> Light or Regular.</li>
+                        <li><strong>Alignment:</strong> Ensure harmonious kerning and optical balance.</li>
+                    </ul>
+                </div>
+            </div>
         </div>
-    </section>
 
-    <section class="services">
-        <div class="container">
-            <h2>Our Services</h2>
-            <ul>
-                <li>Research Reports (SEBI Registered - Coming Soon)</li>
-                <li>Custom Research Services for Investors</li>
-                <li>Private Dashboard & Trading Analytics (Founder use phase)</li>
-                <li>Intuitive Charting Tools (Historic Data - Free for 3 Stocks)</li>
+        {/* Technical Overview */}
+        <div className={`p-6 rounded-lg ${darkMode ? 'bg-darkBg' : 'bg-blue-50'} shadow-md border border-gray-300 dark:border-gray-700`}>
+            <h3 className="text-2xl font-semibold mb-4 text-primary dark:text-darkText"><i className="fas fa-network-wired mr-2"></i>Technical Scrolls: The Arena's Inner Workings</h3>
+            <p className={`mb-4 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                The YodhaTrader Market Arena operates through a powerful combination of frontend and backend services:
+            </p>
+            <ul className="list-disc list-inside space-y-3 pl-4 text-md text-gray-700 dark:text-gray-300">
+                <li>
+                    <strong>Frontend (This Sacred Scroll - `index.html`):</strong> This HTML file encapsulates the entire React.js application. It orchestrates all visual displays, interactive elements, and manages the flow of information on your device. It is designed to run within the browser's realm.
+                </li>
+                <li>
+                    <strong>Backend (The Oracle's Chamber - `app.py`):</strong> The Python Flask service (`app_py_live_ltp` in our archives) resides in a separate domain. It is the Oracle that communicates with external market data providers (like Kite Connect) and the Gemini AI. This frontend sends requests to the Oracle's Chamber via secure API calls, never directly embedding the Python code itself. This separation ensures the security of powerful artifacts and efficient server-side operations.
+                </li>
+                <li>
+                    <strong>Visual Assets (Emblems and Imagery - `.png` files):</strong> Emblems like the main YodhaTrader logo are stored in a publicly accessible vault (e.g., `/public/`) and are summoned into the arena by their unique addresses (URLs). This method enhances performance and allows for swift updates across the realm.
+                </li>
             </ul>
+            <p className={`mt-4 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                This strategic modular design ensures the Arena is both a responsive training ground for Yodhas and a secure fortress for sensitive market intelligence.
+            </p>
         </div>
-    </section>
+    </div>
+);
 
-    <section class="research">
-        <div class="container">
-            <h2>Research Services - Coming Soon</h2>
-            <p>We will soon launch SEBI-Registered Research Reports and subscription services. Stay tuned!</p>
-        </div>
-    </section>
 
-    <section class="contact">
-        <div class="container">
-            <h2>Contact Us</h2>
-            <p>Have questions or want to collaborate? Reach out at: <a href="mailto:contact@yodhatrader.com">contact@yodhatrader.com</a></p>
-        </div>
-    </section>
+// Main App component
+const App = () => {
+    // State to manage the current active section (for simple routing)
+    const [activeSection, setActiveSection] = useState('arenaIntro');
+    // State for dark mode
+    const [darkMode, setDarkMode] = useState(false);
+    const [loggedInUser, setLoggedInUser] = useState(null);
+    const [showAuthModal, setShowAuthModal] = useState(false);
+    const [authModalPurpose, setAuthModalPurpose] = useState('');
+    const [authModalMessage, setAuthModalMessage] = useState('');
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2025 Yodha Trader. All Rights Reserved. <a href="/terms.html">Terms</a> | <a href="/privacy.html">Privacy</a></p>
+    // Base URL for your Fly.io backend API
+    const BACKEND_API_URL = "https://yodha-private-api.fly.dev/api"; // Ensure this matches your Fly.io app URL
+
+    // Function to trigger haptic feedback (vibration)
+    const handleHapticFeedback = (duration = 50) => {
+        if ('vibrate' in navigator) {
+            navigator.vibrate(duration);
+        }
+    };
+
+    // Load user from localStorage on initial render
+    useEffect(() => {
+        const storedUser = localStorage.getItem('yodhaTraderUser');
+        if (storedUser) {
+            setLoggedInUser(JSON.parse(storedUser));
+        }
+    }, []);
+
+    // Handle simulated login
+    const handleLogin = (userData) => {
+        setLoggedInUser(userData);
+        localStorage.setItem('yodhaTraderUser', JSON.stringify(userData));
+        setShowAuthModal(false);
+        setAuthModalMessage('Login successful!');
+    };
+
+    // Handle simulated logout
+    const handleLogout = () => {
+        setLoggedInUser(null);
+        localStorage.removeItem('yodhaTraderUser');
+        setAuthModalMessage('Logged out successfully!');
+        setTimeout(() => setAuthModalMessage(''), 3000);
+    };
+
+    // Open Auth Modal for a specific purpose
+    const openAuthModal = (purpose, message = '') => {
+        setAuthModalPurpose(purpose);
+        setAuthModalMessage(message);
+        setShowAuthModal(true);
+    };
+
+    // Close Auth Modal
+    const closeAuthModal = () => {
+        setShowAuthModal(false);
+        setAuthModalPurpose('');
+        setAuthModalMessage('');
+    };
+
+    // Toggle dark mode and update body class
+    const toggleDarkMode = () => {
+        setDarkMode(!darkMode);
+        document.documentElement.classList.toggle('dark', !darkMode);
+    };
+
+    // Brand Logo Image URL (updated to public folder path for Vercel deployment)
+    // Updated path: Assuming 'public' folder contents are served at the root,
+    // the image should be directly accessible without the /public/ prefix in the URL path.
+    const brandLogo = "/logo.png"; // Corrected path for nested public folder
+
+    // Function to scroll to a section
+    const scrollToSection = (sectionId) => {
+        setActiveSection(sectionId);
+        const sectionElement = document.getElementById(sectionId);
+        if (sectionElement) {
+            sectionElement.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+
+    return (
+        <div className={`min-h-screen ${darkMode ? 'bg-darkBg text-darkText' : 'bg-lightBg text-lightText'} transition-colors duration-300`}>
+            {/* Header */}
+            <header className={`py-4 shadow-lg fixed top-0 w-full z-40 ${darkMode ? 'bg-darkerBg backdrop-blur-sm bg-opacity-80' : 'bg-white'} transition-all duration-300`}>
+                <div className="container mx-auto px-4 flex justify-between items-center">
+                    {/* Logo only */}
+                    <div className="flex items-center">
+                        <img
+                            src={brandLogo}
+                            alt="YodhaTrader Logo"
+                            className="h-16 sm:h-14 w-auto rounded-md shadow-md object-contain"
+                            onError={(e) => { e.target.onerror = null; e.target.src='https://placehold.co/150x50/FDF7F0/183153?text=YodhaTrader'; }} // Fallback image
+                        />
+                    </div>
+
+                    {/* Navigation */}
+                    <nav className="hidden md:flex space-x-6">
+                        <NavLink sectionId="arenaIntro" currentSection={activeSection} scrollToSection={scrollToSection} handleHapticFeedback={handleHapticFeedback} darkMode={darkMode}>
+                            <i className="fas fa-home mr-1"></i> Arena Home
+                        </NavLink>
+                        <NavLink sectionId="battleLog" currentSection={activeSection} scrollToSection={scrollToSection} handleHapticFeedback={handleHapticFeedback} darkMode={darkMode}>
+                            <i className="fas fa-book-open mr-1"></i> Battle Log
+                        </NavLink>
+                        <NavLink sectionId="wisdomScrolls" currentSection={activeSection} scrollToSection={scrollToSection} handleHapticFeedback={handleHapticFeedback} darkMode={darkMode}>
+                            <i className="fas fa-scroll mr-1"></i> Wisdom Scrolls
+                        </NavLink>
+                        <NavLink sectionId="marketSayings" currentSection={activeSection} scrollToSection={scrollToSection} handleHapticFeedback={handleHapticFeedback} darkMode={darkMode}>
+                            <i className="fas fa-quote-right mr-1"></i> Market Sayings
+                        </NavLink>
+                        <NavLink sectionId="marketSensei" currentSection={activeSection} scrollToSection={scrollToSection} handleHapticFeedback={handleHapticFeedback} darkMode={darkMode}>
+                            <i className="fas fa-graduation-cap mr-1"></i> Market Sensei
+                        </NavLink>
+                        <NavLink sectionId="strategyForge" currentSection={activeSection} scrollToSection={scrollToSection} handleHapticFeedback={handleHapticFeedback} darkMode={darkMode}>
+                            <i className="fas fa-hammer mr-1"></i> Strategy Forge
+                        </NavLink>
+                        {/* Conditional NavLink for Yodha's Arsenal */}
+                        <NavLink
+                            sectionId="yodhasArsenal"
+                            currentSection={activeSection}
+                            scrollToSection={(id) => {
+                                if (loggedInUser) {
+                                    scrollToSection(id);
+                                } else {
+                                    openAuthModal('login', 'Only Yodha Masters can access the Arsenal. Login to proceed.');
+                                }
+                            }}
+                            handleHapticFeedback={handleHapticFeedback}
+                            darkMode={darkMode}
+                        >
+                            <i className="fas fa-tools mr-1"></i> Yodha's Arsenal
+                        </NavLink>
+                    </nav>
+
+                    <div className="flex items-center space-x-4">
+                        {loggedInUser ? (
+                            <div className="flex items-center space-x-2">
+                                <span className="text-sm font-medium whitespace-nowrap">Hail, <span className="font-semibold text-accent">{loggedInUser.username}</span>!</span>
+                                <button
+                                    onClick={() => { handleLogout(); handleHapticFeedback(); }}
+                                    className="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors duration-200 text-sm"
+                                >
+                                    <i className="fas fa-sign-out-alt"></i> Logout
+                                </button>
+                            </div>
+                        ) : (
+                            <button
+                                onClick={() => { openAuthModal('login'); handleHapticFeedback(); }}
+                                className="px-3 py-1 bg-accent text-white rounded-md hover:bg-blue-700 transition-colors duration-200 text-sm"
+                            >
+                                <i className="fas fa-sign-in-alt"></i> Login / Enroll
+                            </button>
+                        )}
+                        {/* Dark Mode Toggle */}
+                        <button
+                            onClick={() => { toggleDarkMode(); handleHapticFeedback(); }}
+                            className="p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-accent transition-transform transform hover:scale-105"
+                            aria-label="Toggle arena lighting"
+                        >
+                            {darkMode ? (
+                                // Moon icon for Dark Mode
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-moon text-yellow-400">
+                                    <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+                                </svg>
+                            ) : (
+                                // Sun icon for Light Mode
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-sun text-gray-700">
+                                    <circle cx="12" cy="12" r="4"/>
+                                    <path d="M12 2v2"/>
+                                    <path d="M12 20v2"/>
+                                    <path d="M4.93 4.93l1.41 1.41"/>
+                                    <path d="M17.66 17.66l1.41 1.41"/>
+                                    <path d="M2 12h2"/>
+                                    <path d="M20 12h2"/>
+                                    <path d="M4.93 19.07l1.41-1.41"/>
+                                    <path d="M17.66 6.34l1.41-1.41"/>
+                                </svg>
+                            )}
+                        </button>
+                    </div>
+                </div>
+                {/* Mobile Navigation (Hamburger Menu) */}
+                <div className="md:hidden px-4 pt-2">
+                    <select
+                        onChange={(e) => {
+                            if (e.target.value === 'yodhasArsenal' && !loggedInUser) {
+                                openAuthModal('login', 'Only Yodha Masters can access the Arsenal. Login to proceed.');
+                                e.target.value = activeSection; // Revert selection if not logged in
+                            } else {
+                                scrollToSection(e.target.value);
+                            }
+                            handleHapticFeedback();
+                        }}
+                        className={`w-full p-2 py-3 rounded-md border-2 border-accent font-semibold text-lg
+                            ${darkMode ? 'bg-gray-700 text-darkText' : 'bg-gray-100 text-primary'}
+                            focus:outline-none focus:ring-2 focus:ring-accent`}
+                        value={activeSection}
+                    >
+                        <option value="arenaIntro"><i className="fas fa-home mr-1"></i> Arena Home</option>
+                        <option value="battleLog"><i className="fas fa-book-open mr-1"></i> Battle Log</option>
+                        <option value="wisdomScrolls"><i className="fas fa-scroll mr-1"></i> Wisdom Scrolls</option>
+                        <option value="marketSayings"><i className="fas fa-quote-right mr-1"></i> Market Sayings</option>
+                        <option value="marketSensei"><i className="fas fa-graduation-cap mr-1"></i> Market Sensei</option>
+                        <option value="strategyForge"><i className="fas fa-hammer mr-1"></i> Strategy Forge</option>
+                        <option value="yodhasArsenal"><i className="fas fa-tools mr-1"></i> Yodha's Arsenal</option>
+                    </select>
+                </div>
+            </header>
+
+            {authModalMessage && (
+                <div className={`fixed top-20 left-1/2 -translate-x-1/2 mt-4 p-3 rounded-md shadow-lg z-50
+                    ${authModalMessage.includes('successfully') ? 'bg-green-500' : 'bg-red-500'} text-white transition-opacity duration-300 opacity-100`}>
+                    {authModalMessage}
+                </div>
+            )}
+
+            {/* Main Content Area - Added pt-20 for fixed header */}
+            <main className="pt-20">
+                {/* Arena Intro Section */}
+                <ArenaIntro darkMode={darkMode} scrollToSection={scrollToSection} handleHapticFeedback={handleHapticFeedback} loggedInUser={loggedInUser} />
+
+                {/* Training Modules & Sections */}
+                <SectionWrapper id="strategyForge" darkMode={darkMode}>
+                    <StrategyForge darkMode={darkMode} handleHapticFeedback={handleHapticFeedback} />
+                </SectionWrapper>
+                <SectionWrapper id="marketSensei" darkMode={darkMode}>
+                    <MarketSensei darkMode={darkMode} handleHapticFeedback={handleHapticFeedback} BACKEND_API_URL={BACKEND_API_URL} />
+                </SectionWrapper>
+                <SectionWrapper id="battleLog" darkMode={darkMode}>
+                    <BattleLog darkMode={darkMode} loggedInUser={loggedInUser} openAuthModal={openAuthModal} handleHapticFeedback={handleHapticFeedback} BACKEND_API_URL={BACKEND_API_URL} />
+                </SectionWrapper>
+                <SectionWrapper id="wisdomScrolls" darkMode={darkMode}>
+                    <WisdomScrolls darkMode={darkMode} loggedInUser={loggedInUser} openAuthModal={openAuthModal} handleHapticFeedback={handleHapticFeedback} />
+                </SectionWrapper>
+                <SectionWrapper id="marketSayings" darkMode={darkMode}>
+                    <MarketSayings darkMode={darkMode} handleHapticFeedback={handleHapticFeedback} BACKEND_API_URL={BACKEND_API_URL} />
+                </SectionWrapper>
+
+
+                {/* Yodha's Arsenal (Conditional rendering for Private Access section) */}
+                <SectionWrapper id="yodhasArsenal" darkMode={darkMode}>
+                    {loggedInUser ? (
+                        <YodhasArsenal darkMode={darkMode} loggedInUser={loggedInUser} openAuthModal={openAuthModal} handleHapticFeedback={handleHapticFeedback} BACKEND_API_URL={BACKEND_API_URL} />
+                    ) : (
+                        <div className="text-center py-16">
+                            <h3 className="text-3xl font-bold mb-4 text-primary dark:text-darkText"><i className="fas fa-lock mr-2"></i>Arsenal Locked</h3>
+                            <p className={`text-lg mb-6 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                                This section is for Yodha Masters only. It contains powerful tools and sensitive data.
+                            </p>
+                            <button
+                                onClick={() => openAuthModal('login', 'Only Yodha Masters can access the Arsenal. Login to proceed.')}
+                                className="bg-accent text-white px-6 py-3 rounded-md hover:bg-blue-700 transition duration-300 flex items-center justify-center space-x-2 mx-auto"
+                            >
+                                <i className="fas fa-sign-in-alt mr-2"></i> <span>Login to Access Arsenal</span>
+                            </button>
+                        </div>
+                    )}
+                </SectionWrapper>
+                {/* Arena Blueprints Section */}
+                <SectionWrapper id="arenaBlueprints" darkMode={darkMode}>
+                    <ArenaBlueprints darkMode={darkMode} />
+                </SectionWrapper>
+            </main>
+
+            {/* Footer */}
+            <footer className={`py-8 mt-12 text-center text-sm ${darkMode ? 'bg-darkerBg text-gray-400' : 'bg-gray-100 text-gray-600'} shadow-inner`}>
+                <div className="container mx-auto px-4">
+                    <p>&copy; {new Date().getFullYear()} YodhaTrader. All rights reserved.</p>
+                    <p className="mt-1">Empower your Trading. Forge your destiny.</p>
+                    <SocialShareButtons
+                        url={window.location.href}
+                        title="YodhaTrader Market Arena: Empower your Trading Journey"
+                        description="Your ultimate training ground for financial mastery. Learn, strategize, and conquer the markets."
+                        hashtags={['YodhaTrader', 'TradingArena', 'FinanceMastery']}
+                        darkMode={darkMode}
+                    />
+                </div>
+            </footer>
+
+            <AuthModal
+                isOpen={showAuthModal}
+                onClose={closeAuthModal}
+                purpose={authModalPurpose}
+                onLogin={handleLogin}
+                darkMode={darkMode}
+                loggedInUser={loggedInUser}
+                message={authModalMessage}
+                handleHapticFeedback={handleHapticFeedback}
+            />
         </div>
-    </footer>
+    );
+};
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
 </body>
 </html>
