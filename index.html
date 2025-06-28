@@ -1,1545 +1,544 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YodhaTrader - Empowering Your Financial Journey with Insight and Precision</title>
-    <meta name="description" content="YodhaTrader offers comprehensive financial analysis, investment strategies, and powerful calculators for stock market enthusiasts and investors in India.">
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>YodhaTrader - Empowering Your Financial Journey</title>
     <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
-    <meta name="keywords" content="YodhaTrader, financial analysis, investment strategies, stock market India, stock calculator, SIP calculator, tax calculator, equity research, SEBI registered, Indian stock market, personal finance tools">
-    <link rel="canonical" href="https://www.yodhatrader.com/"> <meta property="og:type" content="website">
-    <meta property="og:url" content="https://www.yodhatrader.com/"> <meta property="og:title" content="YodhaTrader - Financial Insights & Tools for Indian Investors">
-    <meta property="og:description" content="Empower your financial journey with YodhaTrader's expert analysis, research notes, and powerful calculators for the Indian stock market.">
-    <meta property="og:image" content="https://www.yodhatrader.com/images/yodhatrader-og-image.jpg"> <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="https://www.yodhatrader.com/"> <meta name="twitter:title" content="YodhaTrader - Financial Insights & Tools for Indian Investors">
-    <meta name="twitter:description" content="Empower your financial journey with YodhaTrader's expert analysis, research notes, and powerful calculators for the Indian stock market.">
-    <meta name="twitter:image" content="https://www.yodhatrader.com/images/yodhatrader-twitter-image.jpg"> <meta name="twitter:creator" content="@YourTwitterHandle"> <link rel="icon" href="/favicon.ico" type="image/x-icon">
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-
-    <meta name="google-site-verification" content="YOUR_GOOGLE_VERIFICATION_CODE" />
-    <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=YOUR_GA_MEASUREMENT_ID"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'YOUR_GA_MEASUREMENT_ID'); // Replace with your GA4 Measurement ID (e.g., G-XXXXXXXXXX)
-    </script>
-</head>
-</head>
-
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
-        /* Custom scrollbar for better aesthetics */
-        ::-webkit-scrollbar {
-            width: 8px;
+        body {
+            font-family: 'Inter', sans-serif;
         }
-        ::-webkit-scrollbar-track {
-            background: #1a202c; /* Dark background */
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #4a5568; /* Darker thumb */
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #6b7280; /* Lighter on hover */
-        }
-
-        /* Dark mode transitions */
+        /* Dark mode styles */
         html.dark {
-            background-color: #1a202c; /* Tailwind's gray-900 */
-            color: #e2e8f0; /* Tailwind's gray-200 */
+            background-color: #1a202c;
+            color: #e2e8f0;
+        }
+        html.dark .bg-white {
+            background-color: #2d3748;
+        }
+        html.dark .text-gray-900 {
+            color: #e2e8f0;
+        }
+        html.dark .text-gray-700 {
+            color: #cbd5e0;
+        }
+        html.dark input, html.dark button {
+            background-color: #4a5568;
+            color: #e2e8f0;
+            border-color: #4a5568;
+        }
+        html.dark input:focus, html.dark button:hover {
+            border-color: #63b3ed;
         }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-200 transition-colors duration-300">
-
+<body class="bg-gray-100 text-gray-900 transition-colors duration-300">
     <div id="root"></div>
 
     <script type="text/babel">
-        // This script block should be placed inside the <script type="text/babel"></script>
-// replacing the old calculator logic and potentially the main App's render of the Tools section.
-
-const { useState, useEffect } = React;
-
-// Main App Component (assuming it's already structured, but modified to include the Tools section correctly)
-// If your App component is different, just make sure to integrate the <ToolsSection /> component.
-const App = () => {
-    const [darkMode, setDarkMode] = useState(false);
-
-    useEffect(() => {
-        if (darkMode) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-    }, [darkMode]);
-
-    const toggleDarkMode = () => {
-        setDarkMode(!darkMode);
-    };
-
-    return (
-        <div className="min-h-screen flex flex-col">
-            {/* Header/Navbar (existing code) */}
-            <header className="bg-gray-800 text-white shadow-lg sticky top-0 z-50 dark:bg-gray-950">
-                <nav className="container mx-auto px-6 py-4 flex justify-between items-center">
-                    <div className="text-2xl font-bold">
-                        <a href="#" className="hover:text-gray-300 transition-colors duration-200">YodhaTrader</a>
-                    </div>
-                    <div className="hidden md:flex space-x-6">
-                        <a href="#home" className="hover:text-gray-300 transition-colors duration-200">Home</a>
-                        <a href="#blog" className="hover:text-gray-300 transition-colors duration-200">Blog</a>
-                        <a href="#research" className="hover:text-gray-300 transition-colors duration-200">Research Notes</a>
-                        <a href="#books" className="hover:text-gray-300 transition-colors duration-200">Books</a>
-                        <a href="#quotes" className="hover:text-gray-300 transition-colors duration-200">Market Quotes</a>
-                        <a href="#tools" className="hover:text-gray-300 transition-colors duration-200">Tools</a>
-                    </div>
-                    <button
-                        onClick={toggleDarkMode}
-                        className="p-2 rounded-full bg-gray-700 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-colors duration-200"
-                    >
-                        {darkMode ? (
-                            <svg className="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 3v1m0 16v1m9-9h1M3 12h1m15.325-4.275l-.707-.707M4.372 19.372l-.707-.707M18.921 18.921l-.707-.707M5.077 5.077l-.707-.707M19 12a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                        ) : (
-                            <svg className="w-6 h-6 text-indigo-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-                        )}
-                    </button>
-                    <div className="md:hidden">
-                        {/* Mobile menu button (Hamburger icon) */}
-                        <button className="text-white focus:outline-none">
-                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-                        </button>
-                    </div>
-                </nav>
-            </header>
-
-            <main className="flex-grow">
-                {/* Other Sections (Homepage, Blog, Research, Books, Quotes - existing code) */}
-                {/* For brevity, these are omitted from the full code output here but should remain in your index.html */}
-                <section id="home" className="relative bg-gradient-to-r from-gray-900 to-gray-700 text-white py-20 md:py-32 overflow-hidden">
-                    <div className="absolute inset-0 bg-cover bg-center opacity-20" style={{ backgroundImage: 'url("https://via.placeholder.com/1920x1080/0f0f0f/ffffff?text=Financial+Charts+Background")' }}></div>
-                    <div className="container mx-auto px-6 relative z-10 text-center">
-                        <h1 className="text-4xl md:text-6xl font-extrabold leading-tight drop-shadow-lg animate-fade-in-down">
-                            YodhaTrader
-                        </h1>
-                        <p className="mt-4 text-xl md:text-3xl font-light italic animate-fade-in-up">
-                            Empowering Your Financial Journey with Insight and Precision
-                        </p>
-                        <div className="mt-8">
-                            <p className="text-lg md:text-xl leading-relaxed max-w-2xl mx-auto animate-fade-in-up delay-100">
-                                Welcome to YodhaTrader, your dedicated resource for comprehensive financial analysis, investment strategies, and powerful tools. Navigate the markets with confidence.
-                            </p>
-                        </div>
-                        <div className="mt-10">
-                            <a href="#blog" className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg transform hover:scale-105 transition duration-300">
-                                Explore Insights
-                            </a>
-                        </div>
-                    </div>
-                </section>
-                <section id="blog" className="py-16 md:py-24 bg-gray-100 dark:bg-gray-800 transition-colors duration-300">
-                    <div className="container mx-auto px-6">
-                        <h2 className="text-4xl font-bold text-center mb-12 text-gray-800 dark:text-gray-100">Latest Blog Posts</h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
-                                <img src="https://via.placeholder.com/600x400/3498db/ffffff?text=Market+Trends" alt="Market Trends" className="w-full h-48 object-cover"/>
-                                <div className="p-6">
-                                    <h3 className="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-100">Understanding Current Market Trends</h3>
-                                    <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">Date: June 27, 2025</p>
-                                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed">A deep dive into the factors shaping today's financial markets, from inflation to geopolitical events...</p>
-                                    <a href="#" className="mt-4 inline-block text-orange-600 hover:underline font-medium">Read More &rarr;</a>
-                                </div>
-                            </div>
-                            <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
-                                <img src="https://via.placeholder.com/600x400/2ecc71/ffffff?text=Investment+Strategies" alt="Investment Strategies" className="w-full h-48 object-cover"/>
-                                <div className="p-6">
-                                    <h3 className="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-100">Top 5 Investment Strategies for Long-Term Growth</h3>
-                                    <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">Date: June 20, 2025</p>
-                                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed">Discover proven strategies to build a resilient portfolio and achieve your financial goals...</p>
-                                    <a href="#" className="mt-4 inline-block text-orange-600 hover:underline font-medium">Read More &rarr;</a>
-                                </div>
-                            </div>
-                            <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
-                                <img src="https://via.placeholder.com/600x400/e74c3c/ffffff?text=Risk+Management" alt="Risk Management" className="w-full h-48 object-cover"/>
-                                <div className="p-6">
-                                    <h3 className="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-100">Navigating Volatility: Essential Risk Management Tips</h3>
-                                    <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">Date: June 15, 2025</p>
-                                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed">Learn how to protect your investments and minimize losses during periods of market turbulence...</p>
-                                    <a href="#" className="mt-4 inline-block text-orange-600 hover:underline font-medium">Read More &rarr;</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="text-center mt-12">
-                            <a href="#" className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg transform hover:scale-105 transition duration-300">
-                                View All Blog Posts
-                            </a>
-                        </div>
-                    </div>
-                </section>
-
-                <section id="research" className="py-16 md:py-24 bg-gray-200 dark:bg-gray-900 transition-colors duration-300">
-                    <div className="container mx-auto px-6">
-                        <h2 className="text-4xl font-bold text-center mb-12 text-gray-800 dark:text-gray-100">Equity Research Notes</h2>
-                        <p className="text-center text-lg text-gray-700 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
-                            As a SEBI Registered Research Analyst, I provide in-depth equity research notes to help you make informed investment decisions.
-                        </p>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            <div className="bg-white dark:bg-gray-950 rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
-                                <div className="p-6">
-                                    <h3 className="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-100">Company X - Q1 2025 Earnings Analysis</h3>
-                                    <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">Sector: Technology | Date: June 25, 2025</p>
-                                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed">Detailed analysis of Company X's latest quarterly performance, including revenue, profit margins, and future outlook.</p>
-                                    <a href="#" className="mt-4 inline-block text-blue-600 hover:underline font-medium">Download Report (PDF) &rarr;</a>
-                                </div>
-                            </div>
-                            <div className="bg-white dark:bg-gray-950 rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
-                                <div className="p-6">
-                                    <h3 className="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-100">Sectoral Outlook: Renewable Energy (2025-2030)</h3>
-                                    <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">Sector: Energy | Date: June 18, 2025</p>
-                                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed">A comprehensive outlook on the renewable energy sector, identifying key growth drivers and potential investment opportunities.</p>
-                                    <a href="#" className="mt-4 inline-block text-blue-600 hover:underline font-medium">Download Report (PDF) &rarr;</a>
-                                </div>
-                            </div>
-                            <div className="bg-white dark:bg-gray-950 rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
-                                <div className="p-6">
-                                    <h3 className="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-100">Macroeconomic Impact on Indian Equities</h3>
-                                    <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">Category: Macro | Date: June 10, 2025</p>
-                                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed">An analysis of how global and domestic macroeconomic factors are influencing the Indian equity market.</p>
-                                    <a href="#" className="mt-4 inline-block text-blue-600 hover:underline font-medium">Download Report (PDF) &rarr;</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="text-center mt-12">
-                            <a href="#" className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg transform hover:scale-105 transition duration-300">
-                                View All Research Notes
-                            </a>
-                        </div>
-                    </div>
-                </section>
-
-                <section id="books" className="py-16 md:py-24 bg-gray-100 dark:bg-gray-800 transition-colors duration-300">
-                    <div className="container mx-auto px-6">
-                        <h2 className="text-4xl font-bold text-center mb-12 text-gray-800 dark:text-gray-100">Recommended Books</h2>
-                        <p className="text-center text-lg text-gray-700 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
-                            A curated list of books that have significantly influenced my understanding of markets and investments.
-                        </p>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                            <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
-                                <img src="https://via.placeholder.com/300x450/7e57c2/ffffff?text=Book+Cover+1" alt="Book Cover 1" className="w-full h-64 object-cover"/>
-                                <div className="p-4">
-                                    <h3 className="text-lg font-semibold mb-1 text-gray-800 dark:text-gray-100">The Intelligent Investor</h3>
-                                    <p className="text-gray-600 dark:text-gray-400 text-sm mb-2">By Benjamin Graham</p>
-                                    <p className="text-gray-700 dark:text-gray-300 text-sm">The definitive book on value investing, providing timeless principles for successful investing.</p>
-                                </div>
-                            </div>
-                            <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
-                                <img src="https://via.placeholder.com/300x450/4db6ac/ffffff?text=Book+Cover+2" alt="Book Cover 2" className="w-full h-64 object-cover"/>
-                                <div className="p-4">
-                                    <h3 className="text-lg font-semibold mb-1 text-gray-800 dark:text-gray-100">One Up On Wall Street</h3>
-                                    <p className="text-gray-600 dark:text-gray-400 text-sm mb-2">By Peter Lynch</p>
-                                    <p className="text-gray-700 dark:text-gray-300 text-sm">Lynch's approach to individual investing, emphasizing research and understanding what you own.</p>
-                                </div>
-                            </div>
-                            <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
-                                <img src="https://via.placeholder.com/300x450/ffb74d/ffffff?text=Book+Cover+3" alt="Book Cover 3" className="w-full h-64 object-cover"/>
-                                <div className="p-4">
-                                    <h3 className="text-lg font-semibold mb-1 text-gray-800 dark:text-gray-100">Thinking, Fast and Slow</h3>
-                                    <p className="text-gray-600 dark:text-gray-400 text-sm mb-2">By Daniel Kahneman</p>
-                                    <p className="text-gray-700 dark:text-gray-300 text-sm">Explores the two systems that drive the way we think, useful for understanding investor psychology.</p>
-                                </div>
-                            </div>
-                            <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
-                                <img src="https://via.placeholder.com/300x450/9ccc65/ffffff?text=Book+Cover+4" alt="Book Cover 4" className="w-full h-64 object-cover"/>
-                                <div className="p-4">
-                                    <h3 className="text-lg font-semibold mb-1 text-gray-800 dark:text-gray-100">The Psychology of Money</h3>
-                                    <p className="text-gray-600 dark:text-gray-400 text-sm mb-2">By Morgan Housel</p>
-                                    <p className="text-gray-700 dark:text-gray-300 text-sm">Timeless lessons on wealth, greed, and happiness, focusing on the behavioral aspects of finance.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="text-center mt-12">
-                            <a href="#" className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg transform hover:scale-105 transition duration-300">
-                                View All Recommended Books
-                            </a>
-                        </div>
-                    </div>
-                </section>
-
-                <section id="quotes" className="py-16 md:py-24 bg-gray-200 dark:bg-gray-900 transition-colors duration-300">
-                    <div className="container mx-auto px-6">
-                        <h2 className="text-4xl font-bold text-center mb-12 text-gray-800 dark:text-gray-100">Market Wisdom: Shareable Quotes</h2>
-                        <p className="text-center text-lg text-gray-700 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
-                            Inspiring and insightful quotes on investing, markets, and financial philosophy, perfect for sharing.
-                        </p>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            <div className="bg-white dark:bg-gray-950 rounded-lg shadow-lg p-6 flex flex-col justify-between transform hover:scale-105 transition duration-300">
-                                <div>
-                                    <p className="text-xl italic text-gray-800 dark:text-gray-200 mb-4">"The stock market is a device for transferring money from the impatient to the patient."</p>
-                                    <p className="text-right font-semibold text-gray-700 dark:text-gray-300">- Warren Buffett</p>
-                                </div>
-                                <div className="mt-4 flex justify-end space-x-2">
-                                    <a href="https://twitter.com/intent/tweet?text=The%20stock%20market%20is%20a%20device%20for%20transferring%20money%20from%20the%20impatient%20to%20the%20patient.%20-%20Warren%20Buffett%0A%23YodhaTraderQuotes" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:text-blue-700">
-                                        <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.816-2.26c-.83.49-1.764.85-2.75 1.03a4.096 4.096 0 00-6.993 3.734 11.649 11.649 0 01-8.457-4.287 4.104 4.104 0 001.27 5.477A4.073 4.073 0 012 10.425v.053a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.254 8.254 0 012 18.271c-1.614 0-3.136-.145-4.636-.452A11.623 11.623 0 008.29 20.25z"></path></svg>
-                                    </a>
-                                    <a href="#" className="text-gray-500 hover:text-gray-700" onClick={(e) => { e.preventDefault(); navigator.clipboard.writeText("The stock market is a device for transferring money from the impatient to the patient. - Warren Buffett"); alert('Quote copied to clipboard!'); }}>
-                                        <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 13H8v-2h8v2zM16 9H8V7h8v2zM19 16V4c0-1.1-.9-2-2-2H7C5.9 2 5 2.9 5 4v12c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2zm-2 0H7V4h10v12zM21 20V8c0-1.1-.9-2-2-2h-1v14h4v-2z"></path></svg>
-                                    </a>
-                                </div>
-                            </div>
-                            <div className="bg-white dark:bg-gray-950 rounded-lg shadow-lg p-6 flex flex-col justify-between transform hover:scale-105 transition duration-300">
-                                <div>
-                                    <p className="text-xl italic text-gray-800 dark:text-gray-200 mb-4">"Compound interest is the eighth wonder of the world. He who understands it, earns it; he who doesn't, pays it."</p>
-                                    <p className="text-right font-semibold text-gray-700 dark:text-gray-300">- Albert Einstein</p>
-                                </div>
-                                <div className="mt-4 flex justify-end space-x-2">
-                                    <a href="https://twitter.com/intent/tweet?text=Compound%20interest%20is%20the%20eighth%20wonder%20of%20the%20world.%20He%20who%20understands%20it%2C%20earns%20it%3B%20he%20who%20doesn%27t%2C%20pays%20it.%20-%20Albert%20Einstein%0A%23YodhaTraderQuotes" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:text-blue-700">
-                                        <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.816-2.26c-.83.49-1.764.85-2.75 1.03a4.096 4.096 0 00-6.993 3.734 11.649 11.649 0 01-8.457-4.287 4.104 4.104 0 001.27 5.477A4.073 4.073 0 012 10.425v.053a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.254 8.254 0 012 18.271c-1.614 0-3.136-.145-4.636-.452A11.623 11.623 0 008.29 20.25z"></path></svg>
-                                    </a>
-                                    <a href="#" className="text-gray-500 hover:text-gray-700" onClick={(e) => { e.preventDefault(); navigator.clipboard.writeText("Compound interest is the eighth wonder of the world. He who understands it, earns it; he who doesn't, pays it. - Albert Einstein"); alert('Quote copied to clipboard!'); }}>
-                                        <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 13H8v-2h8v2zM16 9H8V7h8v2zM19 16V4c0-1.1-.9-2-2-2H7C5.9 2 5 2.9 5 4v12c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2zm-2 0H7V4h10v12zM21 20V8c0-1.1-.9-2-2-2h-1v14h4v-2z"></path></svg>
-                                    </a>
-                                </div>
-                            </div>
-                            <div className="bg-white dark:bg-gray-950 rounded-lg shadow-lg p-6 flex flex-col justify-between transform hover:scale-105 transition duration-300">
-                                <div>
-                                    <p className="text-xl italic text-gray-800 dark:text-gray-200 mb-4">"Risk comes from not knowing what you're doing."</p>
-                                    <p className="text-right font-semibold text-gray-700 dark:text-gray-300">- Warren Buffett</p>
-                                </div>
-                                <div className="mt-4 flex justify-end space-x-2">
-                                    <a href="https://twitter.com/intent/tweet?text=Risk%20comes%20from%20not%20knowing%20what%20you%27re%20doing.%20-%20Warren%20Buffett%0A%23YodhaTraderQuotes" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:text-blue-700">
-                                        <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.816-2.26c-.83.49-1.764.85-2.75 1.03a4.096 4.096 0 00-6.993 3.734 11.649 11.649 0 01-8.457-4.287 4.104 4.104 0 001.27 5.477A4.073 4.073 0 012 10.425v.053a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.254 8.254 0 012 18.271c-1.614 0-3.136-.145-4.636-.452A11.623 11.623 0 008.29 20.25z"></path></svg>
-                                    </a>
-                                    <a href="#" className="text-gray-500 hover:text-gray-700" onClick={(e) => { e.preventDefault(); navigator.clipboard.writeText("Risk comes from not knowing what you're doing. - Warren Buffett"); alert('Quote copied to clipboard!'); }}>
-                                        <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 13H8v-2h8v2zM16 9H8V7h8v2zM19 16V4c0-1.1-.9-2-2-2H7C5.9 2 5 2.9 5 4v12c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2zm-2 0H7V4h10v12zM21 20V8c0-1.1-.9-2-2-2h-1v14h4v-2z"></path></svg>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="text-center mt-12">
-                            <a href="#" className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg transform hover:scale-105 transition duration-300">
-                                Discover More Quotes
-                            </a>
-                        </div>
-                    </div>
-                </section>
-
-                {/* New Tools Section - This replaces your old tools section content */}
-                <ToolsSection />
-
-            </main>
-
-            {/* Footer (existing code) */}
-            <footer className="bg-gray-800 text-gray-300 py-8 dark:bg-gray-950">
-                <div className="container mx-auto px-6 text-center">
-                    <div className="flex justify-center space-x-6 mb-6">
-                        <a href="https://linkedin.com/in/yourprofile" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors duration-200">
-                            <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"></path></svg>
-                        </a>
-                        <a href="https://twitter.com/yourhandle" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors duration-200">
-                            <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.816-2.26c-.83.49-1.764.85-2.75 1.03a4.096 4.096 0 00-6.993 3.734 11.649 11.649 0 01-8.457-4.287 4.104 4.104 0 001.27 5.477A4.073 4.073 0 012 10.425v.053a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.254 8.254 0 012 18.271c-1.614 0-3.136-.145-4.636-.452A11.623 11.623 0 008.29 20.25z"></path></svg>
-                        </a>
-                        <a href="mailto:your_email@example.com" className="hover:text-white transition-colors duration-200">
-                            <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12.713l-11.985-9.713h23.97l-11.985 9.713zm0 2.287l-12-9.721v13.721h24v-13.721l-12 9.721z"></path></svg>
-                        </a>
-                    </div>
-                    <p className="text-sm">&copy; {new Date().getFullYear()} YodhaTrader. All rights reserved.</p>
-                    <p className="text-xs mt-2">SEBI Registered Research Analyst: [Your SEBI Registration Number Here]</p>
-                    <p className="text-xs mt-1">Disclaimer: Investment in securities markets are subject to market risks. Read all the related documents carefully before investing.</p>
-                </div>
-            </footer>
-        </div>
-    );
-};
-
-
-// ----------------------------------------------------------------------
-// Individual Calculator Components
-// ----------------------------------------------------------------------
-
-// Reusable Input Field Component
-const CalculatorInput = ({ label, value, onChange, placeholder, type = "number", min = "0" }) => (
-    <div>
-        <label className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">
-            {label}:
-        </label>
-        <input
-            type={type}
-            value={value}
-            onChange={(e) => onChange(e.target.value)}
-            placeholder={placeholder}
-            min={min}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
-        />
-    </div>
-);
-
-// Reusable Calculator Card Wrapper
-const CalculatorCard = ({ title, description, children, result }) => (
-    <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg p-6 transform hover:scale-105 transition duration-300">
-        <h3 className="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-100">{title}</h3>
-        <p className="text-gray-700 dark:text-gray-300 mb-4">{description}</p>
-        <div className="space-y-4">
-            {children}
-            <p className="mt-4 text-gray-800 dark:text-gray-200">
-                Result: <span className="font-bold">{result}</span>
-            </p>
-        </div>
-    </div>
-);
-
-// Stock Average Calculator
-const StockAverageCalculator = () => {
-    const [entries, setEntries] = useState([{ price: '', quantity: '' }]);
-    const [average, setAverage] = useState('N/A');
-
-    // Logic to calculate the average price of stock holdings
-    const calculateAverage = () => {
-        let totalValue = 0;
-        let totalQuantity = 0;
-        let isValid = true;
-
-        entries.forEach(entry => {
-            const price = parseFloat(entry.price);
-            const quantity = parseFloat(entry.quantity);
-            if (isNaN(price) || isNaN(quantity) || price < 0 || quantity < 0) {
-                isValid = false;
-            } else {
-                totalValue += price * quantity;
-                totalQuantity += quantity;
-            }
-        });
-
-        if (isValid && totalQuantity > 0) {
-            setAverage(`₹${(totalValue / totalQuantity).toFixed(2)}`);
-        } else {
-            setAverage('Invalid input');
-        }
-    };
-
-    // Add a new row for price/quantity input
-    const addEntry = () => {
-        setEntries([...entries, { price: '', quantity: '' }]);
-    };
-
-    // Update specific entry's price or quantity
-    const updateEntry = (index, field, value) => {
-        const newEntries = [...entries];
-        newEntries[index][field] = value;
-        setEntries(newEntries);
-    };
-
-    // Remove an entry
-    const removeEntry = (index) => {
-        const newEntries = entries.filter((_, i) => i !== index);
-        setEntries(newEntries);
-    };
-
-    return (
-        <CalculatorCard
-            title="Stock Average Calculator"
-            description="Calculate the average price of your stock holdings after multiple purchases."
-            result={average}
-        >
-            {entries.map((entry, index) => (
-                <div key={index} className="flex items-end space-x-2">
-                    <div className="flex-1">
-                        <CalculatorInput
-                            label={`Price ${index + 1} (₹)`}
-                            value={entry.price}
-                            onChange={(val) => updateEntry(index, 'price', val)}
-                            placeholder="e.g., 100"
-                        />
-                    </div>
-                    <div className="flex-1">
-                        <CalculatorInput
-                            label={`Quantity ${index + 1}`}
-                            value={entry.quantity}
-                            onChange={(val) => updateEntry(index, 'quantity', val)}
-                            placeholder="e.g., 10"
-                        />
-                    </div>
-                    {entries.length > 1 && (
-                        <button
-                            onClick={() => removeEntry(index)}
-                            className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-3 rounded focus:outline-none focus:shadow-outline"
-                            title="Remove entry"
-                        >
-                            &times;
-                        </button>
-                    )}
-                </div>
-            ))}
-            <button
-                onClick={addEntry}
-                className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2"
-            >
-                Add Row
-            </button>
-            <button
-                onClick={calculateAverage}
-                className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            >
-                Calculate Average
-            </button>
-        </CalculatorCard>
-    );
-};
-
-// SIP Calculator
-const SIPCalculator = () => {
-    const [monthlyInvestment, setMonthlyInvestment] = useState('');
-    const [investmentPeriod, setInvestmentPeriod] = useState('');
-    const [annualReturnRate, setAnnualReturnRate] = useState('');
-    const [estimatedValue, setEstimatedValue] = useState('N/A');
-
-    // Logic to calculate the future value of an SIP
-    const calculateSIP = () => {
-        const p = parseFloat(monthlyInvestment);
-        const n = parseFloat(investmentPeriod); // Years
-        const r = parseFloat(annualReturnRate); // Percentage
-
-        if (isNaN(p) || isNaN(n) || isNaN(r) || p <= 0 || n <= 0 || r < 0) {
-            setEstimatedValue('Invalid input');
-            // Optionally track invalid input events
-            if (window.gtag) {
-                gtag('event', 'calculator_error', {
-                    event_category: 'Calculator',
-                    event_label: 'SIP Calculator - Invalid Input',
-                    value: 0
-                });
-            }
-            return;
-        }
-
-        const monthlyRate = r / 100 / 12;
-        const totalMonths = n * 12;
-
-        let futureValue;
-        if (monthlyRate === 0) {
-            futureValue = p * totalMonths;
-        } else {
-            futureValue = p * ((Math.pow(1 + monthlyRate, totalMonths) - 1) / monthlyRate) * (1 + monthlyRate);
-        }
-        setEstimatedValue(`₹${futureValue.toFixed(2)}`);
-
-        // --- Google Analytics Tracking for successful calculation ---
-        if (window.gtag) {
-            gtag('event', 'calculate_sip', {
-                event_category: 'Calculator',
-                event_label: 'SIP Calculated Successfully',
-                value: futureValue.toFixed(0) // Send a numeric value if meaningful
-            });
-        }
-        // --- End Google Analytics Tracking ---
-    };
-
-    return (
-        // ... (rest of the SIPCalculator JSX) ...
-    );
-};
-
-// CAGR Calculator
-const CAGRCalculator = () => {
-    const [startValue, setStartValue] = useState('');
-    const [endValue, setEndValue] = useState('');
-    const [years, setYears] = useState('');
-    const [cagrResult, setCagrResult] = useState('N/A');
-
-    // Logic to calculate Compound Annual Growth Rate (CAGR)
-    const calculateCAGR = () => {
-        const start = parseFloat(startValue);
-        const end = parseFloat(endValue);
-        const n = parseFloat(years);
-
-        if (isNaN(start) || isNaN(end) || isNaN(n) || start <= 0 || end < 0 || n <= 0) {
-            setCagrResult('Invalid input');
-            return;
-        }
-
-        const cagr = (Math.pow(end / start, 1 / n) - 1) * 100;
-        setCagrResult(`${cagr.toFixed(2)}%`);
-    };
-
-    return (
-        <CalculatorCard
-            title="CAGR Calculator"
-            description="Compute the Compound Annual Growth Rate of your investment."
-            result={cagrResult}
-        >
-            <CalculatorInput
-                label="Starting Value (₹)"
-                value={startValue}
-                onChange={setStartValue}
-                placeholder="e.g., 100000"
-            />
-            <CalculatorInput
-                label="Ending Value (₹)"
-                value={endValue}
-                onChange={setEndValue}
-                placeholder="e.g., 200000"
-            />
-            <CalculatorInput
-                label="Number of Years"
-                value={years}
-                onChange={setYears}
-                placeholder="e.g., 5"
-            />
-            <button
-                onClick={calculateCAGR}
-                className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            >
-                Calculate CAGR
-            </button>
-        </CalculatorCard>
-    );
-};
-
-// Tax Calculator (Simplified for India - demonstrate logic, not full accuracy)
-const TaxCalculator = () => {
-    const [annualIncome, setAnnualIncome] = useState('');
-    const [age, setAge] = useState('');
-    const [taxRegime, setTaxRegime] = useState('new'); // Default to new regime
-    const [estimatedTax, setEstimatedTax] = useState('N/A');
-
-    // Logic to estimate income tax based on simplified Indian tax slabs.
-    // NOTE: This is a highly simplified model for demonstration purposes only.
-    // Actual tax calculation involves many more factors (deductions, exemptions, surcharge, cess, specific categories etc.)
-    const calculateTax = () => {
-        const income = parseFloat(annualIncome);
-        const ageVal = parseInt(age); // Not used in new regime, but kept for old regime considerations
-        let tax = 0;
-
-        if (isNaN(income) || income < 0) {
-            setEstimatedTax('Invalid input');
-            return;
-        }
-
-        if (taxRegime === 'new') {
-            if (income <= 300000) tax = 0;
-            else if (income <= 600000) tax = (income - 300000) * 0.05;
-            else if (income <= 900000) tax = 15000 + (income - 600000) * 0.10;
-            else if (income <= 1200000) tax = 45000 + (income - 900000) * 0.15;
-            else if (income <= 1500000) tax = 90000 + (income - 1200000) * 0.20;
-            else tax = 150000 + (income - 1500000) * 0.30;
-        } else { // Old Regime (Simplified, ignores senior citizen differences, standard deduction etc.)
-            if (income <= 250000) tax = 0;
-            else if (income <= 500000) tax = (income - 250000) * 0.05;
-            else if (income <= 1000000) tax = 12500 + (income - 500000) * 0.20;
-            else tax = 112500 + (income - 1000000) * 0.30;
-            // Add rebate for income up to 5 Lakh if needed: if (income <= 500000) tax = Math.min(tax, 12500);
-        }
-
-        setEstimatedTax(`₹${tax.toFixed(2)}`);
-    };
-
-    return (
-        <CalculatorCard
-            title="Tax Calculator (India)"
-            description="Estimate your income tax liability based on current Indian tax slabs (simplified)."
-            result={estimatedTax}
-        >
-            <CalculatorInput
-                label="Annual Income (₹)"
-                value={annualIncome}
-                onChange={setAnnualIncome}
-                placeholder="e.g., 700000"
-            />
-            <CalculatorInput
-                label="Age"
-                value={age}
-                onChange={setAge}
-                placeholder="e.g., 35"
-            />
-            <div>
-                <label className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">
-                    Tax Regime:
-                </label>
-                <select
-                    value={taxRegime}
-                    onChange={(e) => setTaxRegime(e.target.value)}
-                    className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
-                >
-                    <option value="new">New Regime</option>
-                    <option value="old">Old Regime</option>
-                </select>
-            </div>
-            <button
-                onClick={calculateTax}
-                className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            >
-                Calculate Tax
-            </button>
-        </CalculatorCard>
-    );
-};
-
-// EMI Calculator
-const EMICalculator = () => {
-    const [principal, setPrincipal] = useState('');
-    const [annualInterest, setAnnualInterest] = useState('');
-    const [tenureMonths, setTenureMonths] = useState('');
-    const [emiResult, setEmiResult] = useState('N/A');
-
-    // Logic to calculate Equated Monthly Installment (EMI)
-    const calculateEMI = () => {
-        const P = parseFloat(principal);
-        const R_annual = parseFloat(annualInterest);
-        const N = parseFloat(tenureMonths);
-
-        if (isNaN(P) || isNaN(R_annual) || isNaN(N) || P <= 0 || R_annual < 0 || N <= 0) {
-            setEmiResult('Invalid input');
-            return;
-        }
-
-        const r_monthly = (R_annual / 12) / 100; // Monthly interest rate
-
-        let emi;
-        if (r_monthly === 0) { // For 0% interest
-            emi = P / N;
-        } else {
-            emi = P * r_monthly * Math.pow(1 + r_monthly, N) / (Math.pow(1 + r_monthly, N) - 1);
-        }
-        setEmiResult(`₹${emi.toFixed(2)}`);
-    };
-
-    return (
-        <CalculatorCard
-            title="EMI Calculator"
-            description="Determine your Equated Monthly Installment for loans."
-            result={emiResult}
-        >
-            <CalculatorInput
-                label="Loan Amount (₹)"
-                value={principal}
-                onChange={setPrincipal}
-                placeholder="e.g., 500000"
-            />
-            <CalculatorInput
-                label="Interest Rate (% per annum)"
-                value={annualInterest}
-                onChange={setAnnualInterest}
-                placeholder="e.g., 9"
-            />
-            <CalculatorInput
-                label="Loan Tenure (Months)"
-                value={tenureMonths}
-                onChange={setTenureMonths}
-                placeholder="e.g., 60"
-            />
-            <button
-                onClick={calculateEMI}
-                className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            >
-                Calculate EMI
-            </button>
-        </CalculatorCard>
-    );
-};
-
-// SWP Calculator (New)
-const SWPCalculator = () => {
-    const [totalInvestment, setTotalInvestment] = useState('');
-    const [withdrawalAmount, setWithdrawalAmount] = useState('');
-    const [annualReturnRate, setAnnualReturnRate] = useState('');
-    const [withdrawalPeriod, setWithdrawalPeriod] = useState('');
-    const [result, setResult] = useState('N/A');
-
-    // Logic to calculate how long an investment will last with systematic withdrawals (SWP)
-    // Or the remaining value after the period.
-    const calculateSWP = () => {
-        let P = parseFloat(totalInvestment); // Principal
-        const W = parseFloat(withdrawalAmount); // Monthly withdrawal
-        const R_annual = parseFloat(annualReturnRate); // Annual return %
-        const N = parseFloat(withdrawalPeriod); // Years
-
-        if (isNaN(P) || isNaN(W) || isNaN(R_annual) || isNaN(N) || P <= 0 || W <= 0 || R_annual < 0 || N <= 0) {
-            setResult('Invalid input');
-            return;
-        }
-
-        const r_monthly = (R_annual / 100) / 12; // Monthly return rate
-        const totalMonths = N * 12;
-
-        // Simplified calculation: track balance month by month
-        let balance = P;
-        let monthsLasted = 0;
-        let finalBalance = 0;
-
-        for (let i = 0; i < totalMonths; i++) {
-            if (balance <= 0) { // If balance runs out before the period
-                monthsLasted = i;
-                balance = 0;
-                break;
-            }
-            balance = balance * (1 + r_monthly) - W;
-            monthsLasted = i + 1;
-        }
-
-        if (balance > 0) {
-            setResult(`Remaining: ₹${balance.toFixed(2)} after ${N} years`);
-        } else {
-            setResult(`Investment lasts ~${monthsLasted} months.`);
-        }
-    };
-
-    return (
-        <CalculatorCard
-            title="SWP Calculator"
-            description="Estimate how long your investment will last with Systematic Withdrawal Plan (SWP) or the remaining value."
-            result={result}
-        >
-            <CalculatorInput
-                label="Total Investment (₹)"
-                value={totalInvestment}
-                onChange={setTotalInvestment}
-                placeholder="e.g., 1000000"
-            />
-            <CalculatorInput
-                label="Monthly Withdrawal (₹)"
-                value={withdrawalAmount}
-                onChange={setWithdrawalAmount}
-                placeholder="e.g., 10000"
-            />
-            <CalculatorInput
-                label="Expected Annual Return (%)"
-                value={annualReturnRate}
-                onChange={setAnnualReturnRate}
-                placeholder="e.g., 8"
-            />
-            <CalculatorInput
-                label="Withdrawal Period (Years)"
-                value={withdrawalPeriod}
-                onChange={setWithdrawalPeriod}
-                placeholder="e.g., 15"
-            />
-            <button
-                onClick={calculateSWP}
-                className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            >
-                Calculate SWP
-            </button>
-        </CalculatorCard>
-    );
-};
-
-// Stock Profit/Loss Calculator (New)
-const StockProfitLossCalculator = () => {
-    const [buyPrice, setBuyPrice] = useState('');
-    const [sellPrice, setSellPrice] = useState('');
-    const [quantity, setQuantity] = useState('');
-    const [buyBrokerage, setBuyBrokerage] = useState(''); // As percentage
-    const [sellBrokerage, setSellBrokerage] = useState(''); // As percentage
-    const [taxRate, setTaxRate] = useState(''); // As percentage (e.g., STT, capital gains)
-    const [result, setResult] = useState('N/A');
-    const [profitLossClass, setProfitLossClass] = useState('');
-
-    // Logic to calculate profit/loss including basic charges
-    const calculateProfitLoss = () => {
-        const bp = parseFloat(buyPrice);
-        const sp = parseFloat(sellPrice);
-        const qty = parseFloat(quantity);
-        const bb = parseFloat(buyBrokerage || 0); // Default to 0 if empty
-        const sb = parseFloat(sellBrokerage || 0); // Default to 0 if empty
-        const tx = parseFloat(taxRate || 0); // Default to 0 if empty
-
-        if (isNaN(bp) || isNaN(sp) || isNaN(qty) || bp <= 0 || sp <= 0 || qty <= 0 || bb < 0 || sb < 0 || tx < 0) {
-            setResult('Invalid input');
-            setProfitLossClass('');
-            return;
-        }
-
-        const totalBuyValue = bp * qty;
-        const totalSellValue = sp * qty;
-
-        const actualBuyBrokerage = totalBuyValue * (bb / 100);
-        const actualSellBrokerage = totalSellValue * (sb / 100);
-
-        const grossProfitLoss = totalSellValue - totalBuyValue;
-        let netProfitLoss = grossProfitLoss - actualBuyBrokerage - actualSellBrokerage;
-
-        // Apply tax only if there's a gross profit
-        if (grossProfitLoss > 0) {
-            const actualTax = grossProfitLoss * (tx / 100);
-            netProfitLoss -= actualTax;
-        }
-
-        if (netProfitLoss > 0) {
-            setResult(`Profit: ₹${netProfitLoss.toFixed(2)}`);
-            setProfitLossClass('text-green-500');
-        } else if (netProfitLoss < 0) {
-            setResult(`Loss: ₹${Math.abs(netProfitLoss).toFixed(2)}`);
-            setProfitLossClass('text-red-500');
-        } else {
-            setResult('No Profit/Loss');
-            setProfitLossClass('text-gray-500');
-        }
-    };
-
-    return (
-        <CalculatorCard
-            title="Stock Profit/Loss Calculator"
-            description="Calculate your net profit or loss from a stock trade, considering basic charges."
-            result={<span className={profitLossClass}>{result}</span>}
-        >
-            <CalculatorInput label="Buy Price (₹)" value={buyPrice} onChange={setBuyPrice} placeholder="e.g., 100" />
-            <CalculatorInput label="Sell Price (₹)" value={sellPrice} onChange={setSellPrice} placeholder="e.g., 120" />
-            <CalculatorInput label="Quantity" value={quantity} onChange={setQuantity} placeholder="e.g., 50" />
-            <CalculatorInput label="Buy Brokerage (%)" value={buyBrokerage} onChange={setBuyBrokerage} placeholder="e.g., 0.05" min="0" />
-            <CalculatorInput label="Sell Brokerage (%)" value={sellBrokerage} onChange={setSellBrokerage} placeholder="e.g., 0.05" min="0" />
-            <CalculatorInput label="Tax Rate on Profit (%)" value={taxRate} onChange={setTaxRate} placeholder="e.g., 15 (STCG)" min="0" />
-            <button
-                onClick={calculateProfitLoss}
-                className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            >
-                Calculate P/L
-            </button>
-        </CalculatorCard>
-    );
-};
-
-// Stock Split Calculator (New)
-const StockSplitCalculator = () => {
-    const [originalShares, setOriginalShares] = useState('');
-    const [originalPrice, setOriginalPrice] = useState('');
-    const [splitRatioNum, setSplitRatioNum] = useState(''); // e.g., 1 for 1:10
-    const [splitRatioDen, setSplitRatioDen] = useState(''); // e.g., 10 for 1:10
-    const [resultShares, setResultShares] = useState('N/A');
-    const [resultPrice, setResultPrice] = useState('N/A');
-
-    // Logic to calculate new shares and new average price after a stock split.
-    const calculateStockSplit = () => {
-        const oldShares = parseFloat(originalShares);
-        const oldPrice = parseFloat(originalPrice);
-        const splitNum = parseFloat(splitRatioNum);
-        const splitDen = parseFloat(splitRatioDen);
-
-        if (isNaN(oldShares) || isNaN(oldPrice) || isNaN(splitNum) || isNaN(splitDen) ||
-            oldShares <= 0 || oldPrice <= 0 || splitNum <= 0 || splitDen <= 0) {
-            setResultShares('Invalid input');
-            setResultPrice('Invalid input');
-            return;
-        }
-
-        // Example: 1:10 split means new shares = old shares * 10 / 1. New price = old price * 1 / 10.
-        // So, ratio is splitDen / splitNum
-        const newShares = oldShares * (splitDen / splitNum);
-        const newPrice = oldPrice * (splitNum / splitDen);
-
-        setResultShares(newShares.toFixed(0)); // Shares are usually whole numbers
-        setResultPrice(`₹${newPrice.toFixed(2)}`);
-    };
-
-    return (
-        <CalculatorCard
-            title="Stock Split Calculator"
-            description="Calculate your new number of shares and average price after a stock split."
-            result={
-                <>
-                    New Shares: <span className="font-bold">{resultShares}</span> <br />
-                    New Average Price: <span className="font-bold">{resultPrice}</span>
-                </>
-            }
-        >
-            <CalculatorInput
-                label="Original Shares"
-                value={originalShares}
-                onChange={setOriginalShares}
-                placeholder="e.g., 10"
-            />
-            <CalculatorInput
-                label="Original Average Buy Price (₹)"
-                value={originalPrice}
-                onChange={setOriginalPrice}
-                placeholder="e.g., 1000"
-            />
-            <div className="flex space-x-2">
-                <div className="flex-1">
-                    <CalculatorInput
-                        label="Split Ratio (New Shares)"
-                        value={splitRatioDen}
-                        onChange={setSplitRatioDen}
-                        placeholder="e.g., 10 (for 1:10 split)"
-                    />
-                </div>
-                <div className="flex-1">
-                    <CalculatorInput
-                        label="Split Ratio (Old Shares)"
-                        value={splitRatioNum}
-                        onChange={setSplitRatioNum}
-                        placeholder="e.g., 1 (for 1:10 split)"
-                    />
-                </div>
-            </div>
-            <p className="text-sm text-gray-500 dark:text-gray-400 -mt-2">
-                Enter ratio as "New Shares : Old Shares" (e.g., 10 : 1 for a 1:10 split)
-            </p>
-            <button
-                onClick={calculateStockSplit}
-                className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            >
-                Calculate Split
-            </button>
-        </CalculatorCard>
-    );
-};
-
-// ----------------------------------------------------------------------
-// Main Tools Section Component - orchestrates all calculators
-// ----------------------------------------------------------------------
-const ToolsSection = () => {
-    return (
-        <section id="tools" className="py-16 md:py-24 bg-gray-100 dark:bg-gray-800 transition-colors duration-300">
-            <div className="container mx-auto px-6">
-                <h2 className="text-4xl font-bold text-center mb-12 text-gray-800 dark:text-gray-100">Financial Tools & Calculators</h2>
-                <p className="text-center text-lg text-gray-700 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
-                    Empower your financial planning with these easy-to-use calculators.
-                </p>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <StockAverageCalculator />
-                    <SIPCalculator />
-                    <CAGRCalculator />
-                    <EMICalculator />
-                    <SWPCalculator />
-                    <StockProfitLossCalculator />
-                    <StockSplitCalculator />
-                    {/* Tax Calculator is kept but note the simplification */}
-                    <TaxCalculator />
-                </div>
-            </div>
-        </section>
-    );
-};
+        const { useState, useEffect } = React;
+
+        const App = () => {
+            const [darkMode, setDarkMode] = useState(true); // Default to dark mode
+
+            useEffect(() => {
+                if (darkMode) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            }, [darkMode]);
+
+            const toggleDarkMode = () => {
+                setDarkMode(!darkMode);
+            };
 
             return (
-                <div className="min-h-screen flex flex-col">
-                    {/* Header/Navbar */}
-                    <header className="bg-gray-800 text-white shadow-lg sticky top-0 z-50 dark:bg-gray-950">
-                        <nav className="container mx-auto px-6 py-4 flex justify-between items-center">
-                            <div className="text-2xl font-bold">
-                                <a href="#" className="hover:text-gray-300 transition-colors duration-200">YodhaTrader</a>
-                            </div>
-                            <div className="hidden md:flex space-x-6">
-                                <a href="#home" className="hover:text-gray-300 transition-colors duration-200">Home</a>
-                                <a href="#blog" className="hover:text-gray-300 transition-colors duration-200">Blog</a>
-                                <a href="#research" className="hover:text-gray-300 transition-colors duration-200">Research Notes</a>
-                                <a href="#books" className="hover:text-gray-300 transition-colors duration-200">Books</a>
-                                <a href="#quotes" className="hover:text-gray-300 transition-colors duration-200">Market Quotes</a>
-                                <a href="#tools" className="hover:text-gray-300 transition-colors duration-200">Tools</a>
-                            </div>
-                            <button
-                                onClick={toggleDarkMode}
-                                className="p-2 rounded-full bg-gray-700 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-colors duration-200"
-                            >
-                                {darkMode ? (
-                                    <svg className="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 3v1m0 16v1m9-9h1M3 12h1m15.325-4.275l-.707-.707M4.372 19.372l-.707-.707M18.921 18.921l-.707-.707M5.077 5.077l-.707-.707M19 12a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                                ) : (
-                                    <svg className="w-6 h-6 text-indigo-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-                                )}
-                            </button>
-                            <div className="md:hidden">
-                                {/* Mobile menu button (Hamburger icon) */}
-                                <button className="text-white focus:outline-none">
-                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-                                </button>
-                            </div>
-                        </nav>
+                <div className="min-h-screen">
+                    {/* Header */}
+                    <header className="bg-white shadow-md py-4 px-6 flex justify-between items-center relative">
+                        <div className="text-2xl font-bold text-indigo-600">YodhaTrader</div>
+                        <button onClick={toggleDarkMode} className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200">
+                            {darkMode ? (
+                                <i className="fas fa-sun text-yellow-500 text-xl"></i>
+                            ) : (
+                                <i className="fas fa-moon text-gray-700 text-xl"></i>
+                            )}
+                        </button>
                     </header>
 
-                    <main className="flex-grow">
-                        {/* Homepage Section */}
-                        <section id="home" className="relative bg-gradient-to-r from-gray-900 to-gray-700 text-white py-20 md:py-32 overflow-hidden">
-                            <div className="absolute inset-0 bg-cover bg-center opacity-20" style={{ backgroundImage: 'url("https://via.placeholder.com/1920x1080/0f0f0f/ffffff?text=Financial+Charts+Background")' }}></div>
-                            <div className="container mx-auto px-6 relative z-10 text-center">
-                                <h1 className="text-4xl md:text-6xl font-extrabold leading-tight drop-shadow-lg animate-fade-in-down">
-                                    YodhaTrader
-                                </h1>
-                                <p className="mt-4 text-xl md:text-3xl font-light italic animate-fade-in-up">
-                                    Empowering Your Financial Journey with Insight and Precision
-                                </p>
-                                <div className="mt-8">
-                                    <p className="text-lg md:text-xl leading-relaxed max-w-2xl mx-auto animate-fade-in-up delay-100">
-                                        Welcome to YodhaTrader, your dedicated resource for comprehensive financial analysis, investment strategies, and powerful tools. Navigate the markets with confidence.
-                                    </p>
+                    {/* Hero Section */}
+                    <section className="relative h-screen bg-gradient-to-r from-gray-900 to-indigo-900 flex items-center justify-center text-center text-white p-4">
+                        <div className="relative z-10">
+                            <h1 className="text-5xl md:text-7xl font-extrabold mb-4">YodhaTrader</h1>
+                            <p className="text-xl md:text-2xl mb-8">Empowering Your Financial Journey with Insight and Precision</p>
+                            <a href="#blog" className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300">Explore Insights</a>
+                        </div>
+                    </section>
+
+                    {/* Blog Section */}
+                    <section id="blog" className="py-16 px-4 bg-gray-50 dark:bg-gray-800 transition-colors duration-300">
+                        <h2 className="text-4xl font-bold text-center mb-12 text-gray-800 dark:text-gray-100">Latest Insights</h2>
+                        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                            {[1, 2, 3].map((i) => (
+                                <div key={i} className="bg-white dark:bg-gray-700 rounded-lg shadow-lg overflow-hidden flex flex-col">
+                                    <img src={`https://via.placeholder.com/400x250?text=Blog+Post+${i}`} alt={`Blog Post ${i}`} className="w-full h-48 object-cover"/>
+                                    <div className="p-6 flex-grow flex flex-col">
+                                        <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">The Future of Finance: Trends to Watch {i}</h3>
+                                        <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">Published on June {20 + i}, 2025</p>
+                                        <p className="text-gray-700 dark:text-gray-200 mb-4 flex-grow">A brief overview of emerging financial trends and their potential impact on your investments.</p>
+                                        <a href="#" className="text-indigo-600 hover:underline font-semibold self-start">Read More</a>
+                                    </div>
                                 </div>
-                                <div className="mt-10">
-                                    <a href="#blog" className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg transform hover:scale-105 transition duration-300">
-                                        Explore Insights
+                            ))}
+                        </div>
+                    </section>
+
+                    {/* Equity Research Section */}
+                    <section id="equity-research" className="py-16 px-4 bg-white dark:bg-gray-900 transition-colors duration-300">
+                        <h2 className="text-4xl font-bold text-center mb-12 text-gray-800 dark:text-gray-100">SEBI Registered Research Notes</h2>
+                        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                            {[1, 2, 3].map((i) => (
+                                <div key={i} className="bg-gray-50 dark:bg-gray-800 rounded-lg shadow-lg p-6 flex flex-col">
+                                    <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">Quarterly Sector Report: Tech {i === 1 ? 'Giants' : i === 2 ? 'Innovations' : 'Outlook'}</h3>
+                                    <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">Sector: Technology</p>
+                                    <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">Date: June {10 + i}, 2025</p>
+                                    <p className="text-gray-700 dark:text-gray-200 mb-4 flex-grow">An in-depth analysis of the technology sector's performance and future prospects, focusing on key players.</p>
+                                    <a href="#" className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md text-center self-start">
+                                        <i className="fas fa-download mr-2"></i>Download Report (PDF)
                                     </a>
                                 </div>
-                            </div>
-                        </section>
+                            ))}
+                        </div>
+                    </section>
 
-                        {/* Blog Section */}
-                        <section id="blog" className="py-16 md:py-24 bg-gray-100 dark:bg-gray-800 transition-colors duration-300">
-                            <div className="container mx-auto px-6">
-                                <h2 className="text-4xl font-bold text-center mb-12 text-gray-800 dark:text-gray-100">Latest Blog Posts</h2>
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                                    {/* Blog Post 1 */}
-                                    <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
-                                        <img src="https://via.placeholder.com/600x400/3498db/ffffff?text=Market+Trends" alt="Market Trends" className="w-full h-48 object-cover"/>
-                                        <div className="p-6">
-                                            <h3 className="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-100">Understanding Current Market Trends</h3>
-                                            <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">Date: June 27, 2025</p>
-                                            <p className="text-gray-700 dark:text-gray-300 leading-relaxed">A deep dive into the factors shaping today's financial markets, from inflation to geopolitical events...</p>
-                                            <a href="#" className="mt-4 inline-block text-orange-600 hover:underline font-medium">Read More &rarr;</a>
-                                        </div>
-                                    </div>
-                                    {/* Blog Post 2 */}
-                                    <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
-                                        <img src="https://via.placeholder.com/600x400/2ecc71/ffffff?text=Investment+Strategies" alt="Investment Strategies" className="w-full h-48 object-cover"/>
-                                        <div className="p-6">
-                                            <h3 className="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-100">Top 5 Investment Strategies for Long-Term Growth</h3>
-                                            <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">Date: June 20, 2025</p>
-                                            <p className="text-gray-700 dark:text-gray-300 leading-relaxed">Discover proven strategies to build a resilient portfolio and achieve your financial goals...</p>
-                                            <a href="#" className="mt-4 inline-block text-orange-600 hover:underline font-medium">Read More &rarr;</a>
-                                        </div>
-                                    </div>
-                                    {/* Blog Post 3 */}
-                                    <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
-                                        <img src="https://via.placeholder.com/600x400/e74c3c/ffffff?text=Risk+Management" alt="Risk Management" className="w-full h-48 object-cover"/>
-                                        <div className="p-6">
-                                            <h3 className="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-100">Navigating Volatility: Essential Risk Management Tips</h3>
-                                            <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">Date: June 15, 2025</p>
-                                            <p className="text-gray-700 dark:text-gray-300 leading-relaxed">Learn how to protect your investments and minimize losses during periods of market turbulence...</p>
-                                            <a href="#" className="mt-4 inline-block text-orange-600 hover:underline font-medium">Read More &rarr;</a>
-                                        </div>
+                    {/* Books Section */}
+                    <section id="books" className="py-16 px-4 bg-gray-50 dark:bg-gray-800 transition-colors duration-300">
+                        <h2 className="text-4xl font-bold text-center mb-12 text-gray-800 dark:text-gray-100">Recommended Reads</h2>
+                        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+                            {[
+                                { title: "The Intelligent Investor", author: "Benjamin Graham", desc: "A timeless guide to value investing." },
+                                { title: "Rich Dad Poor Dad", author: "Robert Kiyosaki", desc: "Financial education and building wealth." },
+                                { title: "Thinking, Fast and Slow", author: "Daniel Kahneman", desc: "Insights into decision-making and biases." },
+                                { title: "Psychology of Money", author: "Morgan Housel", desc: "Understanding behavior in finance." },
+                            ].map((book, i) => (
+                                <div key={i} className="bg-white dark:bg-gray-700 rounded-lg shadow-lg overflow-hidden flex flex-col">
+                                    <img src={`https://via.placeholder.com/200x300?text=${encodeURIComponent(book.title)}`} alt={book.title} className="w-full h-64 object-cover"/>
+                                    <div className="p-4 flex-grow">
+                                        <h3 className="text-xl font-semibold mb-1 text-gray-900 dark:text-gray-100">{book.title}</h3>
+                                        <p className="text-gray-600 dark:text-gray-300 mb-2">By {book.author}</p>
+                                        <p className="text-gray-700 dark:text-gray-200 text-sm">{book.desc}</p>
                                     </div>
                                 </div>
-                                <div className="text-center mt-12">
-                                    <a href="#" className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg transform hover:scale-105 transition duration-300">
-                                        View All Blog Posts
-                                    </a>
-                                </div>
-                            </div>
-                        </section>
+                            ))}
+                        </div>
+                    </section>
 
-                        {/* Equity Research Notes Section */}
-                        <section id="research" className="py-16 md:py-24 bg-gray-200 dark:bg-gray-900 transition-colors duration-300">
-                            <div className="container mx-auto px-6">
-                                <h2 className="text-4xl font-bold text-center mb-12 text-gray-800 dark:text-gray-100">Equity Research Notes</h2>
-                                <p className="text-center text-lg text-gray-700 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
-                                    As a SEBI Registered Research Analyst, I provide in-depth equity research notes to help you make informed investment decisions.
-                                </p>
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                                    {/* Research Note 1 */}
-                                    <div className="bg-white dark:bg-gray-950 rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
-                                        <div className="p-6">
-                                            <h3 className="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-100">Company X - Q1 2025 Earnings Analysis</h3>
-                                            <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">Sector: Technology | Date: June 25, 2025</p>
-                                            <p className="text-gray-700 dark:text-gray-300 leading-relaxed">Detailed analysis of Company X's latest quarterly performance, including revenue, profit margins, and future outlook.</p>
-                                            <a href="#" className="mt-4 inline-block text-blue-600 hover:underline font-medium">Download Report (PDF) &rarr;</a>
-                                        </div>
-                                    </div>
-                                    {/* Research Note 2 */}
-                                    <div className="bg-white dark:bg-gray-950 rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
-                                        <div className="p-6">
-                                            <h3 className="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-100">Sectoral Outlook: Renewable Energy (2025-2030)</h3>
-                                            <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">Sector: Energy | Date: June 18, 2025</p>
-                                            <p className="text-gray-700 dark:text-gray-300 leading-relaxed">A comprehensive outlook on the renewable energy sector, identifying key growth drivers and potential investment opportunities.</p>
-                                            <a href="#" className="mt-4 inline-block text-blue-600 hover:underline font-medium">Download Report (PDF) &rarr;</a>
-                                        </div>
-                                    </div>
-                                    {/* Research Note 3 */}
-                                    <div className="bg-white dark:bg-gray-950 rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
-                                        <div className="p-6">
-                                            <h3 className="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-100">Macroeconomic Impact on Indian Equities</h3>
-                                            <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">Category: Macro | Date: June 10, 2025</p>
-                                            <p className="text-gray-700 dark:text-gray-300 leading-relaxed">An analysis of how global and domestic macroeconomic factors are influencing the Indian equity market.</p>
-                                            <a href="#" className="mt-4 inline-block text-blue-600 hover:underline font-medium">Download Report (PDF) &rarr;</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="text-center mt-12">
-                                    <a href="#" className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg transform hover:scale-105 transition duration-300">
-                                        View All Research Notes
-                                    </a>
-                                </div>
-                            </div>
-                        </section>
+                    {/* Market Quotes Section */}
+                    <section id="market-quotes" className="py-16 px-4 bg-white dark:bg-gray-900 transition-colors duration-300">
+                        <h2 className="text-4xl font-bold text-center mb-12 text-gray-800 dark:text-gray-100">Inspiring Market Quotes</h2>
+                        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                            {[
+                                { quote: "The stock market is a device for transferring money from the impatient to the patient.", author: "Warren Buffett" },
+                                { quote: "Compound interest is the eighth wonder of the world. He who understands it, earns it; he who doesn't, pays it.", author: "Albert Einstein" },
+                                { quote: "Risk comes from not knowing what you're doing.", author: "Warren Buffett" },
+                            ].map((item, i) => (
+                                <QuoteCard key={i} quote={item.quote} author={item.author} />
+                            ))}
+                        </div>
+                    </section>
 
-                        {/* Books Section */}
-                        <section id="books" className="py-16 md:py-24 bg-gray-100 dark:bg-gray-800 transition-colors duration-300">
-                            <div className="container mx-auto px-6">
-                                <h2 className="text-4xl font-bold text-center mb-12 text-gray-800 dark:text-gray-100">Recommended Books</h2>
-                                <p className="text-center text-lg text-gray-700 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
-                                    A curated list of books that have significantly influenced my understanding of markets and investments.
-                                </p>
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                                    {/* Book 1 */}
-                                    <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
-                                        <img src="https://via.placeholder.com/300x450/7e57c2/ffffff?text=Book+Cover+1" alt="Book Cover 1" className="w-full h-64 object-cover"/>
-                                        <div className="p-4">
-                                            <h3 className="text-lg font-semibold mb-1 text-gray-800 dark:text-gray-100">The Intelligent Investor</h3>
-                                            <p className="text-gray-600 dark:text-gray-400 text-sm mb-2">By Benjamin Graham</p>
-                                            <p className="text-gray-700 dark:text-gray-300 text-sm">The definitive book on value investing, providing timeless principles for successful investing.</p>
-                                        </div>
-                                    </div>
-                                    {/* Book 2 */}
-                                    <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
-                                        <img src="https://via.placeholder.com/300x450/4db6ac/ffffff?text=Book+Cover+2" alt="Book Cover 2" className="w-full h-64 object-cover"/>
-                                        <div className="p-4">
-                                            <h3 className="text-lg font-semibold mb-1 text-gray-800 dark:text-gray-100">One Up On Wall Street</h3>
-                                            <p className="text-gray-600 dark:text-gray-400 text-sm mb-2">By Peter Lynch</p>
-                                            <p className="text-gray-700 dark:text-gray-300 text-sm">Lynch's approach to individual investing, emphasizing research and understanding what you own.</p>
-                                        </div>
-                                    </div>
-                                    {/* Book 3 */}
-                                    <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
-                                        <img src="https://via.placeholder.com/300x450/ffb74d/ffffff?text=Book+Cover+3" alt="Book Cover 3" className="w-full h-64 object-cover"/>
-                                        <div className="p-4">
-                                            <h3 className="text-lg font-semibold mb-1 text-gray-800 dark:text-gray-100">Thinking, Fast and Slow</h3>
-                                            <p className="text-gray-600 dark:text-gray-400 text-sm mb-2">By Daniel Kahneman</p>
-                                            <p className="text-gray-700 dark:text-gray-300 text-sm">Explores the two systems that drive the way we think, useful for understanding investor psychology.</p>
-                                        </div>
-                                    </div>
-                                    {/* Book 4 */}
-                                    <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
-                                        <img src="https://via.placeholder.com/300x450/9ccc65/ffffff?text=Book+Cover+4" alt="Book Cover 4" className="w-full h-64 object-cover"/>
-                                        <div className="p-4">
-                                            <h3 className="text-lg font-semibold mb-1 text-gray-800 dark:text-gray-100">The Psychology of Money</h3>
-                                            <p className="text-gray-600 dark:text-gray-400 text-sm mb-2">By Morgan Housel</p>
-                                            <p className="text-gray-700 dark:text-gray-300 text-sm">Timeless lessons on wealth, greed, and happiness, focusing on the behavioral aspects of finance.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="text-center mt-12">
-                                    <a href="#" className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg transform hover:scale-105 transition duration-300">
-                                        View All Recommended Books
-                                    </a>
-                                </div>
-                            </div>
-                        </section>
-
-                        {/* Market Quotes Section */}
-                        <section id="quotes" className="py-16 md:py-24 bg-gray-200 dark:bg-gray-900 transition-colors duration-300">
-                            <div className="container mx-auto px-6">
-                                <h2 className="text-4xl font-bold text-center mb-12 text-gray-800 dark:text-gray-100">Market Wisdom: Shareable Quotes</h2>
-                                <p className="text-center text-lg text-gray-700 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
-                                    Inspiring and insightful quotes on investing, markets, and financial philosophy, perfect for sharing.
-                                </p>
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                                    {/* Quote 1 */}
-                                    <div className="bg-white dark:bg-gray-950 rounded-lg shadow-lg p-6 flex flex-col justify-between transform hover:scale-105 transition duration-300">
-                                        <div>
-                                            <p className="text-xl italic text-gray-800 dark:text-gray-200 mb-4">"The stock market is a device for transferring money from the impatient to the patient."</p>
-                                            <p className="text-right font-semibold text-gray-700 dark:text-gray-300">- Warren Buffett</p>
-                                        </div>
-                                        <div className="mt-4 flex justify-end space-x-2">
-                                            <a href="https://twitter.com/intent/tweet?text=The%20stock%20market%20is%20a%20device%20for%20transferring%20money%20from%20the%20impatient%20to%20the%20patient.%20-%20Warren%20Buffett%0A%23YodhaTraderQuotes" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:text-blue-700">
-                                                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.816-2.26c-.83.49-1.764.85-2.75 1.03a4.096 4.096 0 00-6.993 3.734 11.649 11.649 0 01-8.457-4.287 4.104 4.104 0 001.27 5.477A4.073 4.073 0 012 10.425v.053a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.254 8.254 0 012 18.271c-1.614 0-3.136-.145-4.636-.452A11.623 11.623 0 008.29 20.25z"></path></svg>
-                                            </a>
-                                            <a href="#" className="text-gray-500 hover:text-gray-700" onClick={(e) => { e.preventDefault(); navigator.clipboard.writeText("The stock market is a device for transferring money from the impatient to the patient. - Warren Buffett"); alert('Quote copied to clipboard!'); }}>
-                                                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 13H8v-2h8v2zM16 9H8V7h8v2zM19 16V4c0-1.1-.9-2-2-2H7C5.9 2 5 2.9 5 4v12c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2zm-2 0H7V4h10v12zM21 20V8c0-1.1-.9-2-2-2h-1v14h4v-2z"></path></svg>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    {/* Quote 2 */}
-                                    <div className="bg-white dark:bg-gray-950 rounded-lg shadow-lg p-6 flex flex-col justify-between transform hover:scale-105 transition duration-300">
-                                        <div>
-                                            <p className="text-xl italic text-gray-800 dark:text-gray-200 mb-4">"Compound interest is the eighth wonder of the world. He who understands it, earns it; he who doesn't, pays it."</p>
-                                            <p className="text-right font-semibold text-gray-700 dark:text-gray-300">- Albert Einstein</p>
-                                        </div>
-                                        <div className="mt-4 flex justify-end space-x-2">
-                                            <a href="https://twitter.com/intent/tweet?text=Compound%20interest%20is%20the%20eighth%20wonder%20of%20the%20world.%20He%20who%20understands%20it%2C%20earns%20it%3B%20he%20who%20doesn%27t%2C%20pays%20it.%20-%20Albert%20Einstein%0A%23YodhaTraderQuotes" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:text-blue-700">
-                                                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.816-2.26c-.83.49-1.764.85-2.75 1.03a4.096 4.096 0 00-6.993 3.734 11.649 11.649 0 01-8.457-4.287 4.104 4.104 0 001.27 5.477A4.073 4.073 0 012 10.425v.053a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.254 8.254 0 012 18.271c-1.614 0-3.136-.145-4.636-.452A11.623 11.623 0 008.29 20.25z"></path></svg>
-                                            </a>
-                                            <a href="#" className="text-gray-500 hover:text-gray-700" onClick={(e) => { e.preventDefault(); navigator.clipboard.writeText("Compound interest is the eighth wonder of the world. He who understands it, earns it; he who doesn't, pays it. - Albert Einstein"); alert('Quote copied to clipboard!'); }}>
-                                                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 13H8v-2h8v2zM16 9H8V7h8v2zM19 16V4c0-1.1-.9-2-2-2H7C5.9 2 5 2.9 5 4v12c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2zm-2 0H7V4h10v12zM21 20V8c0-1.1-.9-2-2-2h-1v14h4v-2z"></path></svg>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    {/* Quote 3 */}
-                                    <div className="bg-white dark:bg-gray-950 rounded-lg shadow-lg p-6 flex flex-col justify-between transform hover:scale-105 transition duration-300">
-                                        <div>
-                                            <p className="text-xl italic text-gray-800 dark:text-gray-200 mb-4">"Risk comes from not knowing what you're doing."</p>
-                                            <p className="text-right font-semibold text-gray-700 dark:text-gray-300">- Warren Buffett</p>
-                                        </div>
-                                        <div className="mt-4 flex justify-end space-x-2">
-                                            <a href="https://twitter.com/intent/tweet?text=Risk%20comes%20from%20not%20knowing%20what%20you%27re%20doing.%20-%20Warren%20Buffett%0A%23YodhaTraderQuotes" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:text-blue-700">
-                                                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.816-2.26c-.83.49-1.764.85-2.75 1.03a4.096 4.096 0 00-6.993 3.734 11.649 11.649 0 01-8.457-4.287 4.104 4.104 0 001.27 5.477A4.073 4.073 0 012 10.425v.053a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.254 8.254 0 012 18.271c-1.614 0-3.136-.145-4.636-.452A11.623 11.623 0 008.29 20.25z"></path></svg>
-                                            </a>
-                                            <a href="#" className="text-gray-500 hover:text-gray-700" onClick={(e) => { e.preventDefault(); navigator.clipboard.writeText("Risk comes from not knowing what you're doing. - Warren Buffett"); alert('Quote copied to clipboard!'); }}>
-                                                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 13H8v-2h8v2zM16 9H8V7h8v2zM19 16V4c0-1.1-.9-2-2-2H7C5.9 2 5 2.9 5 4v12c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2zm-2 0H7V4h10v12zM21 20V8c0-1.1-.9-2-2-2h-1v14h4v-2z"></path></svg>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="text-center mt-12">
-                                    <a href="#" className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg transform hover:scale-105 transition duration-300">
-                                        Discover More Quotes
-                                    </a>
-                                </div>
-                            </div>
-                        </section>
-
-                        {/* Tools Section */}
-                        <section id="tools" className="py-16 md:py-24 bg-gray-100 dark:bg-gray-800 transition-colors duration-300">
-                            <div className="container mx-auto px-6">
-                                <h2 className="text-4xl font-bold text-center mb-12 text-gray-800 dark:text-gray-100">Financial Tools & Calculators</h2>
-                                <p className="text-center text-lg text-gray-700 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
-                                    Empower your financial planning with these easy-to-use calculators.
-                                </p>
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                                    {/* Stock Average Calculator */}
-                                    <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg p-6 transform hover:scale-105 transition duration-300">
-                                        <h3 className="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-100">Stock Average Calculator</h3>
-                                        <p className="text-gray-700 dark:text-gray-300 mb-4">Calculate the average price of your stock holdings after multiple purchases.</p>
-                                        <div className="space-y-4">
-                                            <div>
-                                                <label htmlFor="avg-price1" className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Price 1:</label>
-                                                <input type="number" id="avg-price1" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600" placeholder="e.g., 100" />
-                                            </div>
-                                            <div>
-                                                <label htmlFor="avg-qty1" className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Quantity 1:</label>
-                                                <input type="number" id="avg-qty1" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600" placeholder="e.g., 10" />
-                                            </div>
-                                            {/* Add more price/qty pairs as needed for a real calculator */}
-                                            <button className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                                                Calculate Average
-                                            </button>
-                                            <p className="mt-4 text-gray-800 dark:text-gray-200">Result: <span className="font-bold" id="avg-result">N/A</span></p>
-                                        </div>
-                                    </div>
-
-                                    {/* SIP Calculator */}
-                                    <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg p-6 transform hover:scale-105 transition duration-300">
-                                        <h3 className="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-100">SIP Calculator</h3>
-                                        <p className="text-gray-700 dark:text-gray-300 mb-4">Estimate the returns on your Systematic Investment Plan.</p>
-                                        <div className="space-y-4">
-                                            <div>
-                                                <label htmlFor="sip-amount" className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Monthly Investment (₹):</label>
-                                                <input type="number" id="sip-amount" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600" placeholder="e.g., 5000" />
-                                            </div>
-                                            <div>
-                                                <label htmlFor="sip-years" className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Investment Period (Years):</label>
-                                                <input type="number" id="sip-years" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600" placeholder="e.g., 10" />
-                                            </div>
-                                            <div>
-                                                <label htmlFor="sip-rate" className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Expected Annual Return (%):</label>
-                                                <input type="number" id="sip-rate" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600" placeholder="e.g., 12" />
-                                            </div>
-                                            <button className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                                                Calculate SIP
-                                            </button>
-                                            <p className="mt-4 text-gray-800 dark:text-gray-200">Estimated Value: <span className="font-bold" id="sip-result">N/A</span></p>
-                                        </div>
-                                    </div>
-
-                                    {/* CAGR Calculator */}
-                                    <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg p-6 transform hover:scale-105 transition duration-300">
-                                        <h3 className="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-100">CAGR Calculator</h3>
-                                        <p className="text-gray-700 dark:text-gray-300 mb-4">Compute the Compound Annual Growth Rate of your investment.</p>
-                                        <div className="space-y-4">
-                                            <div>
-                                                <label htmlFor="cagr-start" className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Starting Value (₹):</label>
-                                                <input type="number" id="cagr-start" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600" placeholder="e.g., 100000" />
-                                            </div>
-                                            <div>
-                                                <label htmlFor="cagr-end" className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Ending Value (₹):</label>
-                                                <input type="number" id="cagr-end" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600" placeholder="e.g., 200000" />
-                                            </div>
-                                            <div>
-                                                <label htmlFor="cagr-years" className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Number of Years:</label>
-                                                <input type="number" id="cagr-years" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600" placeholder="e.g., 5" />
-                                            </div>
-                                            <button className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                                                Calculate CAGR
-                                            </button>
-                                            <p className="mt-4 text-gray-800 dark:text-gray-200">CAGR: <span className="font-bold" id="cagr-result">N/A</span></p>
-                                        </div>
-                                    </div>
-
-                                    {/* Tax Calculator */}
-                                    <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg p-6 transform hover:scale-105 transition duration-300">
-                                        <h3 className="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-100">Tax Calculator</h3>
-                                        <p className="text-gray-700 dark:text-gray-300 mb-4">Estimate your income tax liability based on current Indian tax slabs.</p>
-                                        <div className="space-y-4">
-                                            <div>
-                                                <label htmlFor="tax-income" className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Annual Income (₹):</label>
-                                                <input type="number" id="tax-income" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600" placeholder="e.g., 700000" />
-                                            </div>
-                                            <div>
-                                                <label htmlFor="tax-age" className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Age:</label>
-                                                <input type="number" id="tax-age" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600" placeholder="e.g., 35" />
-                                            </div>
-                                            <div>
-                                                <label htmlFor="tax-regime" className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Tax Regime:</label>
-                                                <select id="tax-regime" className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600">
-                                                    <option value="old">Old Regime</option>
-                                                    <option value="new">New Regime</option>
-                                                </select>
-                                            </div>
-                                            <button className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                                                Calculate Tax
-                                            </button>
-                                            <p className="mt-4 text-gray-800 dark:text-gray-200">Estimated Tax: <span className="font-bold" id="tax-result">N/A</span></p>
-                                        </div>
-                                    </div>
-
-                                    {/* EMI Calculator */}
-                                    <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg p-6 transform hover:scale-105 transition duration-300">
-                                        <h3 className="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-100">EMI Calculator</h3>
-                                        <p className="text-gray-700 dark:text-gray-300 mb-4">Determine your Equated Monthly Installment for loans.</p>
-                                        <div className="space-y-4">
-                                            <div>
-                                                <label htmlFor="emi-principal" className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Loan Amount (₹):</label>
-                                                <input type="number" id="emi-principal" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600" placeholder="e.g., 500000" />
-                                            </div>
-                                            <div>
-                                                <label htmlFor="emi-interest" className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Interest Rate (% per annum):</label>
-                                                <input type="number" id="emi-interest" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600" placeholder="e.g., 9" />
-                                            </div>
-                                            <div>
-                                                <label htmlFor="emi-tenure" className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Loan Tenure (Months):</label>
-                                                <input type="number" id="emi-tenure" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600" placeholder="e.g., 60" />
-                                            </div>
-                                            <button className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                                                Calculate EMI
-                                            </button>
-                                            <p className="mt-4 text-gray-800 dark:text-gray-200">Monthly EMI: <span className="font-bold" id="emi-result">N/A</span></p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-                    </main>
+                    {/* Tools Section */}
+                    <section id="tools" className="py-16 px-4 bg-gray-50 dark:bg-gray-800 transition-colors duration-300">
+                        <h2 className="text-4xl font-bold text-center mb-12 text-gray-800 dark:text-gray-100">Financial Tools & Calculators</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                            <StockAverageCalculator />
+                            <SIPCalculator />
+                            <CAGRCalculator />
+                            <EMICalculator />
+                            <SWPCalculator />
+                            <ProfitLossCalculator />
+                            <TaxCalculator />
+                            <StockSplitCalculator />
+                        </div>
+                    </section>
 
                     {/* Footer */}
-                    <footer className="bg-gray-800 text-gray-300 py-8 dark:bg-gray-950">
-                        <div className="container mx-auto px-6 text-center">
-                            <div className="flex justify-center space-x-6 mb-6">
-                                <a href="https://linkedin.com/in/yourprofile" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors duration-200">
-                                    <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"></path></svg>
-                                </a>
-                                <a href="https://twitter.com/yourhandle" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors duration-200">
-                                    <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.816-2.26c-.83.49-1.764.85-2.75 1.03a4.096 4.096 0 00-6.993 3.734 11.649 11.649 0 01-8.457-4.287 4.104 4.104 0 001.27 5.477A4.073 4.073 0 012 10.425v.053a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.254 8.254 0 012 18.271c-1.614 0-3.136-.145-4.636-.452A11.623 11.623 0 008.29 20.25z"></path></svg>
-                                </a>
-                                <a href="mailto:your_email@example.com" className="hover:text-white transition-colors duration-200">
-                                    <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12.713l-11.985-9.713h23.97l-11.985 9.713zm0 2.287l-12-9.721v13.721h24v-13.721l-12 9.721z"></path></svg>
-                                </a>
-                            </div>
-                            <p className="text-sm">&copy; {new Date().getFullYear()} YodhaTrader. All rights reserved.</p>
-                            <p className="text-xs mt-2">SEBI Registered Research Analyst: [Your SEBI Registration Number Here]</p>
-                            <p className="text-xs mt-1">Disclaimer: Investment in securities markets are subject to market risks. Read all the related documents carefully before investing.</p>
+                    <footer className="bg-gray-900 text-gray-400 py-10 px-4 text-center">
+                        <div className="flex justify-center space-x-6 mb-6">
+                            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors duration-200">
+                                <i className="fab fa-linkedin-in text-2xl"></i>
+                            </a>
+                            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors duration-200">
+                                <i className="fab fa-twitter text-2xl"></i>
+                            </a>
+                            <a href="mailto:info@yodhatrader.com" className="hover:text-white transition-colors duration-200">
+                                <i className="fas fa-envelope text-2xl"></i>
+                            </a>
                         </div>
+                        <p className="mb-2">SEBI Registration No: INA00000XXXXX (Placeholder)</p>
+                        <p className="text-sm">Disclaimer: Investments are subject to market risks. Read all scheme related documents carefully before investing. Past performance is not indicative of future results.</p>
+                        <p className="text-sm mt-2">&copy; {new Date().getFullYear()} YodhaTrader. All rights reserved.</p>
                     </footer>
                 </div>
             );
         };
 
-        ReactDOM.render(<App />, document.getElementById('root'));
+        const QuoteCard = ({ quote, author }) => {
+            const copyToClipboard = () => {
+                navigator.clipboard.writeText(`"${quote}" - ${author}`);
+                alert('Quote copied to clipboard!');
+            };
 
-        // Basic calculator logic (for demonstration, integrate into React component for full functionality)
-        document.addEventListener('DOMContentLoaded', () => {
-            // Stock Average Calculator
-            const calculateAvg = () => {
-                const price1 = parseFloat(document.getElementById('avg-price1').value);
-                const qty1 = parseFloat(document.getElementById('avg-qty1').value);
-                // Add more price/qty pairs for a real calculator
+            const tweetQuote = () => {
+                const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(`"${quote}" - ${author}`)}`;
+                window.open(tweetUrl, '_blank');
+            };
 
-                if (price1 && qty1) {
-                    const totalValue = price1 * qty1;
-                    const totalQty = qty1;
-                    const average = totalValue / totalQty;
-                    document.getElementById('avg-result').textContent = average.toFixed(2);
+            return (
+                <div className="bg-gray-50 dark:bg-gray-800 rounded-lg shadow-lg p-6 flex flex-col justify-between">
+                    <p className="text-xl italic mb-4 text-gray-800 dark:text-gray-100">"{quote}"</p>
+                    <p className="text-right text-gray-600 dark:text-gray-300">- {author}</p>
+                    <div className="flex justify-end space-x-3 mt-4">
+                        <button onClick={copyToClipboard} className="text-gray-500 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors">
+                            <i className="fas fa-copy"></i>
+                        </button>
+                        <button onClick={tweetQuote} className="text-gray-500 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors">
+                            <i className="fab fa-twitter"></i>
+                        </button>
+                    </div>
+                </div>
+            );
+        };
+
+        const CalculatorCard = ({ title, children }) => (
+            <div className="bg-white dark:bg-gray-700 rounded-lg shadow-lg p-6">
+                <h3 className="text-2xl font-semibold mb-6 text-center text-gray-900 dark:text-gray-100">{title}</h3>
+                {children}
+            </div>
+        );
+
+        const InputField = ({ label, value, onChange, type = "number", placeholder = "" }) => (
+            <div className="mb-4">
+                <label className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">
+                    {label}
+                </label>
+                <input
+                    type={type}
+                    value={value}
+                    onChange={(e) => onChange(e.target.value)}
+                    placeholder={placeholder}
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100 dark:bg-gray-600 dark:text-gray-100 dark:border-gray-600"
+                />
+            </div>
+        );
+
+        const ResultDisplay = ({ label, value }) => (
+            <div className="mt-6 p-4 bg-indigo-100 dark:bg-indigo-900 rounded-md text-indigo-800 dark:text-indigo-100 font-medium text-lg text-center">
+                {label}: <span className="font-bold">{value}</span>
+            </div>
+        );
+
+        const Button = ({ onClick, children }) => (
+            <button
+                onClick={onClick}
+                className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
+            >
+                {children}
+            </button>
+        );
+
+        // --- Calculator Components ---
+
+        const StockAverageCalculator = () => {
+            const [buyPrice1, setBuyPrice1] = useState('');
+            const [quantity1, setQuantity1] = useState('');
+            const [buyPrice2, setBuyPrice2] = useState('');
+            const [quantity2, setQuantity2] = useState('');
+            const [averagePrice, setAveragePrice] = useState('0.00');
+
+            const calculateAverage = () => {
+                const p1 = parseFloat(buyPrice1);
+                const q1 = parseFloat(quantity1);
+                const p2 = parseFloat(buyPrice2);
+                const q2 = parseFloat(quantity2);
+
+                if (!isNaN(p1) && !isNaN(q1) && !isNaN(p2) && !isNaN(q2) && (q1 + q2) > 0) {
+                    const avg = ((p1 * q1) + (p2 * q2)) / (q1 + q2);
+                    setAveragePrice(avg.toFixed(2));
                 } else {
-                    document.getElementById('avg-result').textContent = 'Invalid input';
+                    setAveragePrice('Invalid Input');
                 }
             };
-            document.querySelector('#tools button:nth-of-type(1)').addEventListener('click', calculateAvg);
 
-            // SIP Calculator
+            return (
+                <CalculatorCard title="Stock Average Calculator">
+                    <InputField label="Buy Price 1" value={buyPrice1} onChange={setBuyPrice1} />
+                    <InputField label="Quantity 1" value={quantity1} onChange={setQuantity1} />
+                    <InputField label="Buy Price 2" value={buyPrice2} onChange={setBuyPrice2} />
+                    <InputField label="Quantity 2" value={quantity2} onChange={setQuantity2} />
+                    <Button onClick={calculateAverage}>Calculate Average</Button>
+                    <ResultDisplay label="Average Price" value={`₹ ${averagePrice}`} />
+                </CalculatorCard>
+            );
+        };
+
+        const SIPCalculator = () => {
+            const [monthlyInvestment, setMonthlyInvestment] = useState('');
+            const [annualReturn, setAnnualReturn] = useState('');
+            const [timePeriod, setTimePeriod] = useState('');
+            const [futureValue, setFutureValue] = useState('0.00');
+
             const calculateSIP = () => {
-                const amount = parseFloat(document.getElementById('sip-amount').value);
-                const years = parseFloat(document.getElementById('sip-years').value);
-                const rate = parseFloat(document.getElementById('sip-rate').value) / 100;
+                const p = parseFloat(monthlyInvestment);
+                const r = parseFloat(annualReturn) / 100 / 12; // Monthly rate
+                const n = parseFloat(timePeriod) * 12; // Total months
 
-                if (amount && years && rate) {
-                    const monthlyRate = rate / 12;
-                    const totalMonths = years * 12;
-                    const futureValue = amount * ((Math.pow(1 + monthlyRate, totalMonths) - 1) / monthlyRate) * (1 + monthlyRate);
-                    document.getElementById('sip-result').textContent = `₹${futureValue.toFixed(2)}`;
+                if (!isNaN(p) && !isNaN(r) && !isNaN(n) && n > 0) {
+                    const fv = p * (((Math.pow(1 + r, n) - 1) / r) * (1 + r));
+                    setFutureValue(fv.toFixed(2));
                 } else {
-                    document.getElementById('sip-result').textContent = 'Invalid input';
+                    setFutureValue('Invalid Input');
                 }
             };
-            document.querySelector('#tools button:nth-of-type(2)').addEventListener('click', calculateSIP);
 
-            // CAGR Calculator
+            return (
+                <CalculatorCard title="SIP Calculator">
+                    <InputField label="Monthly Investment (₹)" value={monthlyInvestment} onChange={setMonthlyInvestment} />
+                    <InputField label="Expected Annual Return (%)" value={annualReturn} onChange={setAnnualReturn} />
+                    <InputField label="Time Period (Years)" value={timePeriod} onChange={setTimePeriod} />
+                    <Button onClick={calculateSIP}>Calculate SIP</Button>
+                    <ResultDisplay label="Future Value" value={`₹ ${futureValue}`} />
+                </CalculatorCard>
+            );
+        };
+
+        const CAGRCalculator = () => {
+            const [beginningValue, setBeginningValue] = useState('');
+            const [endingValue, setEndingValue] = useState('');
+            const [numYears, setNumYears] = useState('');
+            const [cagr, setCagr] = useState('0.00');
+
             const calculateCAGR = () => {
-                const start = parseFloat(document.getElementById('cagr-start').value);
-                const end = parseFloat(document.getElementById('cagr-end').value);
-                const years = parseFloat(document.getElementById('cagr-years').value);
+                const bv = parseFloat(beginningValue);
+                const ev = parseFloat(endingValue);
+                const n = parseFloat(numYears);
 
-                if (start && end && years) {
-                    const cagr = (Math.pow(end / start, 1 / years) - 1) * 100;
-                    document.getElementById('cagr-result').textContent = `${cagr.toFixed(2)}%`;
+                if (!isNaN(bv) && !isNaN(ev) && !isNaN(n) && bv > 0 && n > 0) {
+                    const result = (Math.pow((ev / bv), (1 / n)) - 1) * 100;
+                    setCagr(result.toFixed(2));
                 } else {
-                    document.getElementById('cagr-result').textContent = 'Invalid input';
+                    setCagr('Invalid Input');
                 }
             };
-            document.querySelector('#tools button:nth-of-type(3)').addEventListener('click', calculateCAGR);
 
-            // Tax Calculator (Simplified for demo - real tax calculator needs complex logic)
-            const calculateTax = () => {
-                const income = parseFloat(document.getElementById('tax-income').value);
-                const age = parseInt(document.getElementById('tax-age').value);
-                const regime = document.getElementById('tax-regime').value;
-                let tax = 'N/A';
+            return (
+                <CalculatorCard title="CAGR Calculator">
+                    <InputField label="Beginning Value (₹)" value={beginningValue} onChange={setBeginningValue} />
+                    <InputField label="Ending Value (₹)" value={endingValue} onChange={setEndingValue} />
+                    <InputField label="Number of Years" value={numYears} onChange={setNumYears} />
+                    <Button onClick={calculateCAGR}>Calculate CAGR</Button>
+                    <ResultDisplay label="CAGR" value={`${cagr} %`} />
+                </CalculatorCard>
+            );
+        };
 
-                if (income && age && regime) {
-                    // Very simplified Indian tax slab example (not accurate for all scenarios)
-                    if (regime === 'old') {
-                        if (income <= 250000) tax = 0;
-                        else if (income <= 500000) tax = (income - 250000) * 0.05;
-                        else if (income <= 1000000) tax = 12500 + (income - 500000) * 0.20;
-                        else tax = 112500 + (income - 1000000) * 0.30;
-                    } else if (regime === 'new') {
-                         if (income <= 300000) tax = 0;
-                        else if (income <= 600000) tax = (income - 300000) * 0.05;
-                        else if (income <= 900000) tax = 15000 + (income - 600000) * 0.10;
-                        else if (income <= 1200000) tax = 45000 + (income - 900000) * 0.15;
-                        else if (income <= 1500000) tax = 90000 + (income - 1200000) * 0.20;
-                        else tax = 150000 + (income - 1500000) * 0.30;
-                    }
-                    document.getElementById('tax-result').textContent = `₹${tax.toFixed(2)}`;
-                } else {
-                    document.getElementById('tax-result').textContent = 'Invalid input';
-                }
-            };
-            document.querySelector('#tools button:nth-of-type(4)').addEventListener('click', calculateTax);
+        const EMICalculator = () => {
+            const [principal, setPrincipal] = useState('');
+            const [interestRate, setInterestRate] = useState('');
+            const [loanTenure, setLoanTenure] = useState('');
+            const [emi, setEmi] = useState('0.00');
 
-
-            // EMI Calculator
             const calculateEMI = () => {
-                const principal = parseFloat(document.getElementById('emi-principal').value);
-                const annualInterestRate = parseFloat(document.getElementById('emi-interest').value);
-                const tenureMonths = parseFloat(document.getElementById('emi-tenure').value);
+                const p = parseFloat(principal);
+                const r = parseFloat(interestRate) / 100 / 12; // Monthly interest rate
+                const n = parseFloat(loanTenure) * 12; // Total months
 
-                if (principal && annualInterestRate && tenureMonths) {
-                    const monthlyInterestRate = (annualInterestRate / 12) / 100;
-                    if (monthlyInterestRate === 0) {
-                        const emi = principal / tenureMonths;
-                        document.getElementById('emi-result').textContent = `₹${emi.toFixed(2)}`;
-                    } else {
-                        const emi = principal * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, tenureMonths) / (Math.pow(1 + monthlyInterestRate, tenureMonths) - 1);
-                        document.getElementById('emi-result').textContent = `₹${emi.toFixed(2)}`;
-                    }
+                if (!isNaN(p) && !isNaN(r) && !isNaN(n) && n > 0) {
+                    const emiVal = p * r * Math.pow((1 + r), n) / (Math.pow((1 + r), n) - 1);
+                    setEmi(emiVal.toFixed(2));
                 } else {
-                    document.getElementById('emi-result').textContent = 'Invalid input';
+                    setEmi('Invalid Input');
                 }
             };
-            document.querySelector('#tools button:nth-of-type(5)').addEventListener('click', calculateEMI);
-        });
+
+            return (
+                <CalculatorCard title="EMI Calculator">
+                    <InputField label="Loan Amount (₹)" value={principal} onChange={setPrincipal} />
+                    <InputField label="Interest Rate (p.a. %)" value={interestRate} onChange={setInterestRate} />
+                    <InputField label="Loan Tenure (Years)" value={loanTenure} onChange={setLoanTenure} />
+                    <Button onClick={calculateEMI}>Calculate EMI</Button>
+                    <ResultDisplay label="Monthly EMI" value={`₹ ${emi}`} />
+                </CalculatorCard>
+            );
+        };
+
+        const SWPCalculator = () => {
+            const [totalInvestment, setTotalInvestment] = useState('');
+            const [withdrawalAmount, setWithdrawalAmount] = useState('');
+            const [expectedReturn, setExpectedReturn] = useState('');
+            const [swpYears, setSwpYears] = useState('');
+            const [remainingCorpus, setRemainingCorpus] = useState('0.00');
+
+            const calculateSWP = () => {
+                let corpus = parseFloat(totalInvestment);
+                const withdrawal = parseFloat(withdrawalAmount);
+                const rate = parseFloat(expectedReturn) / 100 / 12; // Monthly rate
+                const years = parseFloat(swpYears);
+
+                if (!isNaN(corpus) && !isNaN(withdrawal) && !isNaN(rate) && !isNaN(years) && years > 0) {
+                    for (let i = 0; i < years * 12; i++) {
+                        corpus = corpus * (1 + rate) - withdrawal;
+                        if (corpus < 0 && i < years * 12 -1) { // Stop if corpus goes negative before end of period
+                            setRemainingCorpus('Depleted');
+                            return;
+                        }
+                    }
+                    setRemainingCorpus(Math.max(0, corpus).toFixed(2)); // Ensure not negative
+                } else {
+                    setRemainingCorpus('Invalid Input');
+                }
+            };
+
+            return (
+                <CalculatorCard title="SWP Calculator">
+                    <InputField label="Total Investment (₹)" value={totalInvestment} onChange={setTotalInvestment} />
+                    <InputField label="Monthly Withdrawal (₹)" value={withdrawalAmount} onChange={setWithdrawalAmount} />
+                    <InputField label="Expected Annual Return (%)" value={expectedReturn} onChange={setExpectedReturn} />
+                    <InputField label="Withdrawal Period (Years)" value={swpYears} onChange={setSwpYears} />
+                    <Button onClick={calculateSWP}>Calculate SWP</Button>
+                    <ResultDisplay label="Remaining Corpus" value={`₹ ${remainingCorpus}`} />
+                </CalculatorCard>
+            );
+        };
+
+        const ProfitLossCalculator = () => {
+            const [buyPrice, setBuyPrice] = useState('');
+            const [sellPrice, setSellPrice] = useState('');
+            const [quantity, setQuantity] = useState('');
+            const [profitLoss, setProfitLoss] = useState('0.00');
+            const [type, setType] = useState('');
+
+            const calculateProfitLoss = () => {
+                const bp = parseFloat(buyPrice);
+                const sp = parseFloat(sellPrice);
+                const q = parseFloat(quantity);
+
+                if (!isNaN(bp) && !isNaN(sp) && !isNaN(q) && q > 0) {
+                    const result = (sp - bp) * q;
+                    setProfitLoss(result.toFixed(2));
+                    setType(result >= 0 ? 'Profit' : 'Loss');
+                } else {
+                    setProfitLoss('Invalid Input');
+                    setType('');
+                }
+            };
+
+            return (
+                <CalculatorCard title="Profit/Loss Calculator">
+                    <InputField label="Buy Price (₹)" value={buyPrice} onChange={setBuyPrice} />
+                    <InputField label="Sell Price (₹)" value={sellPrice} onChange={setSellPrice} />
+                    <InputField label="Quantity" value={quantity} onChange={setQuantity} />
+                    <Button onClick={calculateProfitLoss}>Calculate P/L</Button>
+                    {type && (
+                        <ResultDisplay label={type} value={`₹ ${profitLoss}`} />
+                    )}
+                </CalculatorCard>
+            );
+        };
+
+        const TaxCalculator = () => {
+            const [income, setIncome] = useState('');
+            const [age, setAge] = useState('');
+            const [taxAmount, setTaxAmount] = useState('0.00');
+
+            const calculateTax = () => {
+                let taxableIncome = parseFloat(income);
+                const userAge = parseInt(age);
+                let tax = 0;
+
+                if (isNaN(taxableIncome) || taxableIncome < 0 || isNaN(userAge) || userAge < 0) {
+                    setTaxAmount('Invalid Input');
+                    return;
+                }
+
+                // Simplified Indian Tax Slabs (Example, not exhaustive or current)
+                // New Regime (simplified for example purposes)
+                if (taxableIncome <= 300000) {
+                    tax = 0;
+                } else if (taxableIncome <= 600000) {
+                    tax = (taxableIncome - 300000) * 0.05;
+                } else if (taxableIncome <= 900000) {
+                    tax = 15000 + (taxableIncome - 600000) * 0.10;
+                } else if (taxableIncome <= 1200000) {
+                    tax = 45000 + (taxableIncome - 900000) * 0.15;
+                } else if (taxableIncome <= 1500000) {
+                    tax = 90000 + (taxableIncome - 1200000) * 0.20;
+                } else {
+                    tax = 150000 + (taxableIncome - 1500000) * 0.30;
+                }
+
+                // Health and Education Cess (4%)
+                tax += tax * 0.04;
+
+                setTaxAmount(tax.toFixed(2));
+            };
+
+            return (
+                <CalculatorCard title="Simplified India Tax Calculator">
+                    <InputField label="Annual Income (₹)" value={income} onChange={setIncome} />
+                    <InputField label="Age" value={age} onChange={setAge} />
+                    <Button onClick={calculateTax}>Calculate Tax</Button>
+                    <ResultDisplay label="Estimated Tax" value={`₹ ${taxAmount}`} />
+                </CalculatorCard>
+            );
+        };
+
+        const StockSplitCalculator = () => {
+            const [currentShares, setCurrentShares] = useState('');
+            const [currentPrice, setCurrentPrice] = useState('');
+            const [splitRatioNum, setSplitRatioNum] = useState('');
+            const [splitRatioDenom, setSplitRatioDenom] = useState('');
+            const [newShares, setNewShares] = useState('0');
+            const [newPrice, setNewPrice] = useState('0.00');
+
+            const calculateSplit = () => {
+                const shares = parseFloat(currentShares);
+                const price = parseFloat(currentPrice);
+                const num = parseFloat(splitRatioNum);
+                const denom = parseFloat(splitRatioDenom);
+
+                if (!isNaN(shares) && !isNaN(price) && !isNaN(num) && !isNaN(denom) && denom > 0) {
+                    const newTotalShares = shares * (num / denom);
+                    const newSharePrice = price * (denom / num);
+                    setNewShares(newTotalShares.toFixed(0));
+                    setNewPrice(newSharePrice.toFixed(2));
+                } else {
+                    setNewShares('Invalid');
+                    setNewPrice('Invalid');
+                }
+            };
+
+            return (
+                <CalculatorCard title="Stock Split Calculator">
+                    <InputField label="Current Shares Owned" value={currentShares} onChange={setCurrentShares} />
+                    <InputField label="Current Share Price (₹)" value={currentPrice} onChange={setCurrentPrice} />
+                    <InputField label="Split Ratio (e.g., 2 for 2:1, 5 for 5:1)" value={splitRatioNum} onChange={setSplitRatioNum} placeholder="Numerator (e.g., 2 or 5)" />
+                    <InputField label="Split Ratio Denominator (e.g., 1 for 2:1, 1 for 5:1)" value={splitRatioDenom} onChange={setSplitRatioDenom} placeholder="Denominator (usually 1)" />
+                    <Button onClick={calculateSplit}>Calculate Split</Button>
+                    <ResultDisplay label="New Shares" value={newShares} />
+                    <ResultDisplay label="New Price Per Share" value={`₹ ${newPrice}`} />
+                </CalculatorCard>
+            );
+        };
+
+
+        ReactDOM.render(<App />, document.getElementById('root'));
     </script>
 </body>
 </html>
-```
